@@ -1,0 +1,7 @@
+{
+  "name": "peekus",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
