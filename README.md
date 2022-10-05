@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/lauramaror/peekus">
-    <img src="" alt="Logo" width="80" height="80">
+    <img src="src/assets/icon/peekus_icono.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Peekus</h3>
