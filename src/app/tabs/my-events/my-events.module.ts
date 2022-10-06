@@ -5,11 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { MyEventsPage } from './my-events.page';
 
 import { MyEventsPageRoutingModule } from './my-events-routing.module';
-import { TabsPageModule } from '../tabs.module';
+import { CommonsModule } from '../../commons/commons.module';
 
 @NgModule({
   imports: [
-    TabsPageModule
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    MyEventsPageRoutingModule,
+    CommonsModule
   ],
   declarations: [MyEventsPage]
 })

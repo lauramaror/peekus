@@ -17,13 +17,6 @@ import { CommonsModule } from '../commons/commons.module';
     TabsPageRoutingModule,
     CommonsModule
   ],
-  declarations: [TabsPage],
-  exports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    TabsPageRoutingModule,
-    CommonsModule
-  ]
+  declarations: [TabsPage]
 })
 export class TabsPageModule {}
