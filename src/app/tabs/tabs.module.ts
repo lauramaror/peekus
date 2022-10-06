@@ -7,13 +7,23 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
 
+import { CommonsModule } from '../commons/commons.module';
+
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    TabsPageRoutingModule
+    TabsPageRoutingModule,
+    CommonsModule
   ],
-  declarations: [TabsPage]
+  declarations: [TabsPage],
+  exports: [
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    TabsPageRoutingModule,
+    CommonsModule
+  ]
 })
 export class TabsPageModule {}
