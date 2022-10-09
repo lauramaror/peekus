@@ -32,5 +32,3 @@ npm-debug.log*
 /www
 /android
 /ios
-
-./package-lock.json

@@ -7,8 +7,9 @@
         "start": "ionic serve",
         "build": "ionic build",
         "run android": "ionic cap run android -l --external",
-        "copy": "ionic cap copy",
-        "sync": "ionic cap sync",
+        "copy": "ionic cap copy android",
+        "sync": "ionic cap sync android",
+        "build prod": "ionic build --prod",
         "lint": "ng lint"
     },
     "private": true,

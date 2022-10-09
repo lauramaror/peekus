@@ -6,5 +6,7 @@
     <ion-header collapse="condense">
         <app-peekus-header></app-peekus-header>
     </ion-header>
-
+    <ng-container *ngFor="let user of userList">
+        <p>{{user.username}}</p>
+    </ng-container>
 </ion-content>
