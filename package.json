@@ -10,6 +10,7 @@
         "copy": "ionic cap copy android",
         "sync": "ionic cap sync android",
         "build prod": "ionic build --prod",
+        "assets gen": "npx capacitor-assets generate --android",
         "lint": "ng lint"
     },
     "private": true,
