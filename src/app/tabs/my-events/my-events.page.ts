@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/models/user.model';
-import { UserService } from '../../services/user.service';
+import { Event } from 'src/app/models/event.model';
+import { EventService } from '../../services/event.service';
 
 @Component({
   selector: 'app-my-events',
@@ -9,19 +9,19 @@ import { UserService } from '../../services/user.service';
 })
 export class MyEventsPage implements OnInit {
 
-  userList: User[] = [];
+  eventsList: Event[] = [];
 
   constructor(
-    private userService: UserService
+    private eventService: EventService
   ) {}
 
   ngOnInit(): void{
-    this.getUserList();
+    this.getEventsList();
   }
 
-  getUserList(){
-    this.userService.getUsers().subscribe(u=>{
-      this.userList = u as User[];
+  getEventsList(){
+    this.eventService.getEvents().subscribe(e=>{
+      this.eventsList = e as Event[];
     });
   }
 

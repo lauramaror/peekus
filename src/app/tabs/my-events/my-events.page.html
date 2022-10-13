@@ -6,8 +6,8 @@
     <ion-header collapse="condense">
         <app-peekus-header></app-peekus-header>
     </ion-header>
-    <p>users:</p>
-    <ng-container *ngFor="let user of userList">
-        <p>{{user.username}} - {{user.name}}</p>
+    <p>Events:</p>
+    <ng-container *ngFor="let event of eventsList">
+        <p>{{event.name}} - {{event.description}}</p>
     </ng-container>
 </ion-content>
