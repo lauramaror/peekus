@@ -5,7 +5,7 @@ import { LandingPage } from './landing.page';
 
 const routes: Routes = [
   {
-    path: 'landing',
+    path: '',
     children: [
       {
         path: '',
@@ -25,11 +25,6 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: '/landing',
-    pathMatch: 'full'
   }
 ];
 

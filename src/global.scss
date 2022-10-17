@@ -35,6 +35,10 @@
     background-color: #A0E4B0;
 }
 
+.btn-landing {
+    width: 80%;
+}
+
 .m-1 {
     margin: 5px;
 }
@@ -44,7 +48,17 @@
 }
 
 .mt-1 {
-    margin-top: 5px;
+    margin-top: 1em;
+}
+
+.mt-2 {
+    margin-top: 2em;
+}
+
+.m-labels {
+    margin-top: 1.5em;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .d-flex-center {
@@ -54,7 +68,11 @@
     flex-wrap: wrap;
 }
 
-.p-but {
-    padding-left: 1.5em;
-    padding-right: 1.5em;
+.p-1 {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.t-center {
+    text-align: center;
 }
