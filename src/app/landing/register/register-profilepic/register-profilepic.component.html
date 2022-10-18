@@ -1,0 +1,25 @@
+<ion-header [translucent]="true" class="ion-no-border" collapse="fade">
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-header collapse="condense" class="ion-no-border">
+    </ion-header>
+    <app-register-header></app-register-header>
+    <div style="margin: 2em;" class="mt-2">
+        <ion-grid>
+            <ion-row class="ion-justify-content-center mt-2">
+                <ion-text>Añade una foto de perfil</ion-text>
+            </ion-row>
+            <ion-row class="ion-justify-content-center mt-2">
+                <div class="mt-2 icon-stack">
+                    <ion-icon name="person" class="primary-icon"></ion-icon>
+                    <ion-icon name="camera" class="secondary-icon"></ion-icon>
+                </div>
+            </ion-row>
+            <ion-row class="ion-justify-content-center mt-2">
+                <ion-button color="primary" shape="round" class="btn-landing" [routerLink]="'/tabs/my-events'"><span>SIGUIENTE</span></ion-button>
+            </ion-row>
+        </ion-grid>
+    </div>
+
+</ion-content>

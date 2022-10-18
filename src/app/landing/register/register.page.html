@@ -6,43 +6,49 @@
     </ion-header>
     <app-register-header></app-register-header>
     <div style="margin: 2em;">
-        <ion-list>
-            <p class="m-labels">NOMBRE</p>
-            <ion-item class="ion-no-padding">
-                <ion-input class="ion-no-padding"></ion-input>
-                <ion-icon name="id-card" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
-            </ion-item>
+        <ion-grid>
+            <ion-row>
+                <ion-list>
+                    <p class="m-labels">NOMBRE</p>
+                    <ion-item class="ion-no-padding">
+                        <ion-input class="ion-no-padding"></ion-input>
+                        <ion-icon name="id-card" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
+                    </ion-item>
 
-            <p class="m-labels">USUARIO</p>
-            <ion-item class="ion-no-padding">
-                <ion-input class="ion-no-padding"></ion-input>
-                <ion-icon name="person" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
-            </ion-item>
+                    <p class="m-labels">USUARIO</p>
+                    <ion-item class="ion-no-padding">
+                        <ion-input class="ion-no-padding"></ion-input>
+                        <ion-icon name="person" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
+                    </ion-item>
 
-            <p class="m-labels">EMAIL</p>
-            <ion-item class="ion-no-padding">
-                <ion-input class="ion-no-padding" type="email" ngModel email></ion-input>
-                <ion-icon name="mail" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
-                <ion-note slot="error">Email inválido</ion-note>
-            </ion-item>
+                    <p class="m-labels">EMAIL</p>
+                    <ion-item class="ion-no-padding">
+                        <ion-input class="ion-no-padding" type="email" ngModel email></ion-input>
+                        <ion-icon name="mail" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
+                        <ion-note slot="error">Email inválido</ion-note>
+                    </ion-item>
 
-            <p class="m-labels">TELÉFONO</p>
-            <ion-item class="ion-no-padding">
-                <ion-input class="ion-no-padding" type="tel"></ion-input>
-                <ion-icon name="call" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
-            </ion-item>
+                    <p class="m-labels">TELÉFONO</p>
+                    <ion-item class="ion-no-padding">
+                        <ion-input class="ion-no-padding" type="tel"></ion-input>
+                        <ion-icon name="call" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
+                    </ion-item>
 
-            <p class="m-labels">CONTRASEÑA</p>
-            <ion-item class="ion-no-padding">
-                <ion-input class="ion-no-padding" type="password"></ion-input>
-                <ion-icon name="key" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
-            </ion-item>
-        </ion-list>
-        <div class="d-flex-center mt-2">
-            <ion-button color="tertiary" shape="round" class="btn-landing"><span>REGISTRARSE</span></ion-button>
-            <ion-text class="mt-1">Ya tienes cuenta?</ion-text>
-            <a color="primary" class="ml-1 mt-1" style="text-decoration: underline;">Inicia sesión</a>
-        </div>
+                    <p class="m-labels">CONTRASEÑA</p>
+                    <ion-item class="ion-no-padding">
+                        <ion-input class="ion-no-padding" type="password"></ion-input>
+                        <ion-icon name="key" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
+                    </ion-item>
+                </ion-list>
+            </ion-row>
+            <ion-row>
+                <div class="d-flex-center mt-2">
+                    <ion-button color="tertiary" shape="round" class="btn-landing" [routerLink]="'/landing/register/profilepic'"><span>REGISTRARSE</span></ion-button>
+                    <ion-text class="mt-1">¿Ya tienes cuenta?</ion-text>
+                    <a color="primary" class="ml-1 mt-1 t-underline" [routerLink]="'/landing/login'">Inicia sesión</a>
+                </div>
+            </ion-row>
+        </ion-grid>
     </div>
 
 </ion-content>
