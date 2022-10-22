@@ -12,12 +12,12 @@
                 <ion-list>
                     <p class="m-labels">USUARIO, TELÉFONO O EMAIL</p>
                     <ion-item class="ion-no-padding">
-                        <ion-input class="ion-no-padding"></ion-input>
+                        <ion-input class="ion-no-padding" [(ngModel)]="userDataForm"></ion-input>
                         <ion-icon name="person" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
                     </ion-item>
                     <p class="m-labels">CONTRASEÑA</p>
                     <ion-item class="ion-no-padding">
-                        <ion-input class="ion-no-padding" type="password"></ion-input>
+                        <ion-input class="ion-no-padding" type="password" [(ngModel)]="passwordForm"></ion-input>
                         <ion-icon name="key" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
                     </ion-item>
                     <a color="primary" class="mt-1 t-underline d-flex-end font-size-10">
@@ -27,7 +27,7 @@
             </ion-row>
             <ion-row class="ion-justify-content-center">
                 <div class="d-flex-center mt-2">
-                    <ion-button color="tertiary" shape="round" class="btn-landing"><span>INICIAR SESIÓN</span></ion-button>
+                    <ion-button color="tertiary" shape="round" class="btn-landing" (click)="login()"><span>INICIAR SESIÓN</span></ion-button>
                     <ion-text class="mt-1">¿Eres nuevo?</ion-text>
                     <a color="primary" class="ml-1 mt-1 t-underline" [routerLink]="'/landing/register'">Registrarse</a>
                 </div>
