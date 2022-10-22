@@ -10,6 +10,7 @@ import { EventService } from '../../services/event.service';
 export class MyEventsPage implements OnInit {
 
   eventsList: Event[] = [];
+  loading = true;
 
   constructor(
     private eventService: EventService
@@ -22,6 +23,7 @@ export class MyEventsPage implements OnInit {
   getEventsList(){
     this.eventService.getEvents().subscribe(e=>{
       this.eventsList = e as Event[];
+      this.loading = false;
     });
   }
 
