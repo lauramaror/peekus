@@ -8,6 +8,7 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 import { TabsPage } from './tabs.page';
 
 import { CommonsModule } from '../commons/commons.module';
+import { ComponentsModule } from './components/components.module';
 
 @NgModule({
   imports: [
@@ -15,8 +16,9 @@ import { CommonsModule } from '../commons/commons.module';
     CommonModule,
     FormsModule,
     TabsPageRoutingModule,
-    CommonsModule
+    CommonsModule,
+    ComponentsModule
   ],
-  declarations: [TabsPage]
+  declarations: [TabsPage],
 })
 export class TabsPageModule {}

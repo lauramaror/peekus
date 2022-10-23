@@ -18,8 +18,9 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    private  storage: StorageService
-    ) { }
+    private storage: StorageService
+    ) {
+    }
 
   getUsers(): Observable<object>{
     return this.http.get(`${environment.baseUrl}/user`);
@@ -28,9 +29,9 @@ export class UserService {
   saveUser(userData: User): Observable<object> {
     return this.http.post(`${environment.baseUrl}/user`, userData)
     .pipe(
-      tap( (res: any) => {
+      tap( async (res: any) => {
         if(res.ok){
-          this.storage.set('ACCESS_TOKEN', res.token);
+          await this.storage.set('ACCESS_TOKEN', res.token);
           this.user = new User(res.id);
           this.authSubject.next(true);
         }
@@ -41,9 +42,9 @@ export class UserService {
   login(userData: Login): Observable<object> {
     return this.http.post(`${environment.baseUrl}/auth`, userData)
       .pipe(
-        tap( (res: any) => {
+        tap( async (res: any) => {
           if(res.ok){
-            this.storage.set('ACCESS_TOKEN', res.token);
+            await this.storage.set('ACCESS_TOKEN', res.token);
             this.user = new User(res.id);
             this.authSubject.next(true);
           }
@@ -51,12 +52,18 @@ export class UserService {
       );
   }
 
-  logout(){
-    this.storage.remove('ACCESS_TOKEN');
+  async logout(){
+    await this.storage.remove('ACCESS_TOKEN');
+    await this.storage.clear();
     this.authSubject.next(false);
   }
 
   isLoggedIn() {
+    // const token = await this.storage.get('ACCESS_TOKEN');
+    // console.log('token en userservice',token);
+    // if(token){
+    //   this.authSubject.next(true);
+    // }
     return this.authSubject.asObservable();
   }
 

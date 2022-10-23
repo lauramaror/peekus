@@ -22,7 +22,6 @@ export class LoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.userService.logout();
   }
 
   login(){
@@ -33,7 +32,7 @@ export class LoginPage implements OnInit {
     const userToLogin = new Login(this.userDataForm, this.passwordForm);
     this.userService.login(userToLogin).subscribe(e=>{
       this.loggedIn = true;
-      this.router.navigateByUrl('/tabs/my-events');
+      this.router.navigateByUrl('/tabs');
     });
   }
 

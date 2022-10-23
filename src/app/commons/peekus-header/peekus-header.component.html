@@ -1,3 +1,17 @@
 <ion-toolbar color="secondary">
-    <img src="../../../assets/logo/peekus_logo_nf.png" alt="" height="40px" class="ml-1">
+    <div class="d-flex-inbetween">
+        <div style="display: flex; align-items: center;">
+            <img src="../../../assets/logo/peekus_logo_nf.png" alt="" height="45px" class="ml-1">
+        </div>
+        <div style="display: flex; align-items: center;">
+            <ion-button fill="clear" class="ion-no-padding mr-2">
+                <ion-icon name="notifications" color="tertiary" size="large"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="large" class="ion-no-padding" (click)="logout()">
+                <ion-avatar style="max-height: 50px; max-width: 50px;" class="mr-2">
+                    <img src="../../../assets/img/nologo.png" alt="">
+                </ion-avatar>
+            </ion-button>
+        </div>
+    </div>
 </ion-toolbar>

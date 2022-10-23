@@ -6,6 +6,7 @@ import { MyEventsPage } from './my-events.page';
 
 import { MyEventsPageRoutingModule } from './my-events-routing.module';
 import { CommonsModule } from '../../commons/commons.module';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { CommonsModule } from '../../commons/commons.module';
     CommonModule,
     FormsModule,
     MyEventsPageRoutingModule,
-    CommonsModule
+    CommonsModule,
+    ComponentsModule
   ],
   declarations: [MyEventsPage]
 })

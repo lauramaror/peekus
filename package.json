@@ -36,7 +36,9 @@
         "@ionic/pwa-elements": "^3.1.1",
         "@ionic/storage": "^3.0.6",
         "@ionic/storage-angular": "^3.0.6",
+        "cordova-sqlite-storage": "^6.0.0",
         "ionicons": "^6.0.3",
+        "localforage-cordovasqlitedriver": "^1.8.0",
         "rxjs": "~6.6.0",
         "tslib": "^2.2.0",
         "zone.js": "~0.11.4"

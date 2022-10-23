@@ -12,11 +12,14 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'landing',
+    redirectTo: 'tabs',
     pathMatch: 'full'
   }
 
 ];
+// const routes: Routes = [
+//   {path:'**', redirectTo: ''}
+// ];
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
