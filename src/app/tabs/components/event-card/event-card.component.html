@@ -1,0 +1,71 @@
+<div class="cardEvent">
+    <ion-grid class="ion-no-padding" style="border-radius: 20px 0px 0px 0px;">
+        <ion-row>
+            <ion-col size="1" class="d-flex-center" [ngStyle]="{'background-color': optionsByStatusMap.get(event.status).bgColor, 'border-radius': '10px 1px 1px 10px'}">
+                <div class="circleIcon">
+                    <ion-icon name="{{optionsByStatusMap.get(event.status).iconBar}}" style="font-size: 20px;"></ion-icon>
+                </div>
+            </ion-col>
+            <ion-col size="9" class="cardContent">
+                <ion-row>
+                    <ion-col size="6">
+                        <ion-row><span class="cardTitle">{{event.name}}</span></ion-row>
+                        <ion-row>
+                            <ion-text color="primary" class="cardUser">@usuario</ion-text>
+                        </ion-row>
+                        <ion-row style="height: 40px;">
+                            <ion-text color="grey" class="cardDescription">
+                                {{event.description}}
+                            </ion-text>
+                        </ion-row>
+                    </ion-col>
+                    <ion-col size="6">
+                        <ion-row class="ion-align-items-center" style="height: 32%; margin-bottom: 1px;">
+                            <ion-col size="4" class="d-flex-start">
+                                <ion-icon name="{{optionsByTypeMap.get(event.type).icon}}" class="bigIconSize"></ion-icon>
+                            </ion-col>
+                            <ion-col size="8">
+                                <div class="statusBadge d-flex-center" [ngStyle]="{'background-color': optionsByStatusMap.get(event.status).bgColor}">
+                                    <ion-text color="white"><span>{{event.status}}</span></ion-text>
+                                </div>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row style="height: 36%; padding-top: 2px;">
+                            <ion-col class="d-flex-start">
+                                <span>{{event.participants}}</span>
+                                <ion-icon name="person" class="ml-1"></ion-icon>
+                            </ion-col>
+                            <ion-col class="d-flex-center">
+                                <span>{{event.likes}}</span>
+                                <ion-icon name="{{likedByUser ? 'heart' : 'heart-outline'}}" color="{{likedByUser ? 'primary' : 'tertiary'}}" class="ml-1"></ion-icon>
+                            </ion-col>
+                            <ion-col class="d-flex-end" style="align-items: center;">
+                                <span>{{event.comments}}</span>
+                                <ion-icon name="chatbubble" class="ml-1"></ion-icon>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row style="height: 32%;">
+                            <ion-col class="d-flex-center">
+                                <ion-text [ngStyle]="{'color': optionsByStatusMap.get(event.status).colorDate}">
+                                    {{eventStartDate}}
+                                </ion-text>
+                            </ion-col>
+                            <ion-col class="d-flex-center">
+                                <ion-text [ngStyle]="{'color': optionsByStatusMap.get(event.status).colorDate}">
+                                    {{endHour ? startHour + ' - ' + endHour : startHour}}
+                                </ion-text>
+                            </ion-col>
+                        </ion-row>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+            <ion-col size="2" class="cardContent">
+                <ion-row style="height: 60%;">
+                </ion-row>
+                <ion-row style="height: 40%;" class="ion-justify-content-center ion-align-items-end">
+                    <ion-icon name="share-social" class="bigIconSize"></ion-icon>
+                </ion-row>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</div>

@@ -13,5 +13,8 @@ export class Event {
     public description?: string,
     public capacity?: number,
     public collage?: string,
+    public participants?: number,
+    public likes?: number,
+    public comments?: number,
   ) {}
 }

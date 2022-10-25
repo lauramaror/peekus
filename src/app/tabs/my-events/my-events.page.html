@@ -12,8 +12,7 @@
         <div class="d-flex-inbetween">
             <div class="d-flex-start">
                 <ion-item>
-                    <ion-select interface="popover" placeholder="Selecciona estado" value="next">
-                        <ion-select-option value="all">Todos los estados</ion-select-option>
+                    <ion-select multiple="true" selectedText="Estados">
                         <ion-select-option value="next">Próximos</ion-select-option>
                         <ion-select-option value="ongoing">En curso</ion-select-option>
                         <ion-select-option value="done">Finalizados</ion-select-option>
@@ -21,20 +20,16 @@
                     </ion-select>
                 </ion-item>
                 <ion-item class="ml-2">
-                    <ion-select interface="popover" placeholder="Selecciona creadores" value="all">
-                        <ion-select-option value="all">Todos los creadores</ion-select-option>
+                    <ion-select multiple="true" selectedText="Creadores">
                         <ion-select-option value="me">Creador: yo</ion-select-option>
                         <ion-select-option value="others">Creador: otros</ion-select-option>
                     </ion-select>
                 </ion-item>
             </div>
             <ion-button class="ion-no-padding mr-2" style="border-radius: 1%;">
-                <ion-icon slot="icon-only" name="add" color="white"></ion-icon>
+                <ion-icon slot="icon-only" name="add" color="white" style="padding: 5px;"></ion-icon>
             </ion-button>
         </div>
-        <app-event-list></app-event-list>
-        <ng-container *ngFor="let event of eventsList">
-            <p class="p-1">{{event.name}} - {{event.description}}</p>
-        </ng-container>
+        <app-event-list [events]="eventsList"></app-event-list>
     </div>
 </ion-content>
