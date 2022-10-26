@@ -10,10 +10,10 @@ import { Event } from 'src/app/models/event.model';
 export class EventCardComponent implements OnInit {
   @Input() event: Event;
 
+  eventStatus = EventStatus;
   eventStartDate = '';
   startHour = '';
   endHour = '';
-  likedByUser = false;
 
   optionsByStatusMap = new Map<EventStatus, any>([
     [EventStatus.NEXT, {bgColor: '#789FD9', iconBar: 'time', colorDate: '#6B6B6B'}],

@@ -11,7 +11,7 @@
                     <ion-col size="6">
                         <ion-row><span class="cardTitle">{{event.name}}</span></ion-row>
                         <ion-row>
-                            <ion-text color="primary" class="cardUser">@usuario</ion-text>
+                            <ion-text color="primary" class="cardUser">@{{event.creatorUsername}}</ion-text>
                         </ion-row>
                         <ion-row style="height: 40px;">
                             <ion-text color="grey" class="cardDescription">
@@ -25,7 +25,9 @@
                                 <ion-icon name="{{optionsByTypeMap.get(event.type).icon}}" class="bigIconSize"></ion-icon>
                             </ion-col>
                             <ion-col size="8">
-                                <div class="statusBadge d-flex-center" [ngStyle]="{'background-color': optionsByStatusMap.get(event.status).bgColor}">
+                                <div class="statusBadge d-flex-center" [ngStyle]="{'background-color': event.completedByUser && event.status === eventStatus.ONGOING
+                                                                                                      ? optionsByStatusMap.get(event.status).bgColorCompleted
+                                                                                                      : optionsByStatusMap.get(event.status).bgColor}">
                                     <ion-text color="white"><span>{{event.status}}</span></ion-text>
                                 </div>
                             </ion-col>
@@ -37,7 +39,7 @@
                             </ion-col>
                             <ion-col class="d-flex-center">
                                 <span>{{event.likes}}</span>
-                                <ion-icon name="{{likedByUser ? 'heart' : 'heart-outline'}}" color="{{likedByUser ? 'primary' : 'tertiary'}}" class="ml-1"></ion-icon>
+                                <ion-icon name="{{event.likedByUser ? 'heart' : 'heart-outline'}}" color="{{event.likedByUser ? 'primary' : 'tertiary'}}" class="ml-1"></ion-icon>
                             </ion-col>
                             <ion-col class="d-flex-end" style="align-items: center;">
                                 <span>{{event.comments}}</span>

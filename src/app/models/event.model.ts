@@ -16,5 +16,10 @@ export class Event {
     public participants?: number,
     public likes?: number,
     public comments?: number,
+    public creatorName?: string,
+    public creatorUsername?: string,
+    public completedByUser?: boolean,
+    public likedByUser?: boolean,
+    public userImage?: string,
   ) {}
 }
