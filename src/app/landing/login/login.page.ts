@@ -12,9 +12,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginPage implements OnInit {
 
-  // userDataForm: string;
-  // passwordForm: string;
-  loggedIn = false;
+  loading = false;
   loginForm: FormGroup;
 
   constructor(
@@ -37,8 +35,9 @@ export class LoginPage implements OnInit {
       this.presentToast();
       return;
     }
+    this.loading = true;
     this.userService.login(this.loginForm.value).subscribe(e=>{
-      this.loggedIn = true;
+      this.loading = false;
       this.router.navigateByUrl('/tabs');
     });
   }

@@ -27,7 +27,8 @@
                     </ion-list>
                 </ion-row>
                 <ion-row class="ion-justify-content-center">
-                    <div class="d-flex-center mt-2">
+                    <div class="d-flex-center">
+                        <ion-spinner name="lines" style="margin-left: 4em; margin-right: 4em;" [style.visibility]="loading ? 'visible': 'hidden'"></ion-spinner>
                         <ion-button color="tertiary" shape="round" class="btn-landing" type="submit"><span>INICIAR SESIÓN</span></ion-button>
                         <ion-text class="mt-1">¿Eres nuevo?</ion-text>
                         <a color="primary" class="ml-1 mt-1 t-underline" [routerLink]="'/landing/register'">Registrarse</a>

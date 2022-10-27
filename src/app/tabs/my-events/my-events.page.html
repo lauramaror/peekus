@@ -6,21 +6,20 @@
     <ion-header collapse="condense">
         <app-peekus-header></app-peekus-header>
     </ion-header>
-    <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading"></ion-progress-bar>
-    <div *ngIf="!loading">
+    <div>
         <h3 class="t-center">Mis eventos</h3>
         <div class="d-flex-inbetween">
             <div class="d-flex-start">
                 <ion-item>
-                    <ion-select multiple="true" selectedText="Estados">
-                        <ion-select-option value="next">Próximos</ion-select-option>
-                        <ion-select-option value="ongoing">En curso</ion-select-option>
-                        <ion-select-option value="done">Finalizados</ion-select-option>
-                        <ion-select-option value="completed">Completados</ion-select-option>
+                    <ion-select multiple="true" selectedText="Estados" (ionChange)="changeStatuses($event)">
+                        <ion-select-option value="NEXT">Próximos</ion-select-option>
+                        <ion-select-option value="ONGOING">En curso</ion-select-option>
+                        <ion-select-option value="DONE">Finalizados</ion-select-option>
+                        <ion-select-option value="COMPLETED">Completados</ion-select-option>
                     </ion-select>
                 </ion-item>
                 <ion-item class="ml-2">
-                    <ion-select multiple="true" selectedText="Creadores">
+                    <ion-select multiple="true" selectedText="Creadores" (ionChange)="changeCreators($event)">
                         <ion-select-option value="me">Creador: yo</ion-select-option>
                         <ion-select-option value="others">Creador: otros</ion-select-option>
                     </ion-select>
@@ -30,6 +29,7 @@
                 <ion-icon slot="icon-only" name="add" color="white" style="padding: 5px;"></ion-icon>
             </ion-button>
         </div>
-        <app-event-list [events]="eventsList"></app-event-list>
+        <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading" class="mt-1"></ion-progress-bar>
+        <app-event-list *ngIf="!loading" [events]="eventsList"></app-event-list>
     </div>
 </ion-content>
