@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Event } from 'src/app/models/event.model';
+import { EventPeekus } from 'src/app/models/event.model';
 import { EventService } from '../../services/event.service';
 import { UserService } from '../../services/user.service';
+import { StorageService } from '../../services/storage.service';
+import { mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-my-events',
@@ -10,12 +12,13 @@ import { UserService } from '../../services/user.service';
 })
 export class MyEventsPage implements OnInit {
 
-  eventsList: Event[] = [];
+  eventsList: EventPeekus[] = [];
   loading = true;
 
   constructor(
     private eventService: EventService,
-    private userService: UserService
+    private userService: UserService,
+    private storageService: StorageService
   ) {}
 
   ngOnInit(): void{
@@ -23,9 +26,11 @@ export class MyEventsPage implements OnInit {
   }
 
   getEventsList(){
-    // const params = '?participant='+this.userService.getUserId();
-    this.eventService.getEvents('').subscribe(e=>{
-      this.eventsList = e as Event[];
+    this.storageService.getUserInfo().pipe(mergeMap(userInfo=>{
+      const params = '?participant='+userInfo.id;
+      return this.eventService.getEvents(params);
+    })).subscribe(e=>{
+      this.eventsList = e as EventPeekus[];
       this.loading = false;
     });
   }

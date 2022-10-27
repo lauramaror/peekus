@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { EventStatus, EventType } from 'src/app/helpers/enums';
-import { Event } from 'src/app/models/event.model';
+import { EventPeekusStatus, EventPeekusType } from 'src/app/helpers/enums';
+import { EventPeekus } from 'src/app/models/event.model';
 
 @Component({
   selector: 'app-event-card',
@@ -8,32 +8,35 @@ import { Event } from 'src/app/models/event.model';
   styleUrls: ['./event-card.component.scss'],
 })
 export class EventCardComponent implements OnInit {
-  @Input() event: Event;
+  @Input() event: EventPeekus;
 
-  eventStatus = EventStatus;
-  eventStartDate = '';
+  eventStatus = EventPeekusStatus;
   startHour = '';
   endHour = '';
 
-  optionsByStatusMap = new Map<EventStatus, any>([
-    [EventStatus.NEXT, {bgColor: '#789FD9', iconBar: 'time', colorDate: '#6B6B6B'}],
-    [EventStatus.ONGOING, {bgColor: '#BD2742', iconBar: 'alert', colorDate: '#BD2742',
+  optionsByStatusMap = new Map<EventPeekusStatus, any>([
+    [EventPeekusStatus.NEXT, {bgColor: '#789FD9', iconBar: 'time', colorDate: '#6B6B6B'}],
+    [EventPeekusStatus.ONGOING, {bgColor: '#BD2742', iconBar: 'alert', colorDate: '#BD2742',
                           bgColorCompleted:'#E7CC6F', iconBarCompleted: 'camera', colorDateCompleted: '#6B6B6B'}],
-    [EventStatus.FINISHED, {bgColor: '#6F4970', iconBar: 'checkmark', colorDate: '#6B6B6B'}]
+    [EventPeekusStatus.FINISHED, {bgColor: '#6F4970', iconBar: 'checkmark', colorDate: '#6B6B6B'}]
   ]);
 
-  optionsByTypeMap = new Map<EventType, any>([
-    [EventType.EXCLUSIVE, {icon: 'star'}],
-    [EventType.PRIVATE, {icon: 'lock-closed'}],
-    [EventType.PUBLIC, {icon: 'earth'}],
+  optionsByTypeMap = new Map<EventPeekusType, any>([
+    [EventPeekusType.EXCLUSIVE, {icon: 'star'}],
+    [EventPeekusType.PRIVATE, {icon: 'lock-closed'}],
+    [EventPeekusType.PUBLIC, {icon: 'earth'}],
   ]);
 
   constructor() { }
 
   ngOnInit() {
-    const eventDate = new Date(this.event.startDate);
-    this.eventStartDate = eventDate.getDate() + '/' + eventDate.getMonth() + '/' + eventDate.getFullYear();
-    this.startHour = eventDate.getHours() + ':' + eventDate.getMinutes();
+    this.startHour = this.getFixedHour(this.event.startDate);
+    this.endHour = this.getFixedHour(this.event.endDate);
+  }
+
+  getFixedHour(hour: Date){
+    const eventHour = hour ? new Date(hour) : null;
+    return eventHour ? eventHour.getHours() + ':' + (eventHour.getMinutes() === 0 ? '00' : eventHour.getMinutes()) : '';
   }
 
 }

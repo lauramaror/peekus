@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { from, Observable } from 'rxjs';
-import { Event } from '../models/event.model';
+import { EventPeekus } from '../models/event.model';
 import { StorageService } from './storage.service';
 import { mergeMap, tap } from 'rxjs/operators';
 
@@ -11,7 +11,7 @@ import { mergeMap, tap } from 'rxjs/operators';
 })
 export class EventService {
 
-  private event!: Event;
+  private event!: EventPeekus;
 
   constructor(private http: HttpClient,
     private storageService: StorageService) { }

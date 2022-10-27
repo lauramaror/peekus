@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-enum EventStatus {
+enum EventPeekusStatus {
   ONGOING = 'ONGOING',
   NEXT = 'NEXT',
   FINISHED = 'FINISHED'
 }
 
-enum EventType {
+enum EventPeekusType {
   PUBLIC = 'PUBLIC',
   PRIVATE = 'PRIVATE',
   EXCLUSIVE = 'EXCLUSIVE'
@@ -36,8 +36,8 @@ enum ImageType {
 }
 
 export {
-  EventStatus,
-  EventType,
+  EventPeekusStatus,
+  EventPeekusType,
   CodeType,
   FriendStatus,
   NotificationType,

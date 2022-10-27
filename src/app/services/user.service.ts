@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { Data } from '@angular/router';
-import { tap } from  'rxjs/operators';
+import { mergeMap, tap } from  'rxjs/operators';
 import { Login } from '../models/login.model';
 import { StorageService } from './storage.service';
 
@@ -29,12 +29,11 @@ export class UserService {
   saveUser(userData: User): Observable<object> {
     return this.http.post(`${environment.baseUrl}/user`, userData)
     .pipe(
-      tap( async (res: any) => {
-        if(res.ok){
+      mergeMap( async (res: any) => {
           await this.storage.set('ACCESS_TOKEN', res.token);
-          this.user = new User(res.id);
+          this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
           this.authSubject.next(true);
-        }
+          return this.authSubject.asObservable();
       })
     );
   }
@@ -42,11 +41,25 @@ export class UserService {
   login(userData: Login): Observable<object> {
     return this.http.post(`${environment.baseUrl}/auth`, userData)
       .pipe(
-        tap( async (res: any) => {
+        mergeMap( async (res: any) => {
+            await this.storage.set('ACCESS_TOKEN', res.token);
+            this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
+            await this.storage.set('USER', this.user);
+            this.authSubject.next(true);
+            return this.authSubject.asObservable();
+        })
+      );
+  }
+
+  validateToken(): Observable<object>{
+    return this.http.get(`${environment.baseUrl}/auth/token`)
+      .pipe(
+        mergeMap( async (res: any) => {
           if(res.ok){
             await this.storage.set('ACCESS_TOKEN', res.token);
-            this.user = new User(res.id);
+            this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
             this.authSubject.next(true);
+            return this.authSubject.asObservable();
           }
         })
       );
@@ -56,15 +69,6 @@ export class UserService {
     await this.storage.remove('ACCESS_TOKEN');
     await this.storage.clear();
     this.authSubject.next(false);
-  }
-
-  isLoggedIn() {
-    // const token = await this.storage.get('ACCESS_TOKEN');
-    // console.log('token en userservice',token);
-    // if(token){
-    //   this.authSubject.next(true);
-    // }
-    return this.authSubject.asObservable();
   }
 
   getUserId(): string {

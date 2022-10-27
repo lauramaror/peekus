@@ -7,6 +7,7 @@ import { SearchEventsPage } from './search-events.page';
 
 import { SearchEventsPageRoutingModule } from './search-events-routing.module';
 import { CommonsModule } from 'src/app/commons/commons.module';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { CommonsModule } from 'src/app/commons/commons.module';
     CommonModule,
     FormsModule,
     CommonsModule,
-    SearchEventsPageRoutingModule
+    SearchEventsPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [SearchEventsPage]
 })

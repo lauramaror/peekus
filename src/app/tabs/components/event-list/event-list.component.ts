@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Event } from 'src/app/models/event.model';
+import { EventPeekus } from 'src/app/models/event.model';
 
 @Component({
   selector: 'app-event-list',
@@ -7,7 +7,7 @@ import { Event } from 'src/app/models/event.model';
   styleUrls: ['./event-list.component.scss'],
 })
 export class EventListComponent implements OnInit {
-  @Input() events: Event[];
+  @Input() events: EventPeekus[];
 
   constructor() { }
 

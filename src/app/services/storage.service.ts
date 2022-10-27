@@ -36,6 +36,15 @@ export class StorageService {
     );
   }
 
+  getUserInfo(){
+    return this.storageReady.pipe(
+      filter(ready=>ready),
+      switchMap(_ => {
+        return from(this._storage.get('USER'));
+      })
+    );
+  }
+
   public async set(key: string, value: any) {
     await this._storage?.set(key, value);
   }

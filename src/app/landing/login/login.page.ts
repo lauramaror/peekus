@@ -3,6 +3,7 @@ import { Login } from 'src/app/models/login.model';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -11,26 +12,32 @@ import { ToastController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
 
-  userDataForm: string;
-  passwordForm: string;
+  // userDataForm: string;
+  // passwordForm: string;
   loggedIn = false;
+  loginForm: FormGroup;
 
   constructor(
     private userService: UserService,
     private router: Router,
-    private toastController: ToastController
-  ) { }
+    private toastController: ToastController,
+    private formBuilder: FormBuilder
+  ) {
+    this.loginForm = this.formBuilder.group({
+      userData: ['',Validators.required],
+      password: ['',Validators.required],
+    });
+  }
 
   ngOnInit() {
   }
 
   login(){
-    if(!this.userDataForm || !this.passwordForm){
+    if(!this.loginForm.valid){
       this.presentToast();
       return;
     }
-    const userToLogin = new Login(this.userDataForm, this.passwordForm);
-    this.userService.login(userToLogin).subscribe(e=>{
+    this.userService.login(this.loginForm.value).subscribe(e=>{
       this.loggedIn = true;
       this.router.navigateByUrl('/tabs');
     });

@@ -1,14 +1,14 @@
-import {EventType, EventStatus} from '../helpers/enums';
+import {EventPeekusType, EventPeekusStatus} from '../helpers/enums';
 
-export class Event {
+export class EventPeekus {
   constructor(
     public id: string,
     public name: string,
     public createdDate: Date,
     public startDate: Date,
     public creator: string,
-    public type: EventType,
-    public status: EventStatus,
+    public type: EventPeekusType,
+    public status: EventPeekusStatus,
     public endDate?: Date,
     public description?: string,
     public capacity?: number,
