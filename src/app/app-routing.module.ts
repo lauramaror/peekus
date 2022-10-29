@@ -11,10 +11,15 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
+    path: 'base',
+    loadChildren: () => import('./base/base.module').then( m => m.BasePageModule)
+  },
+  {
     path: '',
     redirectTo: 'tabs',
     pathMatch: 'full'
-  }
+  },
+
 
 ];
 // const routes: Routes = [

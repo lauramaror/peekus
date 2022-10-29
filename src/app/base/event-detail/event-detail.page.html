@@ -1,0 +1,34 @@
+<ion-header [translucent]="true">
+    <app-peekus-header></app-peekus-header>
+    <app-peekus-back-button [backButtonText]="backButtonText"></app-peekus-back-button>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+        <app-peekus-header></app-peekus-header>
+        <app-peekus-back-button [backButtonText]="backButtonText"></app-peekus-back-button>
+    </ion-header>
+    <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading" class="mt-1"></ion-progress-bar>
+    <div *ngIf="!loading" class="whiteBgCard">
+        <ion-grid>
+            <ion-row>
+                <ion-col size="5.5">
+                    <ion-row><span class="cardTitle">{{eventData.name}}</span></ion-row>
+                    <ion-row>
+                        <ion-text color="grey" class="cardDescription">
+                            {{eventData.description}}
+                        </ion-text>
+                    </ion-row>
+                </ion-col>
+                <ion-col size="5">
+                    <ion-row>{{eventData.status}}</ion-row>
+                    <ion-row>{{eventData.creatorUsername}}</ion-row>
+                    <ion-row>creado tal</ion-row>
+                </ion-col>
+                <ion-col size="1.5">
+                    <ion-icon name="{{eventData.likedByUser ? 'heart' : 'heart-outline'}}" color="{{eventData.likedByUser ? 'primary' : 'tertiary'}}" size="large"></ion-icon>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+</ion-content>

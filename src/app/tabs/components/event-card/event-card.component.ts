@@ -11,8 +11,6 @@ export class EventCardComponent implements OnInit {
   @Input() event: EventPeekus;
 
   eventStatus = EventPeekusStatus;
-  startHour = '';
-  endHour = '';
 
   optionsByStatusMap = new Map<EventPeekusStatus, any>([
     [EventPeekusStatus.NEXT, {bgColor: '#789FD9', iconBar: 'time', colorDate: '#6B6B6B'}],
@@ -30,13 +28,6 @@ export class EventCardComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.startHour = this.getFixedHour(this.event.startDate);
-    this.endHour = this.getFixedHour(this.event.endDate);
-  }
-
-  getFixedHour(hour: Date){
-    const eventHour = hour ? new Date(hour) : null;
-    return eventHour ? eventHour.getHours() + ':' + (eventHour.getMinutes() === 0 ? '00' : eventHour.getMinutes()) : '';
   }
 
 }

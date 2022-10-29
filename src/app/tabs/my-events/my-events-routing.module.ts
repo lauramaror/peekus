@@ -6,8 +6,11 @@ import { MyEventsPage } from './my-events.page';
 const routes: Routes = [
   {
     path: '',
-    component: MyEventsPage,
-    canActivate: [AuthGuard]
+    children: [
+      {
+        path: '', component: MyEventsPage, canActivate: [AuthGuard]
+      },
+    ]
   }
 ];
 

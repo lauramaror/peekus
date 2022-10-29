@@ -51,18 +51,18 @@
                             </ion-col>
                         </ion-row>
                         <ion-row style="height: 32%;">
-                            <ion-col class="d-flex-start">
+                            <ion-col class="d-flex-start" style="font-size: 12px;">
                                 <ion-text [ngStyle]="{'color': event.completedByUser && event.status === eventStatus.ONGOING
                                 ? optionsByStatusMap.get(event.status).colorDateCompleted
                                 : optionsByStatusMap.get(event.status).colorDate}">
                                     {{this.event.startDate | date: 'dd/MM/yy'}}
                                 </ion-text>
                             </ion-col>
-                            <ion-col class="d-flex-end" style="align-items: center;">
+                            <ion-col class="d-flex-end" style="align-items: center; font-size: 11px;">
                                 <ion-text [ngStyle]="{'color': event.completedByUser && event.status === eventStatus.ONGOING
                                 ? optionsByStatusMap.get(event.status).colorDateCompleted
                                 : optionsByStatusMap.get(event.status).colorDate}">
-                                    {{endHour ? startHour + '-' + endHour : startHour}}
+                                    {{this.event.endDate ? (this.event.startDate | date: 'HH:mm') + '-' + (this.event.endDate | date: 'HH:mm') : (this.event.startDate | date: 'HH:mm')}}
                                 </ion-text>
                             </ion-col>
                         </ion-row>
