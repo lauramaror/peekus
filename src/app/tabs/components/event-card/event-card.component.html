@@ -29,11 +29,7 @@
                                 <ion-icon name="{{optionsByTypeMap.get(event.type).icon}}" class="bigIconSize"></ion-icon>
                             </ion-col>
                             <ion-col size="8">
-                                <div class="statusBadge d-flex-center" [ngStyle]="{'background-color': event.completedByUser && event.status === eventStatus.ONGOING
-                                                                                                      ? optionsByStatusMap.get(event.status).bgColorCompleted
-                                                                                                      : optionsByStatusMap.get(event.status).bgColor}">
-                                    <ion-text color="white"><span>{{event.completedByUser && event.status === eventStatus.ONGOING ? 'COMPLETED' : event.status}}</span></ion-text>
-                                </div>
+                                <app-event-status-badge [event]="event"></app-event-status-badge>
                             </ion-col>
                         </ion-row>
                         <ion-row style="height: 36%; padding-top: 2px;">

@@ -8,6 +8,7 @@ import { EventDetailPageRoutingModule } from './event-detail-routing.module';
 
 import { EventDetailPage } from './event-detail.page';
 import { CommonsModule } from '../../commons/commons.module';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { CommonsModule } from '../../commons/commons.module';
     FormsModule,
     IonicModule,
     EventDetailPageRoutingModule,
-    CommonsModule
+    CommonsModule,
+    ScrollingModule
   ],
   declarations: [EventDetailPage]
 })

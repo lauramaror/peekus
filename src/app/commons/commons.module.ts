@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { PeekusHeaderComponent } from './peekus-header/peekus-header.component';
 import { IonicModule } from '@ionic/angular';
 import { PeekusBackButtonComponent } from './peekus-back-button/peekus-back-button.component';
+import { EventStatusBadgeComponent } from './event-status-badge/event-status-badge.component';
 
 
 @NgModule({
   declarations: [
     PeekusHeaderComponent,
-    PeekusBackButtonComponent
+    PeekusBackButtonComponent,
+    EventStatusBadgeComponent
   ],
   imports: [
     IonicModule,
@@ -16,7 +18,8 @@ import { PeekusBackButtonComponent } from './peekus-back-button/peekus-back-butt
   ],
   exports: [
     PeekusHeaderComponent,
-    PeekusBackButtonComponent
+    PeekusBackButtonComponent,
+    EventStatusBadgeComponent
   ]
 })
 export class CommonsModule { }

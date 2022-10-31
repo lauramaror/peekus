@@ -1,0 +1,5 @@
+<div class="statusBadge d-flex-center" [ngStyle]="{'background-color': event.completedByUser && event.status === eventStatus.ONGOING
+                                                                      ? optionsByStatusMap.get(event.status).bgColorCompleted
+                                                                      : optionsByStatusMap.get(event.status).bgColor}">
+    <ion-text color="white"><span>{{event.completedByUser && event.status === eventStatus.ONGOING ? 'COMPLETED' : event.status}}</span></ion-text>
+</div>
