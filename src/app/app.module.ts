@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { StorageService } from './services/storage.service';
 import { Drivers } from '@ionic/storage';
 import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,7 +26,7 @@ import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
       driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage]
     })
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, DatePipe ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

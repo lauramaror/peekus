@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/dot-notation */
+/* eslint-disable arrow-body-style */
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { mergeMap, zip } from 'rxjs/operators';
+import { forkJoin, zip } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { optionsByTypeMap } from 'src/app/helpers/options-maps';
 import { EventPeekus } from 'src/app/models/event.model';
 import { EventService } from 'src/app/services/event.service';
@@ -23,12 +27,15 @@ export class EventDetailPage implements OnInit {
   createdDate = '';
   startDayWeek = '';
   startDayMonth = '';
-  cancelButtonText = 'CANCELAR INSCRIPCIÓN';
+  cancelButtonText = '';
+  eventParticipants = [];
+  eventComments = [];
 
   constructor(
     private route: ActivatedRoute,
     private storageService: StorageService,
     private eventService: EventService,
+    private datePipe: DatePipe
     ) { }
 
   ngOnInit() {
@@ -38,12 +45,28 @@ export class EventDetailPage implements OnInit {
 
   getEvent(){
     this.loading = true;
-    this.storageService.getUserInfo().pipe(mergeMap(userInfo=>{
+    this.storageService.getUserInfo().pipe(map(userInfo=>{
       this.userId = userInfo.id;
-      const params = '?user='+userInfo.id+'&id='+this.eventId;
-      return this.eventService.getEvents(params);
-    })).subscribe(e=>{
-      this.eventData = e[0] as EventPeekus;
+      return '?user='+userInfo.id+'&id='+this.eventId;
+    }), mergeMap(params=> {
+      return zip(
+        this.eventService.getEvents(params),
+        this.eventService.getParticipantsByEvent('?idEvent='+this.eventId),
+        this.eventService.getCommentsByEvent('?idEvent='+this.eventId)
+      );
+    })).subscribe(([event, participants, comments])=>{
+      this.eventData = event[0] as EventPeekus;
+      this.eventParticipants = participants as [];
+      this.eventComments = comments as [];
+
+      this.eventComments.forEach(c=>{
+        const commentDate = new Date(c.commentDate);
+        c['formattedDate'] = this.datePipe.transform(commentDate, 'HH:mm') + ' · ' + commentDate.getDate() + ' '
+                            + new Intl.DateTimeFormat('es-ES', { month: 'short'}).format(commentDate) + '. '
+                            + commentDate.getFullYear();
+      });
+
+      this.cancelButtonText = this.eventParticipants.find(p=>p.idParticipant===this.userId) ? 'CANCELAR INSCRIPCIÓN' : 'INSCRIBIRSE';
 
       const createdDateToFormat = new Date(this.eventData.createdDate);
       const createdMonth = new Intl.DateTimeFormat('es-ES', { month: 'short'}).format(createdDateToFormat);

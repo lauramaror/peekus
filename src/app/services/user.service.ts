@@ -32,6 +32,7 @@ export class UserService {
       mergeMap( async (res: any) => {
           await this.storage.set('ACCESS_TOKEN', res.token);
           this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
+          await this.storage.set('USER', this.user);
           this.authSubject.next(true);
           return this.authSubject.asObservable();
       })
@@ -51,22 +52,23 @@ export class UserService {
       );
   }
 
-  validateToken(): Observable<object>{
-    return this.http.get(`${environment.baseUrl}/auth/token`)
-      .pipe(
-        mergeMap( async (res: any) => {
-          if(res.ok){
-            await this.storage.set('ACCESS_TOKEN', res.token);
-            this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
-            this.authSubject.next(true);
-            return this.authSubject.asObservable();
-          }
-        })
-      );
-  }
+  // validateToken(): Observable<object>{
+  //   return this.http.get(`${environment.baseUrl}/auth/token`)
+  //     .pipe(
+  //       mergeMap( async (res: any) => {
+  //         if(res.ok){
+  //           await this.storage.set('ACCESS_TOKEN', res.token);
+  //           this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
+  //           this.authSubject.next(true);
+  //           return this.authSubject.asObservable();
+  //         }
+  //       })
+  //     );
+  // }
 
   async logout(){
     await this.storage.remove('ACCESS_TOKEN');
+    await this.storage.remove('USER');
     await this.storage.clear();
     this.authSubject.next(false);
   }

@@ -99,12 +99,12 @@
                 <ion-text class="ml-1 cardHeader">Participantes</ion-text>
             </div>
             <ion-slides [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }">
-                <ion-slide *ngFor="let card of [0,1,2,3,4,5,6]" style="width: 80px; height: 80px;">
+                <ion-slide *ngFor="let participant of eventParticipants" style="width: 80px; height: 80px;">
                     <ion-col class="d-flex-center">
                         <ion-avatar style="max-height: 55px; max-width: 55px;">
                             <img src="../../../assets/img/nologo.png" alt="">
                         </ion-avatar>
-                        <ion-text color="primary" style="font-size: 10px;">@{{eventData.creatorUsername}}</ion-text>
+                        <ion-text color="primary" style="font-size: 10px;">@{{participant.username}}</ion-text>
                     </ion-col>
                 </ion-slide>
             </ion-slides>
@@ -115,7 +115,7 @@
                 <ion-text class="ml-1 cardHeader">Comentarios</ion-text>
             </div>
             <ion-list style="background-color: white;">
-                <ion-item *ngFor="let item of [0,1,2,3,4,5,6]" class="item-bg-color">
+                <ion-item *ngFor="let comment of eventComments" class="item-bg-color">
                     <ion-grid class="ion-no-padding ion-no-margin">
                         <ion-row class="ion-align-items-center ion-no-padding ion-no-margin">
                             <ion-col size="1.5" class="ion-no-padding">
@@ -125,15 +125,15 @@
                             </ion-col>
                             <ion-col size="7">
                                 <ion-row>
-                                    <ion-text color="primary" style="font-size: 12px;">@{{eventData.creatorUsername}}</ion-text>
+                                    <ion-text color="primary" style="font-size: 12px;">@{{comment.username}}</ion-text>
                                 </ion-row>
                                 <ion-row>
-                                    <ion-text color="tertiary" style="font-size: 14px;">Gente se prende 🔥🔥</ion-text>
+                                    <ion-text color="tertiary" style="font-size: 14px;">{{comment.text}}</ion-text>
                                 </ion-row>
                             </ion-col>
                             <ion-col size="3.5">
-                                <ion-row>
-                                    <ion-text color="grey" style="font-size: 10px;">12:53 · 20 sep. 2022</ion-text>
+                                <ion-row class="ion-justify-content-end">
+                                    <ion-text color="grey" style="font-size: 10px;">{{comment.formattedDate}}</ion-text>
                                 </ion-row>
                             </ion-col>
                         </ion-row>
@@ -145,7 +145,7 @@
             </ion-item>
         </div>
     </div>
-    <div class="d-flex-end" style="align-items: center; margin: 5px; margin-top: 5px;">
+    <div *ngIf="!loading" class="d-flex-end" style="align-items: center; margin: 5px; margin-top: 5px;">
         <ion-button color="tertiary" shape="round" class="cancelButton"><span>{{cancelButtonText}}</span></ion-button>
     </div>
 </ion-content>

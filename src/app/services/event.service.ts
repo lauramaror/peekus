@@ -28,4 +28,26 @@ export class EventService {
     }));
   }
 
+  getParticipantsByEvent(params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.get(`${environment.baseUrl}/event/participants${params}`, options);
+    }));
+  }
+
+  getCommentsByEvent(params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.get(`${environment.baseUrl}/comment${params}`, options);
+    }));
+  }
+
 }
