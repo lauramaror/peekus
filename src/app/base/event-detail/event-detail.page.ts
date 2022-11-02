@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { forkJoin, zip } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { optionsByTypeMap } from 'src/app/helpers/options-maps';
+import { CommentPeekus } from 'src/app/models/comment.model';
 import { EventPeekus } from 'src/app/models/event.model';
 import { EventService } from 'src/app/services/event.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -27,9 +28,12 @@ export class EventDetailPage implements OnInit {
   createdDate = '';
   startDayWeek = '';
   startDayMonth = '';
-  cancelButtonText = '';
   eventParticipants = [];
   eventComments = [];
+  commentToPost = '';
+  loadingComments = false;
+  participantActions = [{id: 0, buttonText: 'CANCELAR INSCRIPCIÓN', active: false},{id: 1, buttonText: 'INSCRIBIRSE', active: false}];
+  currentAction = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -59,14 +63,9 @@ export class EventDetailPage implements OnInit {
       this.eventParticipants = participants as [];
       this.eventComments = comments as [];
 
-      this.eventComments.forEach(c=>{
-        const commentDate = new Date(c.commentDate);
-        c['formattedDate'] = this.datePipe.transform(commentDate, 'HH:mm') + ' · ' + commentDate.getDate() + ' '
-                            + new Intl.DateTimeFormat('es-ES', { month: 'short'}).format(commentDate) + '. '
-                            + commentDate.getFullYear();
-      });
-
-      this.cancelButtonText = this.eventParticipants.find(p=>p.idParticipant===this.userId) ? 'CANCELAR INSCRIPCIÓN' : 'INSCRIBIRSE';
+      this.buildComments();
+      this.currentAction = this.eventParticipants.find(p=>p.idParticipant===this.userId) ? 0 : 1;
+      this.participantActions[this.currentAction].active = true;
 
       const createdDateToFormat = new Date(this.eventData.createdDate);
       const createdMonth = new Intl.DateTimeFormat('es-ES', { month: 'short'}).format(createdDateToFormat);
@@ -88,5 +87,29 @@ export class EventDetailPage implements OnInit {
     'VIE',
     'SÁB',
   ][new Date(fecha).getDay()];
+
+  buildComments(){
+    this.eventComments.forEach(c=>{
+      const commentDate = new Date(c.commentDate);
+      c['formattedDate'] = this.datePipe.transform(commentDate, 'HH:mm') + ' · ' + commentDate.getDate() + ' '
+                          + new Intl.DateTimeFormat('es-ES', { month: 'short'}).format(commentDate) + '. '
+                          + commentDate.getFullYear();
+    });
+    this.eventComments.sort((a,b) => new Date(a.commentDate).getTime() - new Date(b.commentDate).getTime());
+  }
+
+  postComment(){
+    if(this.commentToPost.trim()){
+      this.loadingComments = true;
+      const newComment = new CommentPeekus(this.commentToPost, this.userId, this.eventId);
+      this.eventService.postComment(newComment).pipe(
+        mergeMap(c=>this.eventService.getCommentsByEvent('?idEvent='+this.eventId))).subscribe(comments=>{
+          this.eventComments = comments as [];
+          this.buildComments();
+          this.commentToPost = '';
+          this.loadingComments = false;
+      });
+    }
+  }
 
 }

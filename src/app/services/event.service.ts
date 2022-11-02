@@ -5,6 +5,7 @@ import { from, Observable } from 'rxjs';
 import { EventPeekus } from '../models/event.model';
 import { StorageService } from './storage.service';
 import { mergeMap, tap } from 'rxjs/operators';
+import { CommentPeekus } from '../models/comment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,39 @@ export class EventService {
         }
       };
       return this.http.get(`${environment.baseUrl}/comment${params}`, options);
+    }));
+  }
+
+  postComment(commentToPost: CommentPeekus): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.post(`${environment.baseUrl}/comment`, commentToPost, options);
+    }));
+  }
+
+  saveParticipant(participantToPost: any): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.post(`${environment.baseUrl}/event/participants`, participantToPost, options);
+    }));
+  }
+
+  deleteParticipant(params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.delete(`${environment.baseUrl}/event/participants${params}`, options);
     }));
   }
 

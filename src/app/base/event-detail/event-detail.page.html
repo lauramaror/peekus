@@ -114,7 +114,10 @@
                 <ion-icon name="chatbubble" class="ml-2"></ion-icon>
                 <ion-text class="ml-1 cardHeader">Comentarios</ion-text>
             </div>
-            <ion-list style="background-color: white;">
+            <div *ngIf="loadingComments" class="d-flex-center">
+                <ion-spinner name="lines" class="m-1"></ion-spinner>
+            </div>
+            <ion-list style="background-color: white;" *ngIf="!loadingComments">
                 <ion-item *ngFor="let comment of eventComments" class="item-bg-color">
                     <ion-grid class="ion-no-padding ion-no-margin">
                         <ion-row class="ion-align-items-center ion-no-padding ion-no-margin">
@@ -140,12 +143,15 @@
                     </ion-grid>
                 </ion-item>
             </ion-list>
-            <ion-item class="item-bg-color" style="min-height: 30px;">
-                <ion-input placeholder="Deja un comentario" class="ion-no-padding leaveComment"></ion-input>
+            <ion-item class="item-bg-color" style="min-height: 30px;" *ngIf="!loadingComments">
+                <ion-input maxlength="100" placeholder="Deja un comentario" class="ion-no-padding leaveComment" [(ngModel)]="commentToPost"></ion-input>
+                <ion-button (click)="postComment()" slot="end">
+                    <ion-icon name="send"></ion-icon>
+                </ion-button>
             </ion-item>
         </div>
     </div>
-    <div *ngIf="!loading" class="d-flex-end" style="align-items: center; margin: 5px; margin-top: 5px;">
-        <ion-button color="tertiary" shape="round" class="cancelButton"><span>{{cancelButtonText}}</span></ion-button>
+    <div *ngIf="!loading" class="d-flex-end" style="align-items: center; margin: 5px;">
+        <ion-button color="tertiary" shape="round" class="cancelButton"><span>{{participantActions[currentAction].buttonText}}</span></ion-button>
     </div>
 </ion-content>
