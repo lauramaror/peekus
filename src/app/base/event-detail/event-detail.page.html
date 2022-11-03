@@ -46,7 +46,9 @@
                     </ion-row>
                 </ion-col>
                 <ion-col size="1.5">
-                    <ion-icon name="{{eventData.likedByUser ? 'heart' : 'heart-outline'}}" color="{{eventData.likedByUser ? 'primary' : 'tertiary'}}" size="large"></ion-icon>
+                    <ion-button class="ion-no-margin ion-no-padding" fill="clear" (click)="likeEvent()">
+                        <ion-icon name="{{eventData.likedByUser ? 'heart' : 'heart-outline'}}" color="{{eventData.likedByUser ? 'primary' : 'tertiary'}}" size="large"></ion-icon>
+                    </ion-button>
                 </ion-col>
             </ion-row>
             <ion-row class="ion-align-items-center ion-justify-content-between">
@@ -98,7 +100,10 @@
                 <ion-icon name="person" class="ml-2"></ion-icon>
                 <ion-text class="ml-1 cardHeader">Participantes</ion-text>
             </div>
-            <ion-slides [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }">
+            <div *ngIf="loadingParticipants" class="d-flex-center">
+                <ion-spinner name="lines" class="m-1"></ion-spinner>
+            </div>
+            <ion-slides *ngIf="!loadingParticipants" [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }">
                 <ion-slide *ngFor="let participant of eventParticipants" style="width: 80px; height: 80px;">
                     <ion-col class="d-flex-center">
                         <ion-avatar style="max-height: 55px; max-width: 55px;">
@@ -118,30 +123,41 @@
                 <ion-spinner name="lines" class="m-1"></ion-spinner>
             </div>
             <ion-list style="background-color: white;" *ngIf="!loadingComments">
-                <ion-item *ngFor="let comment of eventComments" class="item-bg-color">
-                    <ion-grid class="ion-no-padding ion-no-margin">
-                        <ion-row class="ion-align-items-center ion-no-padding ion-no-margin">
-                            <ion-col size="1.5" class="ion-no-padding">
-                                <ion-avatar style="max-height: 38px; max-width: 38px;">
-                                    <img src="../../../assets/img/nologo.png" alt="">
-                                </ion-avatar>
-                            </ion-col>
-                            <ion-col size="7">
-                                <ion-row>
-                                    <ion-text color="primary" style="font-size: 12px;">@{{comment.username}}</ion-text>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-text color="tertiary" style="font-size: 14px;">{{comment.text}}</ion-text>
-                                </ion-row>
-                            </ion-col>
-                            <ion-col size="3.5">
-                                <ion-row class="ion-justify-content-end">
-                                    <ion-text color="grey" style="font-size: 10px;">{{comment.formattedDate}}</ion-text>
-                                </ion-row>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </ion-item>
+                <ng-container *ngIf="eventComments.length; else noComments">
+                    <ion-item *ngFor="let comment of eventComments" class="item-bg-color">
+                        <ion-grid class="ion-no-padding ion-no-margin">
+                            <ion-row class="ion-align-items-center ion-no-padding ion-no-margin">
+                                <ion-col size="1.5" class="ion-no-padding">
+                                    <ion-avatar style="max-height: 38px; max-width: 38px;">
+                                        <img src="../../../assets/img/nologo.png" alt="">
+                                    </ion-avatar>
+                                </ion-col>
+                                <ion-col size="7">
+                                    <ion-row>
+                                        <ion-text color="primary" style="font-size: 12px;">@{{comment.username}}</ion-text>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-text color="tertiary" style="font-size: 14px;">{{comment.text}}</ion-text>
+                                    </ion-row>
+                                </ion-col>
+                                <ion-col size="3.5">
+                                    <ion-row class="ion-justify-content-end">
+                                        <ion-text color="grey" style="font-size: 10px;">{{comment.formattedDate}}</ion-text>
+                                    </ion-row>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
+                </ng-container>
+                <ng-template #noComments>
+                    <ion-item class="item-bg-color">
+                        <ion-grid class="ion-no-padding ion-no-margin">
+                            <ion-row class="ion-align-items-center ion-justify-content-center ion-no-padding ion-no-margin">
+                                <ion-text color="primary">Sé el primer comentario!</ion-text>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
+                </ng-template>
             </ion-list>
             <ion-item class="item-bg-color" style="min-height: 30px;" *ngIf="!loadingComments">
                 <ion-input maxlength="100" placeholder="Deja un comentario" class="ion-no-padding leaveComment" [(ngModel)]="commentToPost"></ion-input>
@@ -152,6 +168,6 @@
         </div>
     </div>
     <div *ngIf="!loading" class="d-flex-end" style="align-items: center; margin: 5px;">
-        <ion-button color="tertiary" shape="round" class="cancelButton"><span>{{participantActions[currentAction].buttonText}}</span></ion-button>
+        <ion-button color="tertiary" shape="round" class="cancelButton" (click)="inscriptionEvent()"><span>{{participantActions[currentAction].buttonText}}</span></ion-button>
     </div>
 </ion-content>

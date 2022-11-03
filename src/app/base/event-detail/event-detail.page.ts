@@ -5,11 +5,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, zip } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
+import { presentAlert } from 'src/app/helpers/common-functions';
 import { optionsByTypeMap } from 'src/app/helpers/options-maps';
 import { CommentPeekus } from 'src/app/models/comment.model';
 import { EventPeekus } from 'src/app/models/event.model';
 import { EventService } from 'src/app/services/event.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-event-detail',
@@ -32,14 +34,16 @@ export class EventDetailPage implements OnInit {
   eventComments = [];
   commentToPost = '';
   loadingComments = false;
-  participantActions = [{id: 0, buttonText: 'CANCELAR INSCRIPCIÓN', active: false},{id: 1, buttonText: 'INSCRIBIRSE', active: false}];
+  loadingParticipants = false;
+  participantActions = [{id: 0, buttonText: 'CANCELAR INSCRIPCIÓN'},{id: 1, buttonText: 'INSCRIBIRSE'}];
   currentAction = 0;
 
   constructor(
     private route: ActivatedRoute,
     private storageService: StorageService,
     private eventService: EventService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private alertController: AlertController
     ) { }
 
   ngOnInit() {
@@ -60,12 +64,13 @@ export class EventDetailPage implements OnInit {
       );
     })).subscribe(([event, participants, comments])=>{
       this.eventData = event[0] as EventPeekus;
+      this.eventData.likedByUser = event[0].likedByUser === 1;
+      this.eventData.completedByUser = event[0].completedByUser === 1;
       this.eventParticipants = participants as [];
       this.eventComments = comments as [];
 
       this.buildComments();
       this.currentAction = this.eventParticipants.find(p=>p.idParticipant===this.userId) ? 0 : 1;
-      this.participantActions[this.currentAction].active = true;
 
       const createdDateToFormat = new Date(this.eventData.createdDate);
       const createdMonth = new Intl.DateTimeFormat('es-ES', { month: 'short'}).format(createdDateToFormat);
@@ -109,6 +114,54 @@ export class EventDetailPage implements OnInit {
           this.commentToPost = '';
           this.loadingComments = false;
       });
+    }
+  }
+
+  async inscriptionEvent(){
+    switch(this.currentAction){
+      case 0:
+        const answer0 = await presentAlert('¿Quieres cancelar tu inscripción al evento?', this.alertController);
+        if(answer0==='confirm'){
+          this.loadingParticipants = true;
+          const params = '?idEvent='+this.eventId+'&idParticipant='+this.userId;
+          this.eventService.deleteParticipant(params).pipe(
+            mergeMap(c=>this.eventService.getParticipantsByEvent('?idEvent='+this.eventId))).subscribe(participants=>{
+              this.eventParticipants = participants as [];
+              this.eventData.participants--;
+              this.currentAction = 1;
+              this.loadingParticipants = false;
+          });
+        }
+        break;
+      case 1:
+        const answer1 = await presentAlert('¿Quieres inscribirte al evento?', this.alertController);
+        if(answer1==='confirm'){
+          this.loadingParticipants = true;
+          const participantToPost = {idEvent: this.eventId, idParticipant: this.userId};
+          this.eventService.saveParticipant(participantToPost).pipe(
+            mergeMap(c=>this.eventService.getParticipantsByEvent('?idEvent='+this.eventId))).subscribe(participants=>{
+              this.eventParticipants = participants as [];
+              this.eventData.participants++;
+              this.currentAction = 0;
+              this.loadingParticipants = false;
+          });
+        }
+        break;
+    }
+  }
+
+  likeEvent(){
+    if(this.eventData.likedByUser){
+      this.eventData.likedByUser = false;
+      this.eventData.likes--;
+      const params = '?idEvent='+this.eventId+'&idUser='+this.userId;
+      this.eventService.deletelike(params).pipe().subscribe();
+    }
+    else{
+      this.eventData.likedByUser = true;
+      this.eventData.likes++;
+      const likeToPost = {idEvent: this.eventId, idUser: this.userId};
+      this.eventService.saveLike(likeToPost).pipe().subscribe();
     }
   }
 

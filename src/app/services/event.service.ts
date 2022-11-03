@@ -84,4 +84,26 @@ export class EventService {
     }));
   }
 
+  saveLike(likeToPost: any): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.post(`${environment.baseUrl}/like`, likeToPost, options);
+    }));
+  }
+
+  deletelike(params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.delete(`${environment.baseUrl}/like${params}`, options);
+    }));
+  }
+
 }

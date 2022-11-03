@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { Data } from '@angular/router';
-import { mergeMap, tap } from  'rxjs/operators';
+import { map, mergeMap, tap } from  'rxjs/operators';
 import { Login } from '../models/login.model';
 import { StorageService } from './storage.service';
 
@@ -18,7 +18,7 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    private storage: StorageService
+    private storageService: StorageService
     ) {
     }
 
@@ -30,9 +30,9 @@ export class UserService {
     return this.http.post(`${environment.baseUrl}/user`, userData)
     .pipe(
       mergeMap( async (res: any) => {
-          await this.storage.set('ACCESS_TOKEN', res.token);
+          await this.storageService.set('ACCESS_TOKEN', res.token);
           this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
-          await this.storage.set('USER', this.user);
+          await this.storageService.set('USER', this.user);
           this.authSubject.next(true);
           return this.authSubject.asObservable();
       })
@@ -43,33 +43,41 @@ export class UserService {
     return this.http.post(`${environment.baseUrl}/auth`, userData)
       .pipe(
         mergeMap( async (res: any) => {
-            await this.storage.set('ACCESS_TOKEN', res.token);
+            await this.storageService.set('ACCESS_TOKEN', res.token);
             this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
-            await this.storage.set('USER', this.user);
+            await this.storageService.set('USER', this.user);
             this.authSubject.next(true);
             return this.authSubject.asObservable();
         })
       );
   }
 
-  // validateToken(): Observable<object>{
-  //   return this.http.get(`${environment.baseUrl}/auth/token`)
-  //     .pipe(
-  //       mergeMap( async (res: any) => {
-  //         if(res.ok){
-  //           await this.storage.set('ACCESS_TOKEN', res.token);
-  //           this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
-  //           this.authSubject.next(true);
-  //           return this.authSubject.asObservable();
-  //         }
-  //       })
-  //     );
-  // }
+  validateToken(): Observable<boolean>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+        const options = {
+          headers: {
+            token: authToken
+          }
+        };
+        return this.http.get(`${environment.baseUrl}/auth/token`, options);
+      })).pipe(mergeMap(async (res: any)=>{
+        if(res.ok){
+          await this.storageService.set('ACCESS_TOKEN', res.token);
+          this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
+          await this.storageService.set('USER', this.user);
+          this.authSubject.next(true);
+          return true;
+        }
+        else{
+          return false;
+        }
+      }));
+  }
 
   async logout(){
-    await this.storage.remove('ACCESS_TOKEN');
-    await this.storage.remove('USER');
-    await this.storage.clear();
+    await this.storageService.remove('ACCESS_TOKEN');
+    await this.storageService.remove('USER');
+    await this.storageService.clear();
     this.authSubject.next(false);
   }
 
