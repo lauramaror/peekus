@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -26,6 +27,17 @@ export class EventService {
         }
       };
       return this.http.get(`${environment.baseUrl}/event${params}`, options);
+    }));
+  }
+
+  saveEvent(eventToPost: any): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.post(`${environment.baseUrl}/event`, eventToPost, options);
     }));
   }
 
@@ -71,6 +83,13 @@ export class EventService {
       };
       return this.http.post(`${environment.baseUrl}/event/participants`, participantToPost, options);
     }));
+  }
+
+  async saveParticipants(participantList: any[], eventId: string){
+    for await (const participantToPost of participantList){
+      await this.saveParticipant({idEvent: eventId, idParticipant: participantToPost}).toPromise();
+    }
+    return true;
   }
 
   deleteParticipant(params: string): Observable<object>{

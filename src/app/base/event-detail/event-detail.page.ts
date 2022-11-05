@@ -37,6 +37,7 @@ export class EventDetailPage implements OnInit {
   loadingParticipants = false;
   participantActions = [{id: 0, buttonText: 'CANCELAR INSCRIPCIÓN'},{id: 1, buttonText: 'INSCRIBIRSE'}];
   currentAction = 0;
+  likingProcess = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -151,17 +152,25 @@ export class EventDetailPage implements OnInit {
   }
 
   likeEvent(){
+    if(this.likingProcess){
+      return;
+    }
+    this.likingProcess = true;
     if(this.eventData.likedByUser){
       this.eventData.likedByUser = false;
       this.eventData.likes--;
       const params = '?idEvent='+this.eventId+'&idUser='+this.userId;
-      this.eventService.deletelike(params).pipe().subscribe();
+      this.eventService.deletelike(params).pipe().subscribe(l=>{
+        this.likingProcess = false;
+      });
     }
     else{
       this.eventData.likedByUser = true;
       this.eventData.likes++;
       const likeToPost = {idEvent: this.eventId, idUser: this.userId};
-      this.eventService.saveLike(likeToPost).pipe().subscribe();
+      this.eventService.saveLike(likeToPost).pipe().subscribe(l=>{
+        this.likingProcess = false;
+      });
     }
   }
 
