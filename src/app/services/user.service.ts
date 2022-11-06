@@ -39,6 +39,17 @@ export class UserService {
     );
   }
 
+  updateProfilePic(imgUser: any): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.put(`${environment.baseUrl}/user/profilepic`, imgUser, options);
+    }));
+  }
+
   login(userData: Login): Observable<object> {
     return this.http.post(`${environment.baseUrl}/auth`, userData)
       .pipe(

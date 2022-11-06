@@ -1,22 +1,15 @@
 <ion-header [translucent]="true">
     <app-peekus-header></app-peekus-header>
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-back-button [text]="'Crear evento'" icon="close"></ion-back-button>
-        </ion-buttons>
-    </ion-toolbar>
+    <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="routerBackUrl" [iconName]="'close'"></app-peekus-back-button>
 </ion-header>
 
 <ion-content [fullscreen]="true">
     <ion-header collapse="condense">
         <app-peekus-header></app-peekus-header>
-        <ion-toolbar>
-            <ion-buttons slot="start">
-                <ion-back-button [text]="'Crear evento'" icon="close"></ion-back-button>
-            </ion-buttons>
-        </ion-toolbar>
+        <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="routerBackUrl" [iconName]="'close'"></app-peekus-back-button>
     </ion-header>
-    <form [formGroup]="eventForm" (ngSubmit)="saveEvent()" (keyup.enter)="saveEvent()">
+    <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading" class="mt-1"></ion-progress-bar>
+    <form *ngIf="!loading" [formGroup]="eventForm" (ngSubmit)="saveEvent()" (keyup.enter)="saveEvent()">
         <div class="whiteBgCard">
             <div style="margin:2em; margin-top:0; padding-bottom:1em;">
                 <p class="m-labels" style="padding-top:2em;">TÍTULO</p>
@@ -90,7 +83,7 @@
             </div>
         </div>
         <div class="d-flex-end" style="align-items: center; margin: 5px;">
-            <ion-button color="tertiary" shape="round"><span>Cancelar</span></ion-button>
+            <ion-button color="tertiary" shape="round" [routerLink]="[routerBackUrl]" routerDirection="root"><span>Cancelar</span></ion-button>
             <ion-button color="primary" shape="round" class="button-border" type="submit">
                 <ion-spinner name="lines" *ngIf="savingEvent"></ion-spinner>
                 <span>Crear</span>

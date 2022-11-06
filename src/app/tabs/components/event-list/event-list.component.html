@@ -9,5 +9,5 @@
     </ion-button>
 </div>
 <ng-container *ngFor="let event of events">
-    <app-event-card [event]="event" [routerLink]="['/base/detail', event.id]"></app-event-card>
+    <app-event-card [event]="event" [routerLink]="['/base/detail', event.id]" routerDirection="root"></app-event-card>
 </ng-container>

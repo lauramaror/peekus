@@ -1,5 +1,9 @@
 <ion-toolbar>
     <ion-buttons slot="start">
-        <ion-back-button [text]="backButtonText" icon="arrow-back"></ion-back-button>
+        <!-- <ion-back-button [text]="backButtonText" icon="arrow-back"></ion-back-button> -->
+        <ion-button [routerLink]="[routerUrl]" routerDirection="root">
+            <ion-icon name="{{iconName}}"></ion-icon>
+            <ion-text>{{backButtonText}}</ion-text>
+        </ion-button>
     </ion-buttons>
 </ion-toolbar>

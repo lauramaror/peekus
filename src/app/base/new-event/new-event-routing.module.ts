@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '',
     children: [
       {
-        path: '', component: NewEventPage, canActivate: [AuthGuard]
+        path: ':id', component: NewEventPage, canActivate: [AuthGuard]
       },
     ]
   }

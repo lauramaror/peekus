@@ -7,6 +7,8 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class PeekusBackButtonComponent implements OnInit {
   @Input() backButtonText: string;
+  @Input() routerUrl: string;
+  @Input() iconName: string;
 
   constructor() { }
 

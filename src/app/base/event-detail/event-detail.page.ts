@@ -2,7 +2,7 @@
 /* eslint-disable arrow-body-style */
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, zip } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { presentAlert } from 'src/app/helpers/common-functions';
@@ -44,7 +44,8 @@ export class EventDetailPage implements OnInit {
     private storageService: StorageService,
     private eventService: EventService,
     private datePipe: DatePipe,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private router: Router,
     ) { }
 
   ngOnInit() {
@@ -160,7 +161,7 @@ export class EventDetailPage implements OnInit {
       this.eventData.likedByUser = false;
       this.eventData.likes--;
       const params = '?idEvent='+this.eventId+'&idUser='+this.userId;
-      this.eventService.deletelike(params).pipe().subscribe(l=>{
+      this.eventService.deleteLike(params).pipe().subscribe(l=>{
         this.likingProcess = false;
       });
     }
@@ -173,5 +174,19 @@ export class EventDetailPage implements OnInit {
       });
     }
   }
+
+  async deleteEvent(){
+    const answer1 = await presentAlert('¿Quieres borrar el evento?', this.alertController);
+    if(answer1==='confirm'){
+      const params = '?id='+this.eventId;
+      this.eventService.deleteEvent(params).pipe().subscribe(l=>{
+        this.router.navigateByUrl('/tabs/my-events');
+      });
+    }
+  }
+
+  // editEvent(){
+  //   console.log('edit');
+  // }
 
 }

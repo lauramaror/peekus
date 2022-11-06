@@ -4,6 +4,7 @@ import { PeekusHeaderComponent } from './peekus-header/peekus-header.component';
 import { IonicModule } from '@ionic/angular';
 import { PeekusBackButtonComponent } from './peekus-back-button/peekus-back-button.component';
 import { EventStatusBadgeComponent } from './event-status-badge/event-status-badge.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { EventStatusBadgeComponent } from './event-status-badge/event-status-bad
   ],
   imports: [
     IonicModule,
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   exports: [
     PeekusHeaderComponent,

@@ -4,6 +4,7 @@ import { EventService } from '../../services/event.service';
 import { UserService } from '../../services/user.service';
 import { StorageService } from '../../services/storage.service';
 import { mergeMap, take, tap } from 'rxjs/operators';
+import { NavController, ViewWillEnter } from '@ionic/angular';
 
 @Component({
   selector: 'app-my-events',
@@ -23,12 +24,21 @@ export class MyEventsPage implements OnInit {
   constructor(
     private eventService: EventService,
     private userService: UserService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private navController: NavController,
   ) {}
 
   ngOnInit(): void{
     this.getEventsList();
   }
+
+  // ionViewWillEnter(){ console.log('ionViewWillEnter');
+  //   this.getEventsList();
+  // }
+
+  // createEvent(){
+  //   this.navController.navigateRoot(['/base/edit']);
+  // }
 
   changeStatuses(e) {
     const statusesToSearch = [...e.detail.value];
@@ -72,6 +82,7 @@ export class MyEventsPage implements OnInit {
       if(this.creatorOnlyOthers){
         this.eventsList = this.eventsList.filter(eventToFilter=>eventToFilter.creator !== this.userId);
       }
+      this.eventsList = this.eventsList.sort((a,b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
       this.loading = false;
     });
   }

@@ -15,7 +15,6 @@ export class EventListComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.events = this.events.sort((a,b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
   }
 
   orderByDate(){

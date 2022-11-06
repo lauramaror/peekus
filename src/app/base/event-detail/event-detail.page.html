@@ -1,12 +1,12 @@
 <ion-header [translucent]="true">
     <app-peekus-header></app-peekus-header>
-    <app-peekus-back-button [backButtonText]="backButtonText"></app-peekus-back-button>
+    <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="'/tabs/my-events'" [iconName]="'arrow-back'"></app-peekus-back-button>
 </ion-header>
 
 <ion-content [fullscreen]="true">
     <ion-header collapse="condense">
         <app-peekus-header></app-peekus-header>
-        <app-peekus-back-button [backButtonText]="backButtonText"></app-peekus-back-button>
+        <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="'/tabs/my-events'" [iconName]="'arrow-back'"></app-peekus-back-button>
     </ion-header>
     <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading" class="mt-1"></ion-progress-bar>
     <div *ngIf="!loading" class="whiteBgCard">
@@ -167,7 +167,19 @@
             </ion-item>
         </div>
     </div>
-    <div *ngIf="!loading" class="d-flex-end" style="align-items: center; margin: 5px;">
+    <div *ngIf="!loading && eventData.creator!==userId" class="d-flex-end" style="align-items: center; margin: 5px;">
         <ion-button color="tertiary" shape="round" class="cancelButton" (click)="inscriptionEvent()"><span>{{participantActions[currentAction].buttonText}}</span></ion-button>
     </div>
+    <div *ngIf="!loading && eventData.creator===userId" class="d-flex-end" style="align-items: center; margin: 5px;">
+        <ion-button color="tertiary" shape="round" (click)="deleteEvent()"><span>Borrar</span></ion-button>
+        <ion-button color="primary" shape="round" class="button-border" [routerLink]="['/base/edit', eventId]" routerDirection="root"><span>Editar</span></ion-button>
+    </div>
+    <!-- <div *ngIf="!loading && eventData.creator===userId" class="d-flex-end" style="align-items: center; margin: 5px;">
+        <ion-button class="ion-no-padding" fill="outline" color="grey" size="small">
+            <ion-icon name="pencil" class="editButtons"></ion-icon>
+        </ion-button>
+        <ion-button class="ion-no-padding" fill="outline" color="grey" size="small">
+            <ion-icon name="trash" class="editButtons"></ion-icon>
+        </ion-button>
+    </div> -->
 </ion-content>

@@ -32,6 +32,7 @@ export class SearchEventsPage implements OnInit {
       return this.eventService.getEvents(params);
     })).subscribe(e=>{
       this.eventsList = e as EventPeekus[];
+      this.eventsList = this.eventsList.sort((a,b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
       this.loading = false;
     });
   }

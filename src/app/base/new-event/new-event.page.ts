@@ -4,8 +4,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DatetimeChangeEventDetail, ToastController } from '@ionic/angular';
-import { mergeMap } from 'rxjs/operators';
+import { DatetimeChangeEventDetail, NavController, ToastController } from '@ionic/angular';
+import { zip } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
+import { EventPeekus } from 'src/app/models/event.model';
 import { EventService } from 'src/app/services/event.service';
 import { StorageService } from 'src/app/services/storage.service';
 
@@ -26,6 +28,9 @@ export class NewEventPage implements OnInit {
   endHour: string;
   currentType = '';
   participantsList = [];
+  backButtonText = 'Crear Evento';
+  routerBackUrl = '/tabs/my-events';
+  eventData: EventPeekus;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +39,7 @@ export class NewEventPage implements OnInit {
     private router: Router,
     private eventService: EventService,
     private storageService: StorageService,
+    private navController: NavController,
     ) {
       this.eventForm = this.formBuilder.group({
         name: ['',Validators.required],
@@ -49,8 +55,42 @@ export class NewEventPage implements OnInit {
 
   ngOnInit() {
     this.eventId = this.route.snapshot.params.id;
-    console.log('evento',this.eventId);
-    this.storageService.getUserInfo().pipe().subscribe(u=>this.userId=u.id);
+    if(this.eventId){
+      this.backButtonText = 'Editar Evento';
+      this.routerBackUrl = '/base/detail/'+this.eventId;
+      this.getEvent();
+    }else{
+      this.storageService.getUserInfo().pipe().subscribe(u=>this.userId=u.id);
+    }
+  }
+
+  getEvent(){
+    this.loading = true;
+    this.storageService.getUserInfo().pipe(map(userInfo=>{
+      this.userId = userInfo.id;
+      return '?user='+userInfo.id+'&id='+this.eventId;
+    }), mergeMap(params=> {
+      return zip(
+        this.eventService.getEvents(params),
+        this.eventService.getParticipantsByEvent('?idEvent='+this.eventId),
+      );
+    })).subscribe(([event, participants])=>{
+      this.eventData = event[0] as EventPeekus;
+      this.eventData.likedByUser = event[0].likedByUser === 1;
+      this.eventData.completedByUser = event[0].completedByUser === 1;
+      this.participantsList = participants as [];
+      this.setEventValues();
+      this.loading = false;
+    });
+  }
+
+  setEventValues(){
+    this.startDate = new Date(this.eventData.startDate).toISOString();
+    this.startHour = new Date(this.eventData.startDate).toISOString();
+    this.endHour = new Date(this.eventData.endDate).toISOString();
+    this.currentType = this.eventData.type.toLowerCase();
+    this.eventForm.setValue({name: this.eventData.name, description: this.eventData.description,
+                            type: this.currentType, capacity: this.eventData.capacity, secretCode: ''});
   }
 
   changeType(e) {
@@ -58,9 +98,7 @@ export class NewEventPage implements OnInit {
   }
 
   saveEvent(){
-    console.log('saveEvent');
     if(this.eventForm.valid){
-      console.log('valido');
       this.savingEvent = true;
 
       const startDateToPost = new Date(this.startDate);
@@ -80,16 +118,31 @@ export class NewEventPage implements OnInit {
         type: this.currentType.toUpperCase(),
         status: 'NEXT'
       };
-      this.participantsList.push(this.userId);
-      console.log('newEvent',newEvent);
+      this.participantsList.push({idEvent: null, idParticipant: this.userId});
       if(this.eventId){
-
+        // this.eventService.updateEvent(newEvent).pipe(
+        //   map(event=> {
+        //     return event['idEvent'];
+        //   }),
+        //   mergeMap(eventId=>{
+        //     this.participantsList.forEach(p=>p.idEvent = eventId);
+        //     return this.eventService.saveParticipantsList(this.participantsList);
+        //   })).subscribe(p=>{
+        //     this.savingEvent = false;
+        //     this.navController.navigateRoot(['/tabs/my-events']);
+        // });
       }
       else{
         this.eventService.saveEvent(newEvent).pipe(
-          mergeMap(event=>this.eventService.saveParticipants(this.participantsList, event['idEvent']))).subscribe(participants=>{
+          map(event=> {
+            return event['idEvent'];
+          }),
+          mergeMap(eventId=>{
+            this.participantsList.forEach(p=>p.idEvent = eventId);
+            return this.eventService.saveParticipantsList(this.participantsList);
+          })).subscribe(p=>{
             this.savingEvent = false;
-            this.router.navigateByUrl('/tabs/my-events');
+            this.navController.navigateRoot(['/tabs/my-events']);
         });
       }
     }
