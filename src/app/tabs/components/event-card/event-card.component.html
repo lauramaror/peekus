@@ -67,6 +67,10 @@
             </ion-col>
             <ion-col size="1.5" class="cardContent">
                 <ion-row style="height: 60%;">
+                    <ion-button *ngIf="event.status === eventStatus.ONGOING && !event.completedByUser" fill="outline" class="ion-no-margin ion-no-padding icon-stack" color="danger" (click)="takePhoto()">
+                        <ion-icon name="camera" class="primary-icon" [ngStyle]="{'color': optionsByStatusMap.get(event.status).colorDate}"></ion-icon>
+                        <ion-icon name="add" class="secondary-icon"></ion-icon>
+                    </ion-button>
                 </ion-row>
                 <ion-row style="height: 40%;" class="ion-justify-content-center ion-align-items-end">
                     <ion-icon name="share-social" class="bigIconSize"></ion-icon>

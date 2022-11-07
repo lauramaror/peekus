@@ -9,7 +9,7 @@
             </ion-button>
             <ion-button fill="clear" size="large" class="ion-no-padding" (click)="logout()">
                 <ion-avatar style="max-height: 50px; max-width: 50px;" class="mr-2">
-                    <img src="../../../assets/img/nologo.png" alt="">
+                    <img src="{{userProfilePicSrc ? userProfilePicSrc : noLogoDefault}}" alt="">
                 </ion-avatar>
             </ion-button>
         </div>

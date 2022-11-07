@@ -63,6 +63,25 @@ export class ImageService {
     }
   }
 
+  async takePhoto() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 100,
+        allowEditing: false,
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Camera
+      });
+
+      if (image) {
+          console.log('succesfuly got image', image);
+          await this.saveImage(image);
+      }
+
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  }
+
   async saveImage(photo: Photo) {
     const base64Data = await this.readAsBase64(photo);
 
@@ -116,14 +135,6 @@ export class ImageService {
 		}
 	}
 
-  // async startUpload(file: LocalFile) {
-  //   const response = await fetch(file.data);
-  //   const blob = await response.blob();
-  //   const formData = new FormData();
-  //   formData.append('file', blob, file.name);
-  //   this.saveImageAPI(formData,'');
-  // }
-
   startUpload(file: LocalFile, params: string) {
     return from(fetch(file.data))
     .pipe(mergeMap(response=> {
@@ -160,6 +171,15 @@ export class ImageService {
     this.images = [];
   }
 
+  convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+        resolve(reader.result);
+    };
+    reader.readAsDataURL(blob);
+  });
+
   private async readAsBase64(photo: Photo) {
     if (this.platform.is('hybrid')) {
       const file = await Filesystem.readFile({
@@ -175,15 +195,6 @@ export class ImageService {
       return await this.convertBlobToBase64(blob) as string;
     }
   }
-
-  private convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = reject;
-    reader.onload = () => {
-        resolve(reader.result);
-    };
-    reader.readAsDataURL(blob);
-  });
 
 }
 
