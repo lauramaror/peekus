@@ -21,5 +21,6 @@ export class EventPeekus {
     public completedByUser?: boolean,
     public likedByUser?: boolean,
     public userImage?: string,
+    public userParticipates?: boolean,
   ) {}
 }

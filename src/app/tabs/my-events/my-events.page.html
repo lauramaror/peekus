@@ -30,6 +30,6 @@
             </ion-button>
         </div>
         <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading" class="mt-1"></ion-progress-bar>
-        <app-event-list *ngIf="!loading" [events]="eventsList"></app-event-list>
+        <app-event-list *ngIf="!loading" [events]="eventsList" [userId]="userId"></app-event-list>
     </div>
 </ion-content>

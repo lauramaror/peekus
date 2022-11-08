@@ -107,6 +107,17 @@ export class EventService {
     }));
   }
 
+  updateParticipant(participantToUpdate: any): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.put(`${environment.baseUrl}/event/participants`, participantToUpdate, options);
+    }));
+  }
+
   deleteParticipant(params: string): Observable<object>{
     return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
       const options = {

@@ -154,19 +154,9 @@ export class ImageService {
   }
 
   async deleteImages() {
-    await Filesystem.readdir({
-			path: this.photoStorage,
-			directory: Directory.Data
-		})
-			.then(
-				async (result) => {
-          for(const f of this.images){
-            await this.deleteImage(f);
-          }
-				}
-			)
-			.then((_) => {
-			});
+    for await (const f of this.images){
+      await this.deleteImage(f);
+    }
 
     this.images = [];
   }

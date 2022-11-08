@@ -15,6 +15,7 @@ export class SearchEventsPage implements OnInit {
 
   eventsList: EventPeekus[] = [];
   loading = true;
+  userId = '';
 
   constructor(
     private eventService: EventService,
@@ -28,6 +29,7 @@ export class SearchEventsPage implements OnInit {
 
   getEventsList(){
     this.storageService.getUserInfo().pipe(mergeMap(userInfo=>{
+      this.userId = userInfo.id;
       const params = '?user='+userInfo.id;
       return this.eventService.getEvents(params);
     })).subscribe(e=>{

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { EventPeekus } from 'src/app/models/event.model';
+import { ImageService } from 'src/app/services/image.service';
 
 @Component({
   selector: 'app-event-list',
@@ -8,13 +9,22 @@ import { EventPeekus } from 'src/app/models/event.model';
 })
 export class EventListComponent implements OnInit {
   @Input() events: EventPeekus[];
+  @Input() userId: string;
 
   ascDate = true;
   ascName = true;
 
-  constructor() { }
+  constructor(
+    private imageService: ImageService
+  ) { }
 
   ngOnInit() {
+    this.deleteAllFiles();
+  }
+
+  async deleteAllFiles(){
+    await this.imageService.loadFiles();
+    await this.imageService.deleteImages();
   }
 
   orderByDate(){
