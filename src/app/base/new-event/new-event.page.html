@@ -12,7 +12,7 @@
     <form *ngIf="!loading" [formGroup]="eventForm" (ngSubmit)="saveEvent()" (keyup.enter)="saveEvent()">
         <div class="whiteBgCard">
             <div style="margin:2em; margin-top:0; padding-bottom:1em;">
-                <p class="m-labels" style="padding-top:2em;">TÍTULO</p>
+                <p class="m-labels" style="padding-top:2em;">TÍTULO *</p>
                 <ion-item class="ion-no-padding item-bg-color">
                     <ion-input class="ion-no-padding" formControlName="name"></ion-input>
                 </ion-item>
@@ -20,7 +20,7 @@
                 <p class="m-labels">DESCRIPCIÓN</p>
                 <ion-textarea class="ion-no-padding" formControlName="description" [autoGrow]="true" rows="4"></ion-textarea>
 
-                <p class="m-labels">FECHA</p>
+                <p class="m-labels">FECHA *</p>
                 <div class="d-flex-inbetween">
                     <ion-datetime-button datetime="startDate"></ion-datetime-button>
                     <ion-modal [keepContentsMounted]="true">
@@ -47,7 +47,7 @@
                 <ion-grid class="ion-no-padding" style="padding-bottom: 1em;">
                     <ion-row>
                         <ion-col>
-                            <p class="m-labels">TIPO</p>
+                            <p class="m-labels">TIPO *</p>
                             <ion-select formControlName="type" placeholder="Selecciona tipo" class="ion-no-padding" (ionChange)="changeType($event)">
                                 <ion-select-option value="public">Público</ion-select-option>
                                 <ion-select-option value="private">Privado</ion-select-option>
@@ -64,7 +64,7 @@
                     </ion-row>
                     <ion-row *ngIf="currentType === 'private'">
                         <ion-col>
-                            <p class="m-labels">CÓDIGO PARA UNIRSE</p>
+                            <p class="m-labels">CÓDIGO PARA UNIRSE *</p>
                             <ion-input class="ion-no-padding" type="text" formControlName="secretCode"></ion-input>
                         </ion-col>
                     </ion-row>
@@ -86,7 +86,7 @@
             <ion-button color="tertiary" shape="round" [routerLink]="[routerBackUrl]" routerDirection="root"><span>Cancelar</span></ion-button>
             <ion-button color="primary" shape="round" class="button-border" type="submit">
                 <ion-spinner name="lines" *ngIf="savingEvent"></ion-spinner>
-                <span>Crear</span>
+                <span>Guardar</span>
             </ion-button>
         </div>
     </form>

@@ -98,7 +98,11 @@ export class NewEventPage implements OnInit {
   }
 
   saveEvent(){
-    if(this.eventForm.valid){
+    if(!this.eventForm.valid ||
+      !((this.currentType==='private' && this.eventForm.get('secretCode').value) || this.currentType!=='private')){
+      this.presentToast('Rellena los campos obligatorios');
+      return;
+    }
       this.savingEvent = true;
 
       const startDateToPost = new Date(this.startDate);
@@ -113,24 +117,17 @@ export class NewEventPage implements OnInit {
         description: this.eventForm.get('description').value,
         startDate: startDateToPost.toISOString(),
         endDate: endDateToPost.toISOString(),
-        capacity: this.eventForm.get('capacity').value,
+        capacity: this.eventForm.get('capacity').value || 100,
         creator: this.userId,
         type: this.currentType.toUpperCase(),
         status: 'NEXT'
       };
       this.participantsList.push({idEvent: null, idParticipant: this.userId});
       if(this.eventId){
-        // this.eventService.updateEvent(newEvent).pipe(
-        //   map(event=> {
-        //     return event['idEvent'];
-        //   }),
-        //   mergeMap(eventId=>{
-        //     this.participantsList.forEach(p=>p.idEvent = eventId);
-        //     return this.eventService.saveParticipantsList(this.participantsList);
-        //   })).subscribe(p=>{
-        //     this.savingEvent = false;
-        //     this.navController.navigateRoot(['/tabs/my-events']);
-        // });
+        this.eventService.updateEvent(newEvent, '?id='+this.eventId).pipe().subscribe(p=>{
+            this.savingEvent = false;
+            this.navController.navigateRoot(['/tabs/my-events']); // TODO go to event detail
+        });
       }
       else{
         this.eventService.saveEvent(newEvent).pipe(
@@ -139,13 +136,26 @@ export class NewEventPage implements OnInit {
           }),
           mergeMap(eventId=>{
             this.participantsList.forEach(p=>p.idEvent = eventId);
-            return this.eventService.saveParticipantsList(this.participantsList);
-          })).subscribe(p=>{
+            return zip(
+              this.eventService.saveParticipantsList(this.participantsList),
+              this.eventService.saveCode({idEvent: eventId, type: 'numeric', codeContent: this.eventForm.get('secretCode').value})
+            );
+          })).subscribe(([participants, code])=>{
             this.savingEvent = false;
-            this.navController.navigateRoot(['/tabs/my-events']);
+            this.navController.navigateRoot(['/tabs/my-events']); // TODO go to event detail
         });
       }
-    }
+  }
+
+  async presentToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 1500,
+      position: 'bottom',
+      cssClass: 'my-custom-toast'
+    });
+
+    await toast.present();
   }
 
 

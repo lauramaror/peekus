@@ -30,7 +30,7 @@ export class SearchEventsPage implements OnInit {
   getEventsList(){
     this.storageService.getUserInfo().pipe(mergeMap(userInfo=>{
       this.userId = userInfo.id;
-      const params = '?user='+userInfo.id;
+      const params = '?user='+userInfo.id+'&type=\'PRIVATE\',\'PUBLIC\'';
       return this.eventService.getEvents(params);
     })).subscribe(e=>{
       this.eventsList = e as EventPeekus[];

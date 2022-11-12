@@ -8,9 +8,7 @@
                 <ion-icon name="notifications" color="tertiary" size="large"></ion-icon>
             </ion-button>
             <ion-button fill="clear" size="large" class="ion-no-padding" (click)="logout()">
-                <ion-avatar style="max-height: 50px; max-width: 50px;" class="mr-2">
-                    <img src="{{userProfilePicSrc ? userProfilePicSrc : noLogoDefault}}" alt="">
-                </ion-avatar>
+                <app-profile-picture *ngIf="loadedPic" [profilePictureId]="userProfilePicSrc" [size]="50" class="mr-2"></app-profile-picture>
             </ion-button>
         </div>
     </div>

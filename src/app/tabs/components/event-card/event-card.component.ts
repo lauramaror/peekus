@@ -35,16 +35,19 @@ export class EventCardComponent implements OnInit {
   async takePhoto(){
     await this.imageService.takePhoto();
     this.photo = this.imageService.images[0];
-    this.savingPhoto = true;
-    const params = '?type=event&idUser='+this.userId+'&idEvent='+this.event.id;
-    this.imageService.startUpload(this.photo, params).pipe(mergeMap(photo=>{
-      const idPhoto = photo['imgId'];
-      const bodyToSend = {idParticipant: this.userId, idEvent: this.event.id, idImage: idPhoto, completed: 1};
-      return this.eventService.updateParticipant(bodyToSend);
-    })).subscribe(i=>{
-      this.savingPhoto = false;
-      this.navController.navigateRoot(['/tabs/my-events']);
-    });
+    if(this.photo){
+      this.savingPhoto = true;
+      this.event.completedByUser = true;
+      const params = '?type=event&idUser='+this.userId+'&idEvent='+this.event.id;
+      this.imageService.startUpload(this.photo, params).pipe(mergeMap(photo=>{
+        const idPhoto = photo['imgId'];
+        const bodyToSend = {idParticipant: this.userId, idEvent: this.event.id, idImage: idPhoto, completed: 1};
+        return this.eventService.updateParticipant(bodyToSend);
+      })).subscribe(i=>{
+        this.savingPhoto = false;
+        this.navController.navigateRoot(['/tabs/my-events']);
+      });
+    }
   }
 
 }

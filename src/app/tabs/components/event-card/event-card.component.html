@@ -71,6 +71,9 @@
                         <ion-icon name="camera" class="primary-icon" [ngStyle]="{'color': optionsByStatusMap.get(event.status).colorDate}"></ion-icon>
                         <ion-icon name="add" class="secondary-icon"></ion-icon>
                     </ion-button>
+                    <ion-button *ngIf="event.status !== eventStatus.FINISHED && !event.userParticipates" fill="outline" class="ion-no-margin ion-no-padding ml-1" color="primary">
+                        <ion-icon name="clipboard-outline" [ngStyle]="{'color': 'var(--ion-color-primary)'}"></ion-icon>
+                    </ion-button>
                 </ion-row>
                 <ion-row style="height: 40%;" class="ion-justify-content-center ion-align-items-end">
                     <ion-button fill="clear" class="ion-no-margin ion-no-padding" color="tertiary">

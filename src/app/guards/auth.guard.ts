@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { tap } from 'rxjs/operators';
 import { StorageService } from '../services/storage.service';
 import { UserService } from '../services/user.service';
@@ -11,7 +12,9 @@ export class AuthGuard implements CanActivate {
 
   constructor( private userService: UserService,
                private router: Router,
-               private storageService: StorageService) {}
+               private storageService: StorageService,
+               private navController: NavController,
+               ) {}
 
   canActivate(
   next: ActivatedRouteSnapshot,
@@ -20,7 +23,7 @@ export class AuthGuard implements CanActivate {
     .pipe(
       tap( res => {
         if (!res) {
-          this.router.navigateByUrl('/landing');
+          this.navController.navigateRoot(['/landing']);
         }
       })
     );

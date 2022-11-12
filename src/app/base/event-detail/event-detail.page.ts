@@ -5,13 +5,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, zip } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { presentAlert } from 'src/app/helpers/common-functions';
-import { optionsByTypeMap } from 'src/app/helpers/options-maps';
+import { convertArrayBufferToBase64, presentAlert } from 'src/app/helpers/common-functions';
+import { optionsByTypeMap, optionsByStatusMap } from 'src/app/helpers/options-maps';
 import { CommentPeekus } from 'src/app/models/comment.model';
 import { EventPeekus } from 'src/app/models/event.model';
 import { EventService } from 'src/app/services/event.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { AlertController } from '@ionic/angular';
+import { ImageService } from '../../services/image.service';
+import { EventPeekusStatus } from 'src/app/helpers/enums';
 
 @Component({
   selector: 'app-event-detail',
@@ -21,7 +23,8 @@ import { AlertController } from '@ionic/angular';
 export class EventDetailPage implements OnInit {
 
   optionsByTypeMap = optionsByTypeMap;
-
+  eventStatus = EventPeekusStatus;
+  optionsByStatusMap = optionsByStatusMap;
   loading = true;
   eventId = '';
   eventData: EventPeekus;
@@ -38,6 +41,12 @@ export class EventDetailPage implements OnInit {
   participantActions = [{id: 0, buttonText: 'CANCELAR INSCRIPCIÓN'},{id: 1, buttonText: 'INSCRIBIRSE'}];
   currentAction = 0;
   likingProcess = false;
+  generatingCollage = false;
+  actionIcon = '';
+  actionOption: number;
+  photo: any;
+  savingPhoto = false;
+  collageSrc: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,6 +55,7 @@ export class EventDetailPage implements OnInit {
     private datePipe: DatePipe,
     private alertController: AlertController,
     private router: Router,
+    private imageService: ImageService
     ) { }
 
   ngOnInit() {
@@ -62,14 +72,20 @@ export class EventDetailPage implements OnInit {
       return zip(
         this.eventService.getEvents(params),
         this.eventService.getParticipantsByEvent('?idEvent='+this.eventId),
-        this.eventService.getCommentsByEvent('?idEvent='+this.eventId)
+        this.eventService.getCommentsByEvent('?idEvent='+this.eventId),
+        this.imageService.getImages('?idEvent='+this.eventId+'&type=collage')
       );
-    })).subscribe(([event, participants, comments])=>{
+    })).subscribe(([event, participants, comments, collage])=>{
       this.eventData = event[0] as EventPeekus;
       this.eventData.likedByUser = event[0].likedByUser === 1;
       this.eventData.completedByUser = event[0].completedByUser === 1;
       this.eventParticipants = participants as [];
       this.eventComments = comments as [];
+      if((collage as any[]).length){
+        this.collageSrc = convertArrayBufferToBase64(collage[0]['data']['data']);
+      }
+
+      this.setActionOption();
 
       this.buildComments();
       this.currentAction = this.eventParticipants.find(p=>p.idParticipant===this.userId) ? 0 : 1;
@@ -83,6 +99,21 @@ export class EventDetailPage implements OnInit {
 
       this.loading = false;
     });
+  }
+
+  setActionOption(){
+    const today = new Date();
+    this.actionIcon = this.eventData.status === EventPeekusStatus.FINISHED && this.collageSrc ? 'download-outline' : '';
+    if(this.eventData.creator === this.userId){
+      if(this.eventData.status === EventPeekusStatus.FINISHED && !this.collageSrc){
+          this.actionOption = 1;
+      }
+
+      if((this.eventData.status === EventPeekusStatus.NEXT && new Date(this.eventData.startDate) < today)
+        ||(this.eventData.status === EventPeekusStatus.ONGOING && new Date(this.eventData.endDate) <= today)){
+          this.actionOption = 2;
+      }
+    }
   }
 
   dayWeekName = fecha => [
@@ -130,6 +161,7 @@ export class EventDetailPage implements OnInit {
             mergeMap(c=>this.eventService.getParticipantsByEvent('?idEvent='+this.eventId))).subscribe(participants=>{
               this.eventParticipants = participants as [];
               this.eventData.participants--;
+              this.eventData.userParticipates = false;
               this.currentAction = 1;
               this.loadingParticipants = false;
           });
@@ -144,6 +176,7 @@ export class EventDetailPage implements OnInit {
             mergeMap(c=>this.eventService.getParticipantsByEvent('?idEvent='+this.eventId))).subscribe(participants=>{
               this.eventParticipants = participants as [];
               this.eventData.participants++;
+              this.eventData.userParticipates = true;
               this.currentAction = 0;
               this.loadingParticipants = false;
           });
@@ -185,8 +218,62 @@ export class EventDetailPage implements OnInit {
     }
   }
 
-  // editEvent(){
-  //   console.log('edit');
-  // }
+  async takePhoto(){
+    await this.imageService.takePhoto();
+    this.photo = this.imageService.images[0];
+    if(this.photo){
+      this.savingPhoto = true;
+      this.eventData.completedByUser = true;
+      const params = '?type=event&idUser='+this.userId+'&idEvent='+this.eventData.id;
+      this.imageService.startUpload(this.photo, params).pipe(mergeMap(photo=>{
+        const idPhoto = photo['imgId'];
+        const bodyToSend = {idParticipant: this.userId, idEvent: this.eventData.id, idImage: idPhoto, completed: 1};
+        return this.eventService.updateParticipant(bodyToSend);
+      })).subscribe(i=>{
+        this.savingPhoto = false;
+        // this.navController.navigateRoot(['/tabs/my-events']);
+      });
+    }
+  }
+
+  generateCollage(){
+    this.generatingCollage = true;
+    this.actionOption = null;
+    const params = '?idEvent='+this.eventId;
+    this.imageService.generateCollage(params).pipe().subscribe(l=>{
+      this.collageSrc = convertArrayBufferToBase64(l['data']['data']);
+      this.generatingCollage = false;
+    });
+  }
+
+  updateEventStatus(statusToUpdate: EventPeekusStatus){
+    this.actionOption = null;
+    const params = '?id='+this.eventId;
+    this.eventService.updateEventStatus({status: statusToUpdate},params).pipe().subscribe(l=>{
+      this.eventData.status = statusToUpdate;
+      this.setActionOption();
+    });
+  }
+
+  performAction(action: string){
+    switch (action){
+      case 'download':
+        // TODO call download method
+        break;
+      case 'generate':
+        this.generateCollage();
+        break;
+      case 'update':
+        let status = null;
+        if(this.eventData.status === EventPeekusStatus.NEXT){
+            status = EventPeekusStatus.ONGOING;
+        }
+        if(this.eventData.status === EventPeekusStatus.ONGOING){
+            status = EventPeekusStatus.FINISHED;
+        }
+        this.updateEventStatus(status);
+        break;
+    }
+  }
 
 }

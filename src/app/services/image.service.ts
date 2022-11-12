@@ -50,6 +50,17 @@ export class ImageService {
     }));
   }
 
+  generateCollage(params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.post(`${environment.baseUrl}/image/collage${params}`,{},options);
+    }));
+  }
+
   async selectImage() {
     const image = await Camera.getPhoto({
         quality: 100,
@@ -73,12 +84,10 @@ export class ImageService {
       });
 
       if (image) {
-          console.log('succesfuly got image', image);
           await this.saveImage(image);
       }
 
     } catch (error) {
-      console.log('error: ', error);
     }
   }
 

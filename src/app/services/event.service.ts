@@ -41,6 +41,28 @@ export class EventService {
     }));
   }
 
+  updateEvent(eventToUpdate: any, params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.put(`${environment.baseUrl}/event${params}`, eventToUpdate, options);
+    }));
+  }
+
+  updateEventStatus(eventToUpdate: any, params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.put(`${environment.baseUrl}/event/status${params}`, eventToUpdate, options);
+    }));
+  }
+
   deleteEvent(params: string): Observable<object>{
     return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
       const options = {
@@ -49,6 +71,28 @@ export class EventService {
         }
       };
       return this.http.delete(`${environment.baseUrl}/event${params}`, options);
+    }));
+  }
+
+  getCodes(params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.get(`${environment.baseUrl}/code${params}`, options);
+    }));
+  }
+
+  saveCode(codeToPost: any): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.post(`${environment.baseUrl}/code`, codeToPost, options);
     }));
   }
 

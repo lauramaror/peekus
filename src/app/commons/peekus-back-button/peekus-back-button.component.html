@@ -6,4 +6,12 @@
             <ion-text>{{backButtonText}}</ion-text>
         </ion-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+        <ion-button *ngIf="actionIcon" (click)="download()">
+            <ion-icon name="{{actionIcon}}"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="actionOption" color="primary" fill="outline" (click)="generate()">
+            <ion-text style="font-size: 11px;">{{actionByOption[this.actionOption].text}}</ion-text>
+        </ion-button>
+    </ion-buttons>
 </ion-toolbar>

@@ -8,6 +8,7 @@ import { mergeMap } from 'rxjs/operators';
 import { ImageService } from '../../services/image.service';
 import { from } from 'rxjs';
 import { convertArrayBufferToBase64 } from 'src/app/helpers/common-functions';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-peekus-header',
@@ -18,21 +19,20 @@ export class PeekusHeaderComponent implements OnInit {
 
   userId = '';
   userProfilePicSrc = '';
-  noLogoDefault = '../../../assets/img/nologo.png';
+  loadedPic = false;
 
   constructor(
     private userService: UserService,
     private router: Router,
     private storageService: StorageService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private navController: NavController,
+
   ) {
-    this.storageService.getUserInfo().pipe(mergeMap(u=>{
+    this.storageService.getUserInfo().pipe().subscribe(u=>{
       this.userId=u.id;
-      return this.imageService.getImages('?id='+u.profilePic);
-    })).subscribe(p=>{
-      if((p as any[]).length){
-        this.userProfilePicSrc = convertArrayBufferToBase64(p[0]['data']['data']);
-      }
+      this.userProfilePicSrc = u.profilePic;
+      this.loadedPic = true;
     });
    }
 
@@ -41,7 +41,7 @@ export class PeekusHeaderComponent implements OnInit {
 
   async logout(){
     await this.userService.logout();
-    this.router.navigateByUrl('/landing');
+    this.navController.navigateRoot(['/landing']);
   }
 
 }
