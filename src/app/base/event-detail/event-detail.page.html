@@ -29,9 +29,7 @@
                     </ion-row>
                     <ion-row class="ion-align-items-center" style="height: 50%; margin-bottom: 1px;">
                         <ion-col size="3" class="ion-no-padding">
-                            <ion-avatar style="max-height: 38px; max-width: 38px;">
-                                <img src="../../../assets/img/nologo.png" alt="">
-                            </ion-avatar>
+                            <app-profile-picture [profilePictureId]="eventData.creatorProfilePicture" [size]="38"></app-profile-picture>
                         </ion-col>
                         <ion-col size="9">
                             <ion-row>
@@ -168,7 +166,7 @@
             </ion-item>
         </div>
     </div>
-    <div *ngIf="!loading && eventData.creator!==userId && eventData.capacity>eventData.participants && eventData.status!==eventStatus.FINISHED" class="d-flex-end" style="align-items: center; margin: 5px;">
+    <div *ngIf="!loading && eventData.creator!==userId && (eventData.capacity>eventData.participants || currentAction===0) && eventData.status!==eventStatus.FINISHED" class="d-flex-end" style="align-items: center; margin: 5px;">
         <ion-button color="tertiary" shape="round" class="cancelButton" (click)="inscriptionEvent()"><span>{{participantActions[currentAction].buttonText}}</span></ion-button>
     </div>
     <div *ngIf="!loading && eventData.creator===userId" class="d-flex-end" style="align-items: center; margin: 5px;">

@@ -5,11 +5,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatetimeChangeEventDetail, NavController, ToastController } from '@ionic/angular';
-import { zip } from 'rxjs';
+import { of, zip } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { EventPeekus } from 'src/app/models/event.model';
 import { EventService } from 'src/app/services/event.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { IonModal } from '@ionic/angular';
 
 @Component({
   selector: 'app-new-event',
@@ -138,7 +139,9 @@ export class NewEventPage implements OnInit {
             this.participantsList.forEach(p=>p.idEvent = eventId);
             return zip(
               this.eventService.saveParticipantsList(this.participantsList),
-              this.eventService.saveCode({idEvent: eventId, type: 'numeric', codeContent: this.eventForm.get('secretCode').value})
+              this.eventForm.get('secretCode').value
+              ? this.eventService.saveCode({idEvent: eventId, type: 'numeric', codeContent: this.eventForm.get('secretCode').value})
+              : of(null)
             );
           })).subscribe(([participants, code])=>{
             this.savingEvent = false;

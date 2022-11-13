@@ -10,7 +10,7 @@
                       : optionsByStatusMap.get(event.status).iconBar}}" style="font-size: 20px;"></ion-icon>
                 </div>
             </ion-col>
-            <ion-col size="9.5" class="cardContent" [routerLink]="['/base/detail', event.id]" routerDirection="root">
+            <ion-col size="9.5" class="cardContent" [routerLink]="event.type===eventType.PUBLIC || event.userParticipates ? ['/base/detail', event.id] : []" routerDirection="root">
                 <ion-row>
                     <ion-col size="6">
                         <ion-row><span class="cardTitle">{{event.name}}</span></ion-row>
@@ -71,8 +71,8 @@
                         <ion-icon name="camera" class="primary-icon" [ngStyle]="{'color': optionsByStatusMap.get(event.status).colorDate}"></ion-icon>
                         <ion-icon name="add" class="secondary-icon"></ion-icon>
                     </ion-button>
-                    <ion-button *ngIf="event.status !== eventStatus.FINISHED && !event.userParticipates" fill="outline" class="ion-no-margin ion-no-padding ml-1" color="primary">
-                        <ion-icon name="clipboard-outline" [ngStyle]="{'color': 'var(--ion-color-primary)'}"></ion-icon>
+                    <ion-button *ngIf="event.status !== eventStatus.FINISHED && !event.userParticipates && event.capacity>event.participants" fill="outline" class="ion-no-margin ion-no-padding ml-1" color="primary" (click)="inscriptionEvent()">
+                        <img src="../../../../assets/img/inscribe.png" alt="">
                     </ion-button>
                 </ion-row>
                 <ion-row style="height: 40%;" class="ion-justify-content-center ion-align-items-end">

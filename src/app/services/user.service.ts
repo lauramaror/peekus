@@ -1,10 +1,11 @@
+/* eslint-disable arrow-body-style */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { User } from '../models/user.model';
 import { Data } from '@angular/router';
-import { map, mergeMap, tap } from  'rxjs/operators';
+import { catchError, map, mergeMap, tap } from  'rxjs/operators';
 import { Login } from '../models/login.model';
 import { StorageService } from './storage.service';
 
@@ -67,21 +68,18 @@ export class UserService {
     return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
         const options = {
           headers: {
-            token: authToken
+            token: authToken ? authToken : ''
           }
         };
         return this.http.get(`${environment.baseUrl}/auth/token`, options);
       })).pipe(mergeMap(async (res: any)=>{
-        if(res.ok){
           await this.storageService.set('ACCESS_TOKEN', res.token);
           this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
           await this.storageService.set('USER', this.user);
           this.authSubject.next(true);
           return true;
-        }
-        else{
-          return false;
-        }
+      }), catchError(err =>{
+        return of(false);
       }));
   }
 

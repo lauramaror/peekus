@@ -18,6 +18,7 @@ export class EventPeekus {
     public comments?: number,
     public creatorName?: string,
     public creatorUsername?: string,
+    public creatorProfilePicture?: string,
     public completedByUser?: boolean,
     public likedByUser?: boolean,
     public userImage?: string,

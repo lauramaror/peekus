@@ -6,7 +6,8 @@ import { optionsByStatusMap, optionsByTypeMap } from 'src/app/helpers/options-ma
 import { ImageService } from '../../../services/image.service';
 import { mergeMap } from 'rxjs/operators';
 import { EventService } from 'src/app/services/event.service';
-import { NavController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
+import { presentAlert } from 'src/app/helpers/common-functions';
 
 @Component({
   selector: 'app-event-card',
@@ -18,6 +19,7 @@ export class EventCardComponent implements OnInit {
   @Input() userId: string;
 
   eventStatus = EventPeekusStatus;
+  eventType = EventPeekusType;
   optionsByStatusMap = optionsByStatusMap;
   optionsByTypeMap = optionsByTypeMap;
   photo: any;
@@ -26,7 +28,9 @@ export class EventCardComponent implements OnInit {
   constructor(
     private imageService: ImageService,
     private eventService: EventService,
-    private navController: NavController
+    private navController: NavController,
+    private alertController: AlertController,
+
   ) { }
 
   ngOnInit() {
@@ -48,6 +52,23 @@ export class EventCardComponent implements OnInit {
         this.navController.navigateRoot(['/tabs/my-events']);
       });
     }
+  }
+
+  async inscriptionEvent(){
+    if(this.event.type === EventPeekusType.PUBLIC){
+      const answer1 = await presentAlert('¿Quieres inscribirte al evento?', this.alertController);
+      if(answer1==='confirm'){
+        const participantToPost = {idEvent: this.event.id, idParticipant: this.userId};
+        this.eventService.saveParticipant(participantToPost).pipe().subscribe(p=>{
+            this.event.participants++;
+            this.event.userParticipates = true;
+        });
+      }
+    }
+    else if(this.event.type === EventPeekusType.PRIVATE){
+      //modal
+    }
+
   }
 
 }
