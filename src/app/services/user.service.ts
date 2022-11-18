@@ -23,8 +23,26 @@ export class UserService {
     ) {
     }
 
-  getUsers(): Observable<object>{
-    return this.http.get(`${environment.baseUrl}/user`);
+    getUsers(params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.get(`${environment.baseUrl}/user${params}`, options);
+    }));
+  }
+
+  getFriends(params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.get(`${environment.baseUrl}/friend${params}`, options);
+    }));
   }
 
   saveUser(userData: User): Observable<object> {
@@ -60,6 +78,8 @@ export class UserService {
             await this.storageService.set('USER', this.user);
             this.authSubject.next(true);
             return this.authSubject.asObservable();
+        }), catchError(err =>{
+          return of(err);
         })
       );
   }

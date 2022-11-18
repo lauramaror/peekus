@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { Login } from 'src/app/models/login.model';
 import { UserService } from 'src/app/services/user.service';
@@ -38,8 +39,13 @@ export class LoginPage implements OnInit {
     this.loading = true;
     this.userService.login(this.loginForm.value).subscribe(e=>{
       this.loading = false;
-      this.router.navigateByUrl('/tabs');
+      if(e['ok']===false){
+        this.presentToast();
+        return;
+      }
+        this.router.navigateByUrl('/tabs');
     });
+
   }
 
   async presentToast() {

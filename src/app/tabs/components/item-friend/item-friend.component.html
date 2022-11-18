@@ -1,0 +1,25 @@
+<ion-item *ngFor="let user of usersList">
+    <ion-grid class="ion-no-padding ion-no-margin">
+        <ion-row class="ion-align-items-center ion-no-padding ion-no-margin">
+            <ion-col size="2" class="ion-no-padding">
+                <app-profile-picture [profilePictureId]="user.idProfilePicture" [size]="38"></app-profile-picture>
+            </ion-col>
+            <ion-col size="5">
+                <ion-row>
+                    <ion-text color="grey" style="font-size: 12px;">{{user.name}}</ion-text>
+                </ion-row>
+                <ion-row>
+                    <ion-text color="primary" style="font-size: 14px;">@{{user.username}}</ion-text>
+                </ion-row>
+            </ion-col>
+            <ion-col size="5" class="ion-no-padding">
+                <ion-row class="ion-justify-content-end ion-align-items-center">
+                    <ion-button *ngIf="type<3" class="button-border ion-no-margin" shape="round" style="font-size: 10px;">{{type===1 ? 'Aceptar' : 'Añadir'}}</ion-button>
+                    <ion-button fill="clear" color="tertiary" class="ion-no-margin ion-no-padding ml-2">
+                        <ion-icon name="close"></ion-icon>
+                    </ion-button>
+                </ion-row>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-item>

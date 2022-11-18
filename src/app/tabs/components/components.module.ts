@@ -6,6 +6,7 @@ import { EventListComponent } from './event-list/event-list.component';
 import { EventCardComponent } from './event-card/event-card.component';
 import { RouterModule } from '@angular/router';
 import { CommonsModule } from '../../commons/commons.module';
+import { ItemFriendComponent } from './item-friend/item-friend.component';
 
 
 @NgModule({
@@ -19,9 +20,11 @@ import { CommonsModule } from '../../commons/commons.module';
   declarations: [
     EventListComponent,
     EventCardComponent,
+    ItemFriendComponent
   ],
   exports: [
     EventListComponent,
+    ItemFriendComponent
   ]
 })
 export class ComponentsModule {}

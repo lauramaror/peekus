@@ -1,0 +1,12 @@
+.friendsButtons>button {
+    background: none;
+}
+
+.friendsButtons>button>ion-text {
+    font-size: 1.2rem;
+}
+
+.friendsButtons>span {
+    font-size: 1.5rem;
+    color: var(--ion-color-grey);
+}

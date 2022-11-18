@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://peekus.herokuapp.com',
+  baseUrl: 'http://localhost:8080',
 };
 //https://peekus.herokuapp.com
 //http://localhost:8080

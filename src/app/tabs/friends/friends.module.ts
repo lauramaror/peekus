@@ -6,6 +6,7 @@ import { FriendsPage } from './friends.page';
 
 import { FriendsPageRoutingModule } from './friends-routing.module';
 import { CommonsModule } from 'src/app/commons/commons.module';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
   imports: [
@@ -13,7 +14,7 @@ import { CommonsModule } from 'src/app/commons/commons.module';
     CommonModule,
     FormsModule,
     CommonsModule,
-    FriendsPageRoutingModule
+    FriendsPageRoutingModule, ComponentsModule
   ],
   declarations: [FriendsPage]
 })

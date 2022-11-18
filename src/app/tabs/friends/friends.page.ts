@@ -1,12 +1,83 @@
-import { Component } from '@angular/core';
+/* eslint-disable @typescript-eslint/dot-notation */
+import { Component, OnInit } from '@angular/core';
+import { mergeMap } from 'rxjs/operators';
+import { User } from 'src/app/models/user.model';
+import { StorageService } from 'src/app/services/storage.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-friends',
   templateUrl: 'friends.page.html',
   styleUrls: ['friends.page.scss']
 })
-export class FriendsPage {
+export class FriendsPage implements OnInit {
 
-  constructor() {}
+  usersList = [];
+  friendsList = [];
+  friendRequests = [];
+  loading = true;
+  userId = '';
+  myFriends = false;
+  params = '';
+
+  constructor(
+    private userService: UserService,
+    private storageService: StorageService
+  ) {}
+
+  ngOnInit(): void{
+    // this.storageService.getUserInfo().pipe().subscribe(u=>this.userId=u.id);
+    this.getFriendRequests();
+  }
+
+  getFriendRequests(){
+    this.storageService.getUserInfo().pipe(mergeMap(u=>{
+      this.userId=u.id;
+      return this.userService.getFriends('?id='+this.userId+'&status=PENDING');
+    })).subscribe(f=>{
+      this.friendRequests = (f as []).flatMap(u=>u['friendData']);
+      this.loading = false;
+    });
+  }
+
+  getUsers(textToSearch?: string){
+    this.loading = true;
+    if(textToSearch){
+      this.params='?text='+textToSearch;
+    }
+    if(this.myFriends){
+      this.userService.getFriends(this.params).subscribe(e=>{
+        this.usersList = (e as []).flatMap(u=>u['friendData']);
+        this.friendsList = this.usersList;
+        this.loading = false;
+      });
+    } else{
+      this.userService.getUsers(this.params).subscribe(e=>{
+        this.usersList = e as [];
+        this.loading = false;
+      });
+    }
+
+  }
+
+  searchUser(event) {
+    const query = event.target.value.toLowerCase();
+    this.usersList = [];
+    if(this.myFriends){
+      this.usersList = this.friendsList.filter(f=>f.name.startsWith(query) || f.username.startsWith(query));
+    }else if(query!==''){
+      this.params = '';
+      this.getUsers(query);
+    }
+  }
+
+  changeTab(fromTab: number){
+    this.usersList = [];
+    this.myFriends = fromTab===2;
+    this.params= this.myFriends ? '?id='+this.userId+'&status=ACCEPTED' : '';
+    if(this.myFriends){
+      this.getUsers();
+    }
+  }
 
 }

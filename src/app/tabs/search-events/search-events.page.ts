@@ -27,16 +27,24 @@ export class SearchEventsPage implements OnInit {
     this.getEventsList();
   }
 
-  getEventsList(){
+  getEventsList(textToSearch?: string){
     this.storageService.getUserInfo().pipe(mergeMap(userInfo=>{
       this.userId = userInfo.id;
-      const params = '?user='+userInfo.id+'&type=\'PRIVATE\',\'PUBLIC\'';
+      let params = '?user='+userInfo.id+'&type=\'PRIVATE\',\'PUBLIC\'';
+      if(textToSearch){
+        params+='&text='+textToSearch;
+      }
       return this.eventService.getEvents(params);
     })).subscribe(e=>{
       this.eventsList = e as EventPeekus[];
       this.eventsList = this.eventsList.sort((a,b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
       this.loading = false;
     });
+  }
+
+  buscarEvento(event) {
+    const query = event.target.value.toLowerCase();
+    this.getEventsList(query);
   }
 
 }

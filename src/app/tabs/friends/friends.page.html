@@ -7,5 +7,26 @@
         <app-peekus-header></app-peekus-header>
     </ion-header>
 
-    <ion-searchbar placeholder="Buscar por nombre de usuario" show-clear-button="focus"></ion-searchbar>
+    <div class="d-flex-center mt-1 friendsButtons">
+        <button (click)="changeTab(1)"><ion-text [ngStyle]="{'color': myFriends ? '#6B6B6B' : '#1B1C1E'}">Añadir amigos</ion-text></button>
+        <span>|</span>
+        <button (click)="changeTab(2)"><ion-text [ngStyle]="{'color': myFriends ? '#1B1C1E' : '#6B6B6B'}">Mis amigos</ion-text></button>
+    </div>
+    <ion-searchbar placeholder="Buscar por nombre de usuario" show-clear-button="focus" [debounce]="1000" (ionChange)="searchUser($event)"></ion-searchbar>
+
+    <ion-list *ngIf="!loading && usersList.length || friendRequests.length; else noUsers">
+        <ion-list-header *ngIf="!myFriends && friendRequests.length">
+            <ion-label>Solicitudes de amistad</ion-label>
+        </ion-list-header>
+        <app-item-friend *ngIf="!myFriends && friendRequests.length" [usersList]="friendRequests" [type]="1"></app-item-friend>
+        <ion-list-header *ngIf="usersList.length">
+            <ion-label>{{myFriends ? 'Amigos' : 'Búsqueda'}}</ion-label>
+        </ion-list-header>
+        <app-item-friend [usersList]="usersList" [type]="myFriends ? 3 : 2"></app-item-friend>
+    </ion-list>
+    <ng-template #noUsers>
+        <div class="d-flex-center mt-1">
+            <ion-text color="primary">Añade amigos!</ion-text>
+        </div>
+    </ng-template>
 </ion-content>
