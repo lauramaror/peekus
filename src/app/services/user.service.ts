@@ -23,7 +23,7 @@ export class UserService {
     ) {
     }
 
-    getUsers(params: string): Observable<object>{
+  getUsers(params: string): Observable<object>{
     return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
       const options = {
         headers: {
@@ -45,12 +45,45 @@ export class UserService {
     }));
   }
 
+  saveFriend(friendToPost: any): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.post(`${environment.baseUrl}/friend`, friendToPost, options);
+    }));
+  }
+
+  updateFriend(friendToUpdate: any): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.put(`${environment.baseUrl}/friend`, friendToUpdate, options);
+    }));
+  }
+
+  deleteFriend(params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.delete(`${environment.baseUrl}/friend${params}`, options);
+    }));
+  }
+
   saveUser(userData: User): Observable<object> {
     return this.http.post(`${environment.baseUrl}/user`, userData)
     .pipe(
       mergeMap( async (res: any) => {
           await this.storageService.set('ACCESS_TOKEN', res.token);
-          this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
+          this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.idProfilePicture);
           await this.storageService.set('USER', this.user);
           this.authSubject.next(true);
           return this.authSubject.asObservable();
@@ -74,7 +107,7 @@ export class UserService {
       .pipe(
         mergeMap( async (res: any) => {
             await this.storageService.set('ACCESS_TOKEN', res.token);
-            this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
+            this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.idProfilePicture);
             await this.storageService.set('USER', this.user);
             this.authSubject.next(true);
             return this.authSubject.asObservable();
@@ -94,7 +127,7 @@ export class UserService {
         return this.http.get(`${environment.baseUrl}/auth/token`, options);
       })).pipe(mergeMap(async (res: any)=>{
           await this.storageService.set('ACCESS_TOKEN', res.token);
-          this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.profilePic);
+          this.user = new User(res.id, res.username, '', true, res.name, '', 0, res.idProfilePicture);
           await this.storageService.set('USER', this.user);
           this.authSubject.next(true);
           return true;

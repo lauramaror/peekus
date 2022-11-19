@@ -71,7 +71,7 @@
                         <ion-icon name="camera" class="primary-icon" [ngStyle]="{'color': optionsByStatusMap.get(event.status).colorDate}"></ion-icon>
                         <ion-icon name="add" class="secondary-icon"></ion-icon>
                     </ion-button>
-                    <ion-button *ngIf="event.status !== eventStatus.FINISHED && !event.userParticipates && event.capacity>event.participants" fill="outline" class="ion-no-margin ion-no-padding ml-1" color="primary" (click)="inscriptionEvent()">
+                    <ion-button *ngIf="event.status !== eventStatus.FINISHED && !event.userParticipates && event.capacity>event.participants" fill="outline" class="ion-no-margin ion-no-padding" color="primary" (click)="inscriptionEvent()">
                         <img src="../../../../assets/img/inscribe.png" alt="">
                     </ion-button>
                 </ion-row>

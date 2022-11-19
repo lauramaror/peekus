@@ -31,7 +31,7 @@ export class PeekusHeaderComponent implements OnInit {
   ) {
     this.storageService.getUserInfo().pipe().subscribe(u=>{
       this.userId=u.id;
-      this.userProfilePicSrc = u.profilePic;
+      this.userProfilePicSrc = u.idProfilePicture;
       this.loadedPic = true;
     });
    }

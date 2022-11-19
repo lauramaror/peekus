@@ -31,11 +31,13 @@ export class FriendsPage implements OnInit {
   }
 
   getFriendRequests(){
+    this.loading = true;
     this.storageService.getUserInfo().pipe(mergeMap(u=>{
       this.userId=u.id;
-      return this.userService.getFriends('?id='+this.userId+'&status=PENDING');
+      return this.userService.getFriends('?id='+this.userId);
     })).subscribe(f=>{
-      this.friendRequests = (f as []).flatMap(u=>u['friendData']);
+      this.friendRequests = (f as []).filter(u=>u['status']==='PENDING' && u['idSolicitant']!==this.userId).flatMap(u=>u['friendData']);
+      this.friendsList = (f as []).flatMap(u=>u['friendData']);
       this.loading = false;
     });
   }
@@ -53,7 +55,7 @@ export class FriendsPage implements OnInit {
       });
     } else{
       this.userService.getUsers(this.params).subscribe(e=>{
-        this.usersList = e as [];
+        this.usersList = (e as []).filter(u=>!this.friendsList.flatMap(f=>f.id).includes(u['id']) && u['id']!==this.userId);
         this.loading = false;
       });
     }
@@ -72,11 +74,14 @@ export class FriendsPage implements OnInit {
   }
 
   changeTab(fromTab: number){
+    this.friendRequests = [];
     this.usersList = [];
     this.myFriends = fromTab===2;
     this.params= this.myFriends ? '?id='+this.userId+'&status=ACCEPTED' : '';
     if(this.myFriends){
       this.getUsers();
+    } else{
+      this.getFriendRequests();
     }
   }
 

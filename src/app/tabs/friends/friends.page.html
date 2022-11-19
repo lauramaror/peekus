@@ -12,21 +12,25 @@
         <span>|</span>
         <button (click)="changeTab(2)"><ion-text [ngStyle]="{'color': myFriends ? '#1B1C1E' : '#6B6B6B'}">Mis amigos</ion-text></button>
     </div>
-    <ion-searchbar placeholder="Buscar por nombre de usuario" show-clear-button="focus" [debounce]="1000" (ionChange)="searchUser($event)"></ion-searchbar>
+    <ion-searchbar placeholder="Buscar usuarios" show-clear-button="focus" [debounce]="1000" (ionChange)="searchUser($event)"></ion-searchbar>
 
-    <ion-list *ngIf="!loading && usersList.length || friendRequests.length; else noUsers">
-        <ion-list-header *ngIf="!myFriends && friendRequests.length">
-            <ion-label>Solicitudes de amistad</ion-label>
-        </ion-list-header>
-        <app-item-friend *ngIf="!myFriends && friendRequests.length" [usersList]="friendRequests" [type]="1"></app-item-friend>
-        <ion-list-header *ngIf="usersList.length">
-            <ion-label>{{myFriends ? 'Amigos' : 'Búsqueda'}}</ion-label>
-        </ion-list-header>
-        <app-item-friend [usersList]="usersList" [type]="myFriends ? 3 : 2"></app-item-friend>
-    </ion-list>
-    <ng-template #noUsers>
-        <div class="d-flex-center mt-1">
-            <ion-text color="primary">Añade amigos!</ion-text>
-        </div>
-    </ng-template>
+    <ng-container *ngIf="!loading">
+        <ion-list *ngIf="usersList.length || friendRequests.length; else noUsers">
+            <ion-list-header *ngIf="!myFriends && friendRequests.length">
+                <ion-label class="d-flex-start"><span>Solicitudes de amistad</span>
+                    <ion-badge color="primary" class="ml-1">{{friendRequests.length}}</ion-badge>
+                </ion-label>
+            </ion-list-header>
+            <app-item-friend *ngIf="!myFriends && friendRequests.length" [usersList]="friendRequests" [type]="1" [userId]="userId"></app-item-friend>
+            <ion-list-header *ngIf="usersList.length">
+                <ion-label>{{myFriends ? 'Amigos' : 'Búsqueda'}}</ion-label>
+            </ion-list-header>
+            <app-item-friend [usersList]="usersList" [type]="myFriends ? 3 : 2" [userId]="userId"></app-item-friend>
+        </ion-list>
+        <ng-template #noUsers>
+            <div class="d-flex-center mt-1">
+                <ion-text color="primary">Añade amigos!</ion-text>
+            </div>
+        </ng-template>
+    </ng-container>
 </ion-content>

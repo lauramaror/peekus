@@ -14,8 +14,10 @@
             </ion-col>
             <ion-col size="5" class="ion-no-padding">
                 <ion-row class="ion-justify-content-end ion-align-items-center">
-                    <ion-button *ngIf="type<3" class="button-border ion-no-margin" shape="round" style="font-size: 10px;">{{type===1 ? 'Aceptar' : 'Añadir'}}</ion-button>
-                    <ion-button fill="clear" color="tertiary" class="ion-no-margin ion-no-padding ml-2">
+                    <ion-button *ngIf="type<3" class="button-border ion-no-margin" shape="round" style="font-size: 10px;" (click)="acceptOrAdd(user.id)">
+                        {{type===1 ? 'Aceptar' : 'Añadir'}}
+                    </ion-button>
+                    <ion-button fill="clear" color="tertiary" class="ion-no-margin ion-no-padding ml-2" (click)="cancelOrRemove(user.id)">
                         <ion-icon name="close"></ion-icon>
                     </ion-button>
                 </ion-row>
