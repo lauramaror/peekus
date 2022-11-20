@@ -14,6 +14,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { AlertController } from '@ionic/angular';
 import { ImageService } from '../../services/image.service';
 import { EventPeekusStatus } from 'src/app/helpers/enums';
+import { PreviousRouteService } from 'src/app/services/previous-route.service';
 
 @Component({
   selector: 'app-event-detail',
@@ -47,6 +48,7 @@ export class EventDetailPage implements OnInit {
   photo: any;
   savingPhoto = false;
   collageSrc: any;
+  previousUrl = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -55,10 +57,13 @@ export class EventDetailPage implements OnInit {
     private datePipe: DatePipe,
     private alertController: AlertController,
     private router: Router,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private previousRouteService: PreviousRouteService
     ) { }
 
   ngOnInit() {
+    this.previousUrl = !this.previousRouteService.getLoop() && this.previousRouteService.getPreviousUrl()
+                      ? this.previousRouteService.getPreviousUrl() : '/tabs/my-events';
     this.eventId = this.route.snapshot.params.id;
     this.getEvent();
   }

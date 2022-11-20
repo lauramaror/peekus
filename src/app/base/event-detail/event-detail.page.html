@@ -1,12 +1,12 @@
 <ion-header [translucent]="true">
     <app-peekus-header></app-peekus-header>
-    <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="'/tabs/my-events'" [iconName]="'arrow-back'" [actionIcon]="actionIcon" [actionOption]="actionOption" (actionToPerform)="performAction($event)"></app-peekus-back-button>
+    <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="previousUrl" [iconName]="'arrow-back'" [actionIcon]="actionIcon" [actionOption]="actionOption" (actionToPerform)="performAction($event)"></app-peekus-back-button>
 </ion-header>
 
 <ion-content [fullscreen]="true">
     <ion-header collapse="condense">
         <app-peekus-header></app-peekus-header>
-        <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="'/tabs/my-events'" [iconName]="'arrow-back'" [actionIcon]="actionIcon" [actionOption]="actionOption" (actionToPerform)="performAction($event)"></app-peekus-back-button>
+        <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="previousUrl" [iconName]="'arrow-back'" [actionIcon]="actionIcon" [actionOption]="actionOption" (actionToPerform)="performAction($event)"></app-peekus-back-button>
     </ion-header>
     <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading || generatingCollage" class="mt-1"></ion-progress-bar>
     <div *ngIf="!loading" class="whiteBgCard">
@@ -27,7 +27,7 @@
                             <app-event-status-badge [event]="eventData"></app-event-status-badge>
                         </ion-col>
                     </ion-row>
-                    <ion-row class="ion-align-items-center" style="height: 50%; margin-bottom: 1px;">
+                    <ion-row class="ion-align-items-center" style="height: 50%; margin-bottom: 1px;" [routerLink]="['/base/my-profile', eventData.creator]" routerDirection="root">
                         <ion-col size="3" class="ion-no-padding">
                             <app-profile-picture [profilePictureId]="eventData.creatorProfilePicture" [size]="38"></app-profile-picture>
                         </ion-col>
@@ -41,7 +41,7 @@
                         </ion-col>
                     </ion-row>
                     <ion-row style="height: 15%; margin-bottom: 1px;">
-                        <ion-text color="grey" style="font-size: 12px;">Creado el {{createdDate}}</ion-text>
+                        <ion-text color="grey" style="font-size: 10px;">Creado el {{createdDate}}</ion-text>
                     </ion-row>
                 </ion-col>
                 <ion-col size="1.5">
@@ -108,7 +108,7 @@
             </div>
             <ion-slides *ngIf="!loadingParticipants" [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }">
                 <ion-slide *ngFor="let participant of eventParticipants" style="width: 80px; height: 80px;">
-                    <ion-col class="d-flex-center">
+                    <ion-col class="d-flex-center" [routerLink]="['/base/my-profile', participant.idParticipant]" routerDirection="root">
                         <app-profile-picture [profilePictureId]="participant.idProfilePicture" [size]="55"></app-profile-picture>
                         <ion-text color="primary" style="font-size: 10px;">@{{participant.username}}</ion-text>
                     </ion-col>
@@ -136,7 +136,7 @@
                                         <ion-text color="primary" style="font-size: 12px;">@{{comment.username}}</ion-text>
                                     </ion-row>
                                     <ion-row>
-                                        <ion-text color="tertiary" style="font-size: 14px;">{{comment.text}}</ion-text>
+                                        <ion-text color="tertiary" style="font-size: 12px;">{{comment.text}}</ion-text>
                                     </ion-row>
                                 </ion-col>
                                 <ion-col size="3.5">

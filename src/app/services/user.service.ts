@@ -91,6 +91,17 @@ export class UserService {
     );
   }
 
+  updateUser(userData: User, params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.put(`${environment.baseUrl}/user${params}`, userData, options);
+    }));
+  }
+
   updateProfilePic(imgUser: any): Observable<object>{
     return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
       const options = {

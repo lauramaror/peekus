@@ -1,10 +1,10 @@
 <ion-item *ngFor="let user of usersList">
     <ion-grid class="ion-no-padding ion-no-margin">
         <ion-row class="ion-align-items-center ion-no-padding ion-no-margin">
-            <ion-col size="2" class="ion-no-padding">
+            <ion-col size="2" class="ion-no-padding" [routerLink]="['/base/my-profile',user.id]" routerDirection="root">
                 <app-profile-picture [profilePictureId]="user.idProfilePicture" [size]="38"></app-profile-picture>
             </ion-col>
-            <ion-col size="5">
+            <ion-col size="5" [routerLink]="['/base/my-profile',user.id]" routerDirection="root">
                 <ion-row>
                     <ion-text color="grey" style="font-size: 12px;">{{user.name}}</ion-text>
                 </ion-row>

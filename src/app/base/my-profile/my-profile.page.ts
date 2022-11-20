@@ -2,6 +2,7 @@
 /* eslint-disable arrow-body-style */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { zip } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { convertArrayBufferToBase64 } from 'src/app/helpers/common-functions';
@@ -10,6 +11,7 @@ import { EventService } from 'src/app/services/event.service';
 import { ImageService } from 'src/app/services/image.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from '../../services/user.service';
+import { PreviousRouteService } from '../../services/previous-route.service';
 
 @Component({
   selector: 'app-my-profile',
@@ -26,16 +28,21 @@ export class MyProfilePage implements OnInit {
   isMyself = false;
   collagesParticipated = [];
   collagesLiked = [];
+  previousUrl = '';
 
   constructor(
     private route: ActivatedRoute,
     private storageService: StorageService,
     private userService: UserService,
     private eventService: EventService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private navController: NavController,
+    private previousRouteService: PreviousRouteService
   ) { }
 
   ngOnInit() {
+    this.previousUrl = !this.previousRouteService.getLoop() && this.previousRouteService.getPreviousUrl()
+                    ? this.previousRouteService.getPreviousUrl() : '/tabs/my-events';
     this.profileUserId = this.route.snapshot.params.id;
     this.getUser();
   }
@@ -79,6 +86,11 @@ export class MyProfilePage implements OnInit {
     // } else{
     //   this.getFriendRequests();
     // }
+  }
+
+  async logout(){
+    await this.userService.logout();
+    this.navController.navigateRoot(['/landing']);
   }
 
 }

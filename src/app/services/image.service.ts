@@ -50,6 +50,17 @@ export class ImageService {
     }));
   }
 
+  updateImageAPI(imageData: any, params: string): Observable<object> {
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.put(`${environment.baseUrl}/image${params}`, imageData, options);
+    }));
+  }
+
   generateCollage(params: string): Observable<object>{
     return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
       const options = {
@@ -152,6 +163,17 @@ export class ImageService {
       const formData = new FormData();
       formData.append('image', blob, file.name);
       return this.saveImageAPI(formData,params);
+    }));
+  }
+
+  updatPictureUpload(file: LocalFile, params: string) {
+    return from(fetch(file.data))
+    .pipe(mergeMap(response=> {
+      return from(response.blob());
+    })).pipe(mergeMap(blob=> {
+      const formData = new FormData();
+      formData.append('image', blob, file.name);
+      return this.updateImageAPI(formData,params);
     }));
   }
 

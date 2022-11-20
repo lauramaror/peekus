@@ -1,0 +1,8 @@
+<button style="background-color: transparent;" (click)="selectImage()">
+  <div class="mt-2 icon-stackPic" [ngStyle]="{'height': size+'px', 'width': size+'px'}">
+    <ion-avatar style="height: 100%; width: 100%;" class="primary-icon">
+      <ion-img [src]="photo ? photo.data : userProfilePicSrc"></ion-img>
+    </ion-avatar>
+      <ion-icon name="camera" class="secondary-icon"></ion-icon>
+  </div>
+</button>

@@ -71,9 +71,14 @@
                         <ion-icon name="camera" class="primary-icon" [ngStyle]="{'color': optionsByStatusMap.get(event.status).colorDate}"></ion-icon>
                         <ion-icon name="add" class="secondary-icon"></ion-icon>
                     </ion-button>
-                    <ion-button *ngIf="event.status !== eventStatus.FINISHED && !event.userParticipates && event.capacity>event.participants" fill="outline" class="ion-no-margin ion-no-padding" color="primary" (click)="inscriptionEvent()">
-                        <img src="../../../../assets/img/inscribe.png" alt="">
-                    </ion-button>
+                    <ng-container *ngIf="event.status !== eventStatus.FINISHED && !event.userParticipates && event.capacity>event.participants">
+                        <ion-button *ngIf="event.type === eventType.PUBLIC" fill="outline" class="ion-no-margin ion-no-padding" color="primary" (click)="inscriptionEvent()">
+                            <img src="../../../../assets/img/inscribe.png" alt="">
+                        </ion-button>
+                        <ion-button *ngIf="event.type === eventType.PRIVATE" class="ion-no-padding" id="open-modal-{{event.id}}" fill="outline" class="ion-no-margin ion-no-padding" color="primary">
+                            <img src="../../../../assets/img/inscribe.png" alt="">
+                        </ion-button>
+                    </ng-container>
                 </ion-row>
                 <ion-row style="height: 40%;" class="ion-justify-content-center ion-align-items-end">
                     <ion-button fill="clear" class="ion-no-margin ion-no-padding" color="tertiary">
@@ -84,3 +89,29 @@
         </ion-row>
     </ion-grid>
 </div>
+<ion-modal #modal trigger="open-modal-{{event.id}}">
+    <ng-template>
+        <ion-content>
+            <ion-toolbar>
+                <ion-title>{{event.name}}</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button color="tertiary" (click)="modal.dismiss()">
+                        <ion-icon name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+            <ion-item class="m-2">
+                <ion-input placeholder="Introduce código de acceso" type="text" [(ngModel)]="accessCode"></ion-input>
+            </ion-item>
+        </ion-content>
+        <ion-footer>
+            <ion-toolbar>
+                <div class="d-flex-end mr-1" style="align-items: center;">
+                    <ion-button color="primary" shape="round" class="button-border" (click)="inscriptionEvent()">
+                        <span>ACEPTAR</span>
+                    </ion-button>
+                </div>
+            </ion-toolbar>
+        </ion-footer>
+    </ng-template>
+</ion-modal>

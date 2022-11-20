@@ -6,6 +6,7 @@ import { PeekusBackButtonComponent } from './peekus-back-button/peekus-back-butt
 import { EventStatusBadgeComponent } from './event-status-badge/event-status-badge.component';
 import { RouterModule } from '@angular/router';
 import { ProfilePictureComponent } from './profile-picture/profile-picture.component';
+import { SelectImageComponent } from './select-image/select-image.component';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { ProfilePictureComponent } from './profile-picture/profile-picture.compo
     PeekusHeaderComponent,
     PeekusBackButtonComponent,
     EventStatusBadgeComponent,
-    ProfilePictureComponent
+    ProfilePictureComponent,
+    SelectImageComponent
   ],
   imports: [
     IonicModule,
@@ -24,7 +26,8 @@ import { ProfilePictureComponent } from './profile-picture/profile-picture.compo
     PeekusHeaderComponent,
     PeekusBackButtonComponent,
     EventStatusBadgeComponent,
-    ProfilePictureComponent
+    ProfilePictureComponent,
+    SelectImageComponent
   ]
 })
 export class CommonsModule { }
