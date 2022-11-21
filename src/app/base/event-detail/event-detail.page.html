@@ -93,11 +93,68 @@
                 </ion-col>
                 <ion-col size="1.5">
                     <ion-row class="ion-align-items-center">
-                        <ion-icon name="share-social" class="bigIconSize"></ion-icon>
+                        <ion-icon *ngIf="eventData.type!==eventType.EXCLUSIVE" name="share-social" class="bigIconSize"></ion-icon>
+                        <ion-button *ngIf="eventData.type===eventType.EXCLUSIVE" fill="clear" class="ion-no-margin ion-no-padding icon-stack" color="tertiary" id="open-modal" (click)="loadInvites()">
+                            <ion-icon name="person" class="primary-icon" color="tertirary"></ion-icon>
+                            <ion-icon name="add" class="secondary-icon" style="background-color: var(--ion-color-tertiary);"></ion-icon>
+                        </ion-button>
                     </ion-row>
                 </ion-col>
             </ion-row>
         </ion-grid>
+        <ion-modal #modal trigger="open-modal">
+            <ng-template>
+                <ion-content>
+                    <ion-toolbar>
+                        <ion-title>ENVIAR INVITACIÓN</ion-title>
+                        <ion-buttons slot="end">
+                            <ion-button color="tertiary" (click)="modal.dismiss()">
+                                <ion-icon name="close"></ion-icon>
+                            </ion-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                    <div class="ml-1">
+                        <ion-text *ngIf="participantsInvitedList.length" class="ml-1">Invitados</ion-text>
+                        <ion-slides *ngIf="participantsInvitedList.length" [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }">
+                            <ion-slide *ngFor="let participant of participantsInvitedList" style="width: 50px; height: 50px;">
+                                <ion-col class="d-flex-center">
+                                    <app-profile-picture [profilePictureId]="participant.idProfilePicture" [size]="40"></app-profile-picture>
+                                    <ion-text color="primary" style="font-size: 8px;">@{{participant.username}}</ion-text>
+                                </ion-col>
+                            </ion-slide>
+                        </ion-slides>
+                    </div>
+                    <ion-searchbar placeholder="Buscar usuario" show-clear-button="focus" [debounce]="1000" (ionChange)="searchUser($event)"></ion-searchbar>
+                    <ion-list>
+                        <ion-item *ngFor="let user of usersList">
+                            <app-profile-picture [profilePictureId]="user.idProfilePicture" [size]="38"></app-profile-picture>
+                            <ion-label class="ml-2">
+                                <h2>
+                                    <ion-text color="grey" style="font-size: 14px;">{{user.name}}</ion-text>
+                                </h2>
+                                <p>
+                                    <ion-text color="primary">@{{user.username}}</ion-text>
+                                </p>
+                            </ion-label>
+                            <ion-button fill="clear" class="ion-no-margin ion-no-padding icon-stack" color="tertiary" (click)="saveParticipant(user)">
+                                <ion-icon name="mail" class="primary-icon" color="tertirary"></ion-icon>
+                                <ion-icon name="arrow-forward" class="secondary-icon" style="background-color: var(--ion-color-tertiary);"></ion-icon>
+                            </ion-button>
+                        </ion-item>
+                    </ion-list>
+                </ion-content>
+                <ion-footer>
+                    <ion-toolbar>
+                        <div class="d-flex-end mr-1" style="align-items: center;">
+                            <ion-spinner name="lines" *ngIf="savingParticipants"></ion-spinner>
+                            <ion-button color="primary" shape="round" class="button-border" (click)="sendNotifications()">
+                                <span>HECHO</span>
+                            </ion-button>
+                        </div>
+                    </ion-toolbar>
+                </ion-footer>
+            </ng-template>
+        </ion-modal>
         <div style="margin-top: 5px;">
             <div>
                 <ion-icon name="person" class="ml-2"></ion-icon>

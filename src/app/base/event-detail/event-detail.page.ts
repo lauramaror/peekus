@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable arrow-body-style */
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, zip } from 'rxjs';
+import { forkJoin, of, zip } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { convertArrayBufferToBase64, presentAlert } from 'src/app/helpers/common-functions';
 import { optionsByTypeMap, optionsByStatusMap } from 'src/app/helpers/options-maps';
@@ -11,10 +11,12 @@ import { CommentPeekus } from 'src/app/models/comment.model';
 import { EventPeekus } from 'src/app/models/event.model';
 import { EventService } from 'src/app/services/event.service';
 import { StorageService } from 'src/app/services/storage.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonModal, ToastController } from '@ionic/angular';
 import { ImageService } from '../../services/image.service';
-import { EventPeekusStatus } from 'src/app/helpers/enums';
+import { EventPeekusStatus, EventPeekusType } from 'src/app/helpers/enums';
 import { PreviousRouteService } from 'src/app/services/previous-route.service';
+import { UserService } from 'src/app/services/user.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-event-detail',
@@ -22,9 +24,12 @@ import { PreviousRouteService } from 'src/app/services/previous-route.service';
   styleUrls: ['./event-detail.page.scss'],
 })
 export class EventDetailPage implements OnInit {
+  @ViewChild(IonModal) modal: IonModal;
+
 
   optionsByTypeMap = optionsByTypeMap;
   eventStatus = EventPeekusStatus;
+  eventType = EventPeekusType;
   optionsByStatusMap = optionsByStatusMap;
   loading = true;
   eventId = '';
@@ -49,6 +54,9 @@ export class EventDetailPage implements OnInit {
   savingPhoto = false;
   collageSrc: any;
   previousUrl = '';
+  usersList = [];
+  participantsInvitedList = [];
+  savingParticipants = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -58,7 +66,11 @@ export class EventDetailPage implements OnInit {
     private alertController: AlertController,
     private router: Router,
     private imageService: ImageService,
-    private previousRouteService: PreviousRouteService
+    private previousRouteService: PreviousRouteService,
+    private userService: UserService,
+    private notificationService: NotificationService,
+    private toastController: ToastController,
+
     ) { }
 
   ngOnInit() {
@@ -280,5 +292,76 @@ export class EventDetailPage implements OnInit {
         break;
     }
   }
+
+  searchUser(event) {
+    const query = event.target.value.toLowerCase();
+    this.usersList = [];
+    if(query!=='') { this.getUsers(query); }
+  }
+
+  getUsers(textToSearch?: string){
+    this.userService.getUsers('?text='+textToSearch).subscribe(e=>{
+      this.usersList = (e as []).filter(u=>!this.participantsInvitedList.flatMap(p=>p.id).includes(u['id']) && u['id']!==this.userId);
+    });
+  }
+
+  loadInvites(){
+    const params = '?idEvent='+this.eventId+'&type=EVENT_INVITE';
+    const notifToPost = {idEvent: this.eventId, type: 'EVENT_INVITE', description: 'Te han invitado al evento '+this.eventData.name};
+    this.notificationService.getNotifications(params).pipe(map(n=>{
+      return n as any[];
+    }), mergeMap(no=>{
+      return no.length ? of(no[0]) : this.notificationService.saveNotification(notifToPost);
+    }), mergeMap(nu=>{
+      const paramsNu = '?idNotification='+nu.id;
+      return this.notificationService.getNotificationUsers(paramsNu);
+    })).subscribe(notif=>{
+      // this.participantsInvitedList = (notif as []).flatMap(n=>n['idUser']);
+      this.participantsInvitedList = (notif as []).map(c=> {
+          return {
+            id: c['idUser'],
+            username: c['username'],
+            idProfilePicture: c['idProfilePicture'],
+          };
+        });
+    });
+  }
+
+  saveParticipant(participant: any){
+    this.participantsInvitedList.push({
+      id: participant.id,
+      username: participant.username,
+      idProfilePicture: participant.idProfilePicture,
+    });
+    this.usersList = this.usersList.filter(u=>u.id!==participant.id);
+  }
+
+  sendNotifications(){
+    this.savingParticipants = true;
+    const params = '?idEvent='+this.eventId+'&type=EVENT_INVITE';
+    const notifToPost = {idEvent: this.eventId, type: 'EVENT_INVITE', description: 'Te han invitado al evento '+this.eventData.name};
+    this.notificationService.getNotifications(params).pipe(map(n=>{
+      return (n as []).length ? n[0] : this.notificationService.saveNotification(notifToPost);
+    }), mergeMap(nu=>{
+      const bodyToPost = {idNotification: nu.id, idUsers: this.participantsInvitedList.flatMap(p=>p.id) };
+      return this.notificationService.saveNotificationUsers(bodyToPost);
+    })).subscribe(notif=>{
+      this.savingParticipants = false;
+      this.modal.dismiss();
+      this.presentToast('Invitaciones enviadas');
+    });
+  }
+
+  async presentToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 1500,
+      position: 'bottom',
+      cssClass: 'my-custom-toast'
+    });
+
+    await toast.present();
+  }
+
 
 }

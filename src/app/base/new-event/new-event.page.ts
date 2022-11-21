@@ -11,6 +11,7 @@ import { EventPeekus } from 'src/app/models/event.model';
 import { EventService } from 'src/app/services/event.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { IonModal } from '@ionic/angular';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-new-event',
@@ -22,6 +23,7 @@ export class NewEventPage implements OnInit {
   eventId = '';
   userId = '';
   loading = false;
+  savingParticipants = false;
   savingEvent = false;
   eventForm: FormGroup;
   startDate: string;
@@ -32,6 +34,8 @@ export class NewEventPage implements OnInit {
   backButtonText = 'Crear Evento';
   routerBackUrl = '/tabs/my-events';
   eventData: EventPeekus;
+  // usersList = [];
+
 
   constructor(
     private route: ActivatedRoute,
@@ -41,6 +45,8 @@ export class NewEventPage implements OnInit {
     private eventService: EventService,
     private storageService: StorageService,
     private navController: NavController,
+    private userService: UserService,
+
     ) {
       this.eventForm = this.formBuilder.group({
         name: ['',Validators.required],
@@ -127,12 +133,13 @@ export class NewEventPage implements OnInit {
       if(this.eventId){
         this.eventService.updateEvent(newEvent, '?id='+this.eventId).pipe().subscribe(p=>{
             this.savingEvent = false;
-            this.navController.navigateRoot(['/tabs/my-events']); // TODO go to event detail
+            this.navController.navigateRoot(['/base/detail', this.eventId]);
         });
       }
       else{
         this.eventService.saveEvent(newEvent).pipe(
           map(event=> {
+            this.eventId = event['idEvent'];
             return event['idEvent'];
           }),
           mergeMap(eventId=>{
@@ -145,7 +152,7 @@ export class NewEventPage implements OnInit {
             );
           })).subscribe(([participants, code])=>{
             this.savingEvent = false;
-            this.navController.navigateRoot(['/tabs/my-events']); // TODO go to event detail
+            this.navController.navigateRoot(['/base/detail', this.eventId]);
         });
       }
   }
@@ -160,6 +167,25 @@ export class NewEventPage implements OnInit {
 
     await toast.present();
   }
+
+  // searchUser(event) {
+  //   const query = event.target.value.toLowerCase();
+  //   this.usersList = [];
+  //   if(query!=='') { this.getUsers(query); }
+  // }
+
+  // getUsers(textToSearch?: string){
+  //   this.userService.getUsers('?text='+textToSearch).subscribe(e=>{
+  //     // this.usersList = (e as []).filter(u=>!this.friendsList.flatMap(f=>f.id).includes(u['id']) && u['id']!==this.userId);
+  //     this.usersList = (e as []);
+  //   });
+  // }
+
+  // saveParticipant(participantId: string){
+  //   // this.participantsList.push({idEvent: null, idParticipant: participantId});
+  //   // const participantToPost = {idEvent: this.eventId, idParticipant: this.userId};
+  //   // this.eventService.saveParticipant(participantToPost).pipe().subscribe()
+  // }
 
 
 }

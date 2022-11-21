@@ -81,11 +81,6 @@ export class MyProfilePage implements OnInit {
 
   changeTab(fromTab: number){
     this.participatedTab = fromTab===1;
-    // if(this.myFriends){
-    //   this.getUsers();
-    // } else{
-    //   this.getFriendRequests();
-    // }
   }
 
   async logout(){
