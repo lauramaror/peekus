@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+    <app-peekus-header></app-peekus-header>
+    <app-peekus-back-button [backButtonText]="'Notificaciones'" [routerUrl]="previousUrl" [iconName]="'arrow-back'"></app-peekus-back-button>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+        <app-peekus-header></app-peekus-header>
+        <app-peekus-back-button [backButtonText]="'Notificaciones'" [routerUrl]="previousUrl" [iconName]="'arrow-back'"></app-peekus-back-button>
+    </ion-header>
+    <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading" class="mt-1"></ion-progress-bar>
+    <ion-list>
+        <ion-item *ngFor="let notification of notificationsList" [ngClass]="{'item-bg-color': !notification.notified}">
+            <ion-grid class="ion-no-padding ion-no-margin">
+                <ion-row class="ion-align-items-center ion-no-padding ion-no-margin">
+                    <ion-col size="10">
+                        <ion-row>
+                            <ion-text color="grey" style="font-size: 13px;">{{notification.description}}</ion-text>
+                        </ion-row>
+                        <ion-row>
+                            <ion-text color="grey" style="font-size: 10px;">{{notification.formattedDate}}</ion-text>
+                        </ion-row>
+                    </ion-col>
+                    <ion-col size="2" class="d-flex-end">
+                        <ion-button *ngIf="!notification.notified" shape="round" class="button-border" style="font-size: 12px;" (click)="notifiedCheck(notification)">Ver</ion-button>
+                        <ion-button *ngIf="notification.notified" shape="round" class="button-border" style="font-size: 12px;" color="tertiary" fill="outline" [routerLink]="[notification.redirectLink]" routerDirection="root">Ver</ion-button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-item>
+    </ion-list>
+
+</ion-content>

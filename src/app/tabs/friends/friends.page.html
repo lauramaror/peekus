@@ -25,7 +25,7 @@
             <ion-list-header *ngIf="usersList.length">
                 <ion-label>{{myFriends ? 'Amigos' : 'Búsqueda'}}</ion-label>
             </ion-list-header>
-            <app-item-friend [usersList]="usersList" [type]="myFriends ? 3 : 2" [userId]="userId"></app-item-friend>
+            <app-item-friend [usersList]="usersList" [type]="myFriends ? 3 : 2" [userId]="userId" (updateUsers)="updateUserList($event)"></app-item-friend>
         </ion-list>
         <ng-template #noUsers>
             <div class="d-flex-center mt-1">

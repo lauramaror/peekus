@@ -1,0 +1,25 @@
+.icon-stack {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s;
+    ion-icon {
+        flex: 1;
+        &.primary-icon {
+            margin: 0 auto;
+            z-index: 1;
+        }
+        &.secondary-icon {
+            position: absolute;
+            right: 2%;
+            bottom: 50%;
+            height: 36%;
+            width: 36%;
+            border-radius: 50%;
+            background-color: var(--ion-color-tertiary);
+            color: var(--ion-color-primary);
+            z-index: 2;
+        }
+    }
+}

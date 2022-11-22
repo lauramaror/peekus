@@ -9,6 +9,7 @@ import { ImageService } from '../../services/image.service';
 import { from } from 'rxjs';
 import { convertArrayBufferToBase64 } from 'src/app/helpers/common-functions';
 import { NavController } from '@ionic/angular';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-peekus-header',
@@ -20,6 +21,7 @@ export class PeekusHeaderComponent implements OnInit {
   userId = '';
   userProfilePicSrc = '';
   loadedPic = false;
+  newNotifications = false;
 
   constructor(
     private userService: UserService,
@@ -27,12 +29,16 @@ export class PeekusHeaderComponent implements OnInit {
     private storageService: StorageService,
     private imageService: ImageService,
     private navController: NavController,
+    private notificationService: NotificationService,
 
   ) {
-    this.storageService.getUserInfo().pipe().subscribe(u=>{
+    this.storageService.getUserInfo().pipe(mergeMap(u=>{
       this.userId=u.id;
       this.userProfilePicSrc = u.idProfilePicture;
       this.loadedPic = true;
+      return this.notificationService.getNotificationUsers('?idUser='+this.userId);
+    })).subscribe(s=>{
+      this.newNotifications = (s as []).length > 0;
     });
    }
 

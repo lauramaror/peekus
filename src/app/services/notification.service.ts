@@ -60,4 +60,15 @@ export class NotificationService {
     }));
   }
 
+  updateNotificationUser(params: any): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.put(`${environment.baseUrl}/notification/users${params}`, {}, options);
+    }));
+  }
+
 }

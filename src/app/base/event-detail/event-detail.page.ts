@@ -57,6 +57,7 @@ export class EventDetailPage implements OnInit {
   usersList = [];
   participantsInvitedList = [];
   savingParticipants = false;
+  notificationId = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -313,10 +314,10 @@ export class EventDetailPage implements OnInit {
     }), mergeMap(no=>{
       return no.length ? of(no[0]) : this.notificationService.saveNotification(notifToPost);
     }), mergeMap(nu=>{
+      this.notificationId = nu.id;
       const paramsNu = '?idNotification='+nu.id;
       return this.notificationService.getNotificationUsers(paramsNu);
     })).subscribe(notif=>{
-      // this.participantsInvitedList = (notif as []).flatMap(n=>n['idUser']);
       this.participantsInvitedList = (notif as []).map(c=> {
           return {
             id: c['idUser'],
@@ -338,14 +339,8 @@ export class EventDetailPage implements OnInit {
 
   sendNotifications(){
     this.savingParticipants = true;
-    const params = '?idEvent='+this.eventId+'&type=EVENT_INVITE';
-    const notifToPost = {idEvent: this.eventId, type: 'EVENT_INVITE', description: 'Te han invitado al evento '+this.eventData.name};
-    this.notificationService.getNotifications(params).pipe(map(n=>{
-      return (n as []).length ? n[0] : this.notificationService.saveNotification(notifToPost);
-    }), mergeMap(nu=>{
-      const bodyToPost = {idNotification: nu.id, idUsers: this.participantsInvitedList.flatMap(p=>p.id) };
-      return this.notificationService.saveNotificationUsers(bodyToPost);
-    })).subscribe(notif=>{
+    const bodyToPost = {idNotification: this.notificationId, idUsers: this.participantsInvitedList.flatMap(p=>p.id) };
+    this.notificationService.saveNotificationUsers(bodyToPost).pipe().subscribe(notif=>{
       this.savingParticipants = false;
       this.modal.dismiss();
       this.presentToast('Invitaciones enviadas');

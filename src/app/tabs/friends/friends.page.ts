@@ -26,7 +26,6 @@ export class FriendsPage implements OnInit {
   ) {}
 
   ngOnInit(): void{
-    // this.storageService.getUserInfo().pipe().subscribe(u=>this.userId=u.id);
     this.getFriendRequests();
   }
 
@@ -83,6 +82,10 @@ export class FriendsPage implements OnInit {
     } else{
       this.getFriendRequests();
     }
+  }
+
+  updateUserList(newUsers: any[]){
+    this.getFriendRequests();
   }
 
 }

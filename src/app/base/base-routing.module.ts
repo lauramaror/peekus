@@ -24,8 +24,13 @@ const routes: Routes = [
         path: 'edit-profile',
         loadChildren: () => import('./edit-profile/edit-profile.module').then( m => m.EditProfilePageModule)
       },
+      {
+        path: 'notifications',
+        loadChildren: () => import('./notifications/notifications.module').then( m => m.NotificationsPageModule)
+      },
     ]
   },
+
 ];
 
 @NgModule({
