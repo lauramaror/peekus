@@ -34,6 +34,10 @@ export class UserService {
     }));
   }
 
+  checkUsername(params: string): Observable<object>{
+    return this.http.get(`${environment.baseUrl}/user/username${params}`);
+  }
+
   getFriends(params: string): Observable<object>{
     return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
       const options = {

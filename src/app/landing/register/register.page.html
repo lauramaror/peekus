@@ -18,7 +18,8 @@
 
                         <p class="m-labels">USUARIO</p>
                         <ion-item class="ion-no-padding">
-                            <ion-input class="ion-no-padding" formControlName="username"></ion-input>
+                            <ion-input class="ion-no-padding" formControlName="username" [debounce]="1000" (ionChange)="usernameTaken($event)"></ion-input>
+                            <ion-note slot="helper" *ngIf="!validUsername" style="color: var(--ion-color-danger);">Nombre de usuario no disponible</ion-note>
                             <ion-icon name="person" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
                         </ion-item>
 

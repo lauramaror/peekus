@@ -14,6 +14,7 @@ export class RegisterPage implements OnInit {
 
   loading = false;
   registerForm: FormGroup;
+  validUsername = true;
 
   constructor(
     private userService: UserService,
@@ -33,6 +34,19 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
   }
 
+  usernameTaken(event){
+    const usernameToCheck = event.target.value.toLowerCase();
+    if(usernameToCheck !== ''){
+      this.userService.checkUsername('?username='+usernameToCheck).pipe().subscribe(u=>{
+        this.validUsername = true;
+        if((u as []).length){
+          this.validUsername = false;
+          // this.presentToast('Nombre de usuario no disponible');
+        }
+      });
+    }
+  }
+
   register(){
     if(!this.registerForm.valid){
       this.presentToast('Rellena el nombre de usuario y la contraseña');
@@ -40,6 +54,10 @@ export class RegisterPage implements OnInit {
     }
     if(!this.registerForm.get('email').value && !this.registerForm.get('phone').value){
       this.presentToast('Rellena el email y/o el teléfono');
+      return;
+    }
+    if(!this.validUsername){
+      this.presentToast('Nombre de usuario no disponible');
       return;
     }
     this.loading = true;

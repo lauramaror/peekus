@@ -10,6 +10,7 @@ import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Preferences } from '@capacitor/preferences';
 import { Platform } from '@ionic/angular';
+import { Media } from '@capacitor-community/media';
 
 @Injectable({
   providedIn: 'root'
@@ -190,6 +191,45 @@ export class ImageService {
     }
 
     this.images = [];
+  }
+
+  async saveImageToGallery(photo: Photo) {
+    try {
+      // const media = new Media();
+      const platform = Capacitor.getPlatform();
+      // Save the wallpaper locally to Cache folder
+      const wallpaperTempFile = `${new Date().getTime()}.jpeg`;
+      const wallpaperAsBase64 = await this.readAsBase64(photo);
+      const wallpaperTemp = await Filesystem.writeFile({
+        path: wallpaperTempFile,
+        data: wallpaperAsBase64,
+        directory: Directory.Cache
+      });
+      // Get or create the album
+      // @TODO Simplify when issue https://github.com/capacitor-community/media/issues/6 is fixed
+      const albumName = 'Peekus';
+      let albumIdentifier = '';
+      if (platform === 'ios') {
+        // Handle albums
+        let albums = await Media.getAlbums();
+        albumIdentifier = albums.albums.find(a => a.name === albumName)?.identifier || null;
+
+        if (!albumIdentifier) {
+          // Doesn't exist, create new album
+          await Media.createAlbum({ name: albumName });
+          albums = await Media.getAlbums();
+          albumIdentifier = albums.albums.find(a => a.name === albumName)?.identifier;
+        }
+      } else if (platform === 'android') {
+        await Media.createAlbum({ name: albumName });
+      }
+      Media.savePhoto({
+        path: wallpaperTemp.uri,
+        album: (platform === 'ios') ? albumIdentifier : albumName
+      })
+      .then(() => console.log('Image has been saved'))
+      .catch(e => console.error(e));
+    } catch (e) { console.error(e); }
   }
 
   convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
