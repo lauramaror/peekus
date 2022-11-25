@@ -11,11 +11,15 @@
         <div class="d-flex-inbetween">
             <div class="d-flex-start">
                 <ion-item>
-                    <ion-select multiple="true" selectedText="Estados" (ionChange)="changeStatuses($event)">
+                    <!-- <ion-select multiple="true" selectedText="Estados" (ionChange)="changeStatuses($event)">
                         <ion-select-option value="NEXT">Próximos</ion-select-option>
                         <ion-select-option value="ONGOING">En curso</ion-select-option>
                         <ion-select-option value="DONE">Finalizados</ion-select-option>
                         <ion-select-option value="COMPLETED">Completados</ion-select-option>
+                    </ion-select> -->
+                    <!-- [compareWith]="compareWith" value="{{myDefaultStatusesValue}}" -->
+                    <ion-select multiple="true" selectedText="Estados" (ionChange)="changeStatuses($event)">
+                        <ion-select-option *ngFor="let status of statusesArray" value="{{status.value}}">{{status.name}}</ion-select-option>
                     </ion-select>
                 </ion-item>
                 <ion-item class="ml-2">

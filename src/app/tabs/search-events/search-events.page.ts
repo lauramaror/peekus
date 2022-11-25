@@ -16,6 +16,8 @@ export class SearchEventsPage implements OnInit {
   eventsList: EventPeekus[] = [];
   loading = true;
   userId = '';
+  textToSearch = '';
+  paramsToSearch = '';
 
   constructor(
     private eventService: EventService,
@@ -27,12 +29,15 @@ export class SearchEventsPage implements OnInit {
     this.getEventsList();
   }
 
-  getEventsList(textToSearch?: string){
+  getEventsList(){
     this.storageService.getUserInfo().pipe(mergeMap(userInfo=>{
-      this.userId = userInfo.id;
-      let params = '?user='+userInfo.id+'&type=\'PRIVATE\',\'PUBLIC\'';
-      if(textToSearch){
-        params+='&text='+textToSearch;
+      if(!this.userId){
+        this.userId = userInfo.id;
+        this.paramsToSearch = '?user='+userInfo.id+'&type=\'PRIVATE\',\'PUBLIC\'';
+      }
+      let params = this.paramsToSearch;
+      if(this.textToSearch){
+        params+='&text='+this.textToSearch;
       }
       return this.eventService.getEvents(params);
     })).subscribe(e=>{
@@ -43,8 +48,17 @@ export class SearchEventsPage implements OnInit {
   }
 
   buscarEvento(event) {
-    const query = event.target.value.toLowerCase();
-    this.getEventsList(query);
+    this.textToSearch = event.target.value.toLowerCase();
+    this.getEventsList();
+  }
+
+  filterByType(filters: boolean[]){
+    this.paramsToSearch = '?user='+this.userId;
+    const types = [];
+    if(filters[0]) {types.push('\'PUBLIC\'');}
+    if(filters[1]) {types.push('\'PRIVATE\'');}
+    this.paramsToSearch += types.length ? '&type='+types.join(',') : '';
+    this.getEventsList();
   }
 
 }

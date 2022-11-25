@@ -1,12 +1,22 @@
-<div class="d-flex-end">
-    <ion-button class="ion-no-padding mr-2 ion-no-margin" fill="clear" color="grey" (click)="orderByDate()">
-        <ion-icon name="calendar-outline"></ion-icon>
-        <ion-icon name="swap-vertical" size="small"></ion-icon>
-    </ion-button>
-    <ion-button class="ion-no-padding mr-2 ion-no-margin" fill="clear" color="grey" (click)="orderByName()">
-        <ion-icon name="text"></ion-icon>
-        <ion-icon name="swap-vertical" size="small"></ion-icon>
-    </ion-button>
+<div class="d-flex-inbetween">
+    <div class="d-flex-start" [style.visibility]="search ? 'visible': 'hidden'">
+        <ion-button class="ion-no-margin typeButton ml-1" [fill]="publicCheck ? 'solid' : 'outline'" (click)="setPublic()">
+            <ion-text [color]="publicCheck ? 'white' : 'primary'">Públicos</ion-text>
+        </ion-button>
+        <ion-button class="ion-no-margin ml-1 typeButton" [fill]="privateCheck ? 'solid' : 'outline'" (click)="setPrivate()">
+            <ion-text [color]="privateCheck ? 'white' : 'primary'">Privados</ion-text>
+        </ion-button>
+    </div>
+    <div class="d-flex-end">
+        <ion-button class="ion-no-padding mr-2 ion-no-margin" fill="clear" color="grey" (click)="orderByDate()">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <ion-icon name="swap-vertical" size="small"></ion-icon>
+        </ion-button>
+        <ion-button class="ion-no-padding mr-2 ion-no-margin" fill="clear" color="grey" (click)="orderByName()">
+            <ion-icon name="text"></ion-icon>
+            <ion-icon name="swap-vertical" size="small"></ion-icon>
+        </ion-button>
+    </div>
 </div>
 <ng-container *ngFor="let event of events">
     <app-event-card [event]="event" [userId]="userId"></app-event-card>

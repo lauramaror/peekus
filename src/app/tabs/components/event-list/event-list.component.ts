@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EventPeekus } from 'src/app/models/event.model';
 import { ImageService } from 'src/app/services/image.service';
 
@@ -10,9 +10,14 @@ import { ImageService } from 'src/app/services/image.service';
 export class EventListComponent implements OnInit {
   @Input() events: EventPeekus[];
   @Input() userId: string;
+  @Input() search: boolean;
+
+  @Output() filterByType = new EventEmitter<boolean[]>();
 
   ascDate = true;
   ascName = true;
+  publicCheck = true;
+  privateCheck = true;
 
   constructor(
     private imageService: ImageService
@@ -37,6 +42,18 @@ export class EventListComponent implements OnInit {
     this.events = this.ascName ? this.events.sort((a,b) => a.name.localeCompare(b.name))
                           : this.events.sort((a,b) => b.name.localeCompare(a.name));
     this.ascName = !this.ascName;
+  }
+
+  setPublic(){
+    this.publicCheck = !this.publicCheck;
+    this.privateCheck = !this.publicCheck && !this.privateCheck ? true : this.privateCheck;
+    this.filterByType.emit([this.publicCheck, this.privateCheck]);
+  }
+
+  setPrivate(){
+    this.privateCheck = !this.privateCheck;
+    this.publicCheck = !this.privateCheck && !this.publicCheck ? true : this.publicCheck;
+    this.filterByType.emit([this.publicCheck, this.privateCheck]);
   }
 
 }
