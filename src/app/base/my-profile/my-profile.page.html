@@ -18,7 +18,7 @@
                     </ion-button>
                 </ion-col>
                 <ion-col size="6" class="d-flex-end ion-no-padding">
-                    <ion-button *ngIf="isMyself" (click)="logout()" fill="clear" color="tertiary" class="ion-no-padding">
+                    <ion-button *ngIf="isMyself" [routerLink]="['/base/settings']" routerDirection="root" fill="clear" color="tertiary" class="ion-no-padding">
                         <ion-icon name="ellipsis-vertical"></ion-icon>
                     </ion-button>
                 </ion-col>

@@ -83,9 +83,4 @@ export class MyProfilePage implements OnInit {
     this.participatedTab = fromTab===1;
   }
 
-  async logout(){
-    await this.userService.logout();
-    this.navController.navigateRoot(['/landing']);
-  }
-
 }

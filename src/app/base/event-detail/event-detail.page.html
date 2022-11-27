@@ -10,7 +10,7 @@
     </ion-header>
     <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading || generatingCollage" class="mt-1"></ion-progress-bar>
     <div *ngIf="!loading" class="whiteBgCard">
-        <img *ngIf="collageSrc" src="{{collageSrc}}" alt="">
+        <img *ngFor="let collage of collageSrc" src="{{collage}}" alt="">
         <ion-grid>
             <ion-row>
                 <ion-col size="5.5">

@@ -1,0 +1,20 @@
+<ion-header [translucent]="true">
+    <app-peekus-header></app-peekus-header>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+        <app-peekus-header></app-peekus-header>
+    </ion-header>
+
+    <ion-button [routerLink]="[previousUrl]" routerDirection="root" fill="clear" color="tertiary" class="ion-no-padding">
+        <ion-icon name="arrow-back"></ion-icon>
+    </ion-button>
+
+    <div class="d-flex-center">
+        <ion-button class="button-border editButton mt-1" shape="round" (click)="logout">
+            <span class="ml-2 mr-2">Cerrar Sesión</span>
+        </ion-button>
+    </div>
+
+</ion-content>

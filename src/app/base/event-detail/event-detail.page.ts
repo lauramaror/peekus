@@ -52,7 +52,7 @@ export class EventDetailPage implements OnInit {
   actionOption: number;
   photo: any;
   savingPhoto = false;
-  collageSrc: any;
+  collageSrc = [];
   previousUrl = '';
   usersList = [];
   participantsInvitedList = [];
@@ -99,8 +99,12 @@ export class EventDetailPage implements OnInit {
       this.eventData.completedByUser = event[0].completedByUser === 1;
       this.eventParticipants = participants as [];
       this.eventComments = comments as [];
-      if((collage as any[]).length){
-        this.collageSrc = convertArrayBufferToBase64(collage[0]['data']['data']);
+      const collages = (collage as any[]);
+      if(collages.length){
+        collages.forEach(c=>{
+          const collageData = convertArrayBufferToBase64(c['data']['data']);
+          this.collageSrc.push(collageData);
+        });
       }
 
       this.setActionOption();
@@ -121,9 +125,9 @@ export class EventDetailPage implements OnInit {
 
   setActionOption(){
     const today = new Date();
-    this.actionIcon = this.eventData.status === EventPeekusStatus.FINISHED && this.collageSrc ? 'download-outline' : '';
+    this.actionIcon = this.eventData.status === EventPeekusStatus.FINISHED && this.collageSrc.length ? 'download-outline' : '';
     if(this.eventData.creator === this.userId){
-      if(this.eventData.status === EventPeekusStatus.FINISHED && !this.collageSrc){
+      if(this.eventData.status === EventPeekusStatus.FINISHED && this.collageSrc.length===0){
           this.actionOption = 1;
       }
 
@@ -258,8 +262,16 @@ export class EventDetailPage implements OnInit {
     this.generatingCollage = true;
     this.actionOption = null;
     const params = '?idEvent='+this.eventId;
-    this.imageService.generateCollage(params).pipe().subscribe(l=>{
-      this.collageSrc = convertArrayBufferToBase64(l['data']['data']);
+    this.imageService.generateCollage(params).pipe(mergeMap(c=>{
+      return this.imageService.getImages('?idEvent='+this.eventId+'&type=collage');
+    })).subscribe(collage=>{
+      const collages = (collage as any[]);
+      if(collages.length){
+        collages.forEach(c=>{
+          const collageData = convertArrayBufferToBase64(c['data']['data']);
+          this.collageSrc.push(collageData);
+        });
+      }
       this.generatingCollage = false;
     });
   }
