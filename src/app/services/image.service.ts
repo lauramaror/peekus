@@ -193,43 +193,58 @@ export class ImageService {
     this.images = [];
   }
 
-  async saveImageToGallery(photo: Photo) {
+  async saveCollagesToGallery(collages: string[]){
+    let result = false;
+    for await (const c of collages) {
+      result = await this.saveImageToGallery(c);
+    }
+    return result;
+    // return collages.forEach(c=> {return this.saveImageToGallery(c);});
+  }
+
+  async saveImageToGallery(photoBase: string) {
+    let savedOk = false;
     try {
-      // const media = new Media();
       const platform = Capacitor.getPlatform();
-      // Save the wallpaper locally to Cache folder
-      const wallpaperTempFile = `${new Date().getTime()}.jpeg`;
-      const wallpaperAsBase64 = await this.readAsBase64(photo);
-      const wallpaperTemp = await Filesystem.writeFile({
-        path: wallpaperTempFile,
-        data: wallpaperAsBase64,
+      const photoTempFile = `${new Date().getTime()}.jpeg`;
+      const photoTemp = await Filesystem.writeFile({
+        path: photoTempFile,
+        data: photoBase,
         directory: Directory.Cache
       });
-      // Get or create the album
-      // @TODO Simplify when issue https://github.com/capacitor-community/media/issues/6 is fixed
       const albumName = 'Peekus';
       let albumIdentifier = '';
       if (platform === 'ios') {
-        // Handle albums
         let albums = await Media.getAlbums();
         albumIdentifier = albums.albums.find(a => a.name === albumName)?.identifier || null;
 
         if (!albumIdentifier) {
-          // Doesn't exist, create new album
           await Media.createAlbum({ name: albumName });
           albums = await Media.getAlbums();
           albumIdentifier = albums.albums.find(a => a.name === albumName)?.identifier;
         }
       } else if (platform === 'android') {
-        await Media.createAlbum({ name: albumName });
+        const albums = await Media.getAlbums();
+
+        if (!albums.albums.find(a => a.name === albumName)) {
+          await Media.createAlbum({ name: albumName });
+        }
       }
-      Media.savePhoto({
-        path: wallpaperTemp.uri,
+      return Media.savePhoto({
+        path: photoTemp.uri,
         album: (platform === 'ios') ? albumIdentifier : albumName
       })
-      .then(() => console.log('Image has been saved'))
-      .catch(e => console.error(e));
-    } catch (e) { console.error(e); }
+      .then(() => {
+        console.log('Image has been saved');
+        savedOk = true;
+        return savedOk;
+      })
+      .catch(e => {
+        console.log('error',e);
+        savedOk = false;
+        return savedOk;
+      });
+    } catch (e) { console.error('error catch',e); return savedOk; }
   }
 
   convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {

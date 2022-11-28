@@ -18,6 +18,13 @@
         </ion-button>
     </div>
 </div>
-<ng-container *ngFor="let event of events">
-    <app-event-card [event]="event" [userId]="userId"></app-event-card>
+<ng-container *ngIf="events.length; else noEvents">
+    <ng-container *ngFor="let event of events">
+        <app-event-card [event]="event" [userId]="userId"></app-event-card>
+    </ng-container>
 </ng-container>
+<ng-template #noEvents>
+    <div class="d-flex-center mt-1">
+        <ion-text color="primary">No hay eventos que mostrar</ion-text>
+    </div>
+</ng-template>

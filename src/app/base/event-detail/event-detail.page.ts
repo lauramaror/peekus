@@ -288,7 +288,10 @@ export class EventDetailPage implements OnInit {
   performAction(action: string){
     switch (action){
       case 'download':
-        // TODO call download method
+        this.imageService.saveCollagesToGallery(this.collageSrc).then((saved) => {
+          const textToast = saved ? 'Collage guardado en galería' : 'Ha habido un error guardando el collage';
+          this.presentToast(textToast);
+        });
         break;
       case 'generate':
         this.generateCollage();
