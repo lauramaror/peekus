@@ -106,9 +106,14 @@ ion-modal::part(backdrop) {
 ion-modal::part(content) {
     margin-left: 5px;
     margin-right: 5px;
+    font-size: 14px;
 }
 
-// ion-input {
-//     border: solid 1.2px var(--ion-item-border-color, var(--ion-border-color, var(--ion-color-step-150, rgba(0, 0, 0, 0.13))));
-//     border-radius: 1px;
-// }
+ion-title {
+    font-size: 16px;
+}
+
+.logoSocial {
+    --padding-start: 0.5em;
+    --padding-end: 0.5em;
+}

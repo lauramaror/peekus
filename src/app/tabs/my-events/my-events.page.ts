@@ -6,7 +6,7 @@ import { EventService } from '../../services/event.service';
 import { UserService } from '../../services/user.service';
 import { StorageService } from '../../services/storage.service';
 import { mergeMap, take, tap } from 'rxjs/operators';
-import { NavController, ViewWillEnter } from '@ionic/angular';
+import { InfiniteScrollCustomEvent, NavController, ViewWillEnter } from '@ionic/angular';
 
 @Component({
   selector: 'app-my-events',
@@ -22,6 +22,7 @@ export class MyEventsPage implements OnInit {
   creatorOnlyMe = false;
   creatorOnlyOthers = false;
   userId = '';
+  page = 0;
 
   statusesArray: any[ ] = [
     {
@@ -64,10 +65,6 @@ export class MyEventsPage implements OnInit {
 
   // ionViewWillEnter(){ console.log('ionViewWillEnter');
   //   this.getEventsList();
-  // }
-
-  // createEvent(){
-  //   this.navController.navigateRoot(['/base/edit']);
   // }
 
   changeStatuses(e) {
@@ -137,6 +134,25 @@ export class MyEventsPage implements OnInit {
       this.eventsList = this.eventsList.sort((a,b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
       this.loading = false;
     });
+  }
+
+  addEventsNextPage(){
+    const params = '?participant='+this.userId+this.statusParams+'&pageNum='+this.page;
+    this.eventService.getEvents(params).pipe().subscribe(e=>{
+      (e as EventPeekus[]).forEach(ev=> {
+        if(!this.eventsList.includes(ev)){
+          this.eventsList.push(ev);
+        }
+      });
+    });
+  }
+
+  onIonInfinite(ev) {
+    this.page+=10;
+    this.addEventsNextPage();
+    setTimeout(() => {
+      (ev as InfiniteScrollCustomEvent).target.complete();
+    }, 500);
   }
 
 }

@@ -28,7 +28,7 @@ export class PreviousRouteService {
   }
 
   public getPreviousUrl() {
-    return this.previousUrl;
+    return (this.previousUrl === '/base/edit/' || this.previousUrl === '/base/edit-profile') ? '/tabs/my-events' : this.previousUrl;
   }
 
   public getLoop() {

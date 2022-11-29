@@ -7,7 +7,7 @@ import { ImageService } from '../../../services/image.service';
 import { mergeMap } from 'rxjs/operators';
 import { EventService } from 'src/app/services/event.service';
 import { AlertController, IonModal, NavController, ToastController } from '@ionic/angular';
-import { presentAlert } from 'src/app/helpers/common-functions';
+import { convertArrayBufferToBase64, presentAlert } from 'src/app/helpers/common-functions';
 
 @Component({
   selector: 'app-event-card',
@@ -16,6 +16,7 @@ import { presentAlert } from 'src/app/helpers/common-functions';
 })
 export class EventCardComponent implements OnInit {
   @ViewChild(IonModal) modal: IonModal;
+  @ViewChild(IonModal) modalShare: IonModal;
   @Input() event: EventPeekus;
   @Input() userId: string;
 
@@ -27,6 +28,15 @@ export class EventCardComponent implements OnInit {
   savingPhoto = false;
   accessCode = '';
   eventCode = '';
+  eventQR = '';
+  logosSocial = [
+    {logo:'logo-twitter', link:''},
+    {logo:'logo-instagram', link:''},
+    {logo:'logo-whatsapp', link:''},
+    {logo:'logo-facebook', link:''},
+    {logo:'logo-tumblr', link:''},
+    {logo:'link-outline', link:''},
+  ];
 
   constructor(
     private imageService: ImageService,
@@ -38,9 +48,14 @@ export class EventCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(this.event.type===EventPeekusType.PRIVATE){
-      this.eventService.getCodes('?idEvent='+this.event.id+'&type=NUMERIC').pipe().subscribe(e=> this.eventCode=e[0]['content']);
-    }
+      this.eventService.getCodes('?idEvent='+this.event.id).pipe().subscribe(e=> {
+        const allCodes = (e as []);
+        this.eventCode = allCodes.find(ev=>ev['type']==='NUMERIC')?.['content'];
+        const codeQR = allCodes.find(ev=>ev['type']==='QR');
+        if(codeQR){
+          this.eventQR = convertArrayBufferToBase64(codeQR['dataQR']['data']);
+        }
+      });
   }
 
   async takePhoto(){
@@ -87,6 +102,13 @@ export class EventCardComponent implements OnInit {
       }
     }
 
+  }
+
+  downloadQR(){
+    this.imageService.saveCollagesToGallery([this.eventQR]).then((saved) => {
+      const textToast = saved ? 'QR guardado en galería' : 'Ha habido un error guardando el QR';
+      this.presentToast(textToast);
+    });
   }
 
   async presentToast(msg: string) {

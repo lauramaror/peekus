@@ -199,7 +199,6 @@ export class ImageService {
       result = await this.saveImageToGallery(c);
     }
     return result;
-    // return collages.forEach(c=> {return this.saveImageToGallery(c);});
   }
 
   async saveImageToGallery(photoBase: string) {

@@ -9,7 +9,10 @@
 
     <ion-searchbar placeholder="Buscar eventos" show-clear-button="focus" [debounce]="1000" (ionChange)="buscarEvento($event)"></ion-searchbar>
     <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading"></ion-progress-bar>
-    <div *ngIf="!loading">
-        <app-event-list [events]="eventsList" [userId]="userId" [search]="true" (filterByType)="filterByType($event)"></app-event-list>
-    </div>
+    <!-- <div *ngIf="!loading"> -->
+    <app-event-list *ngIf="!loading" [events]="eventsList" [userId]="userId" [search]="true" (filterByType)="filterByType($event)"></app-event-list>
+    <!-- </div> -->
+    <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 </ion-content>

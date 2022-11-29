@@ -36,7 +36,7 @@ export class PeekusHeaderComponent implements OnInit {
       this.userId=u.id;
       this.userProfilePicSrc = u.idProfilePicture;
       this.loadedPic = true;
-      return this.notificationService.getNotificationUsers('?idUser='+this.userId);
+      return this.notificationService.getNotificationUsers('?idUser='+this.userId+'&notified=0');
     })).subscribe(s=>{
       this.newNotifications = (s as []).length > 0;
     });

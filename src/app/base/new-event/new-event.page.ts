@@ -148,9 +148,10 @@ export class NewEventPage implements OnInit {
               this.eventService.saveParticipantsList(this.participantsList),
               this.eventForm.get('secretCode').value
               ? this.eventService.saveCode({idEvent: eventId, type: 'numeric', codeContent: this.eventForm.get('secretCode').value})
-              : of(null)
+              : of(null),
+              this.eventService.saveCodeQR('?idEvent='+eventId)
             );
-          })).subscribe(([participants, code])=>{
+          })).subscribe(([participants, code, qr])=>{
             this.savingEvent = false;
             this.navController.navigateRoot(['/base/detail', this.eventId]);
         });

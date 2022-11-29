@@ -96,6 +96,17 @@ export class EventService {
     }));
   }
 
+  saveCodeQR(params: string): Observable<object>{
+    return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
+      const options = {
+        headers: {
+          token: authToken
+        }
+      };
+      return this.http.post(`${environment.baseUrl}/code/qr${params}`, {}, options);
+    }));
+  }
+
   getParticipantsByEvent(params: string): Observable<object>{
     return this.storageService.getAccessToken().pipe(mergeMap(authToken=>{
       const options = {

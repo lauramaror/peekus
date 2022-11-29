@@ -1,5 +1,6 @@
 /* eslint-disable arrow-body-style */
 import { Component, OnInit } from '@angular/core';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { mergeMap } from 'rxjs/operators';
 import { EventPeekus } from 'src/app/models/event.model';
 import { EventService } from 'src/app/services/event.service';
@@ -18,6 +19,7 @@ export class SearchEventsPage implements OnInit {
   userId = '';
   textToSearch = '';
   paramsToSearch = '';
+  page = 0;
 
   constructor(
     private eventService: EventService,
@@ -30,6 +32,7 @@ export class SearchEventsPage implements OnInit {
   }
 
   getEventsList(){
+    this.loading = true;
     this.storageService.getUserInfo().pipe(mergeMap(userInfo=>{
       if(!this.userId){
         this.userId = userInfo.id;
@@ -59,6 +62,28 @@ export class SearchEventsPage implements OnInit {
     if(filters[1]) {types.push('\'PRIVATE\'');}
     this.paramsToSearch += types.length ? '&type='+types.join(',') : '';
     this.getEventsList();
+  }
+
+  addEventsNextPage(){
+    let params = this.paramsToSearch+'&pageNum='+this.page;
+    if(this.textToSearch){
+      params+='&text='+this.textToSearch;
+    }
+    this.eventService.getEvents(params).pipe().subscribe(e=>{
+      (e as EventPeekus[]).forEach(ev=> {
+        if(!this.eventsList.includes(ev)){
+          this.eventsList.push(ev);
+        }
+      });
+    });
+  }
+
+  onIonInfinite(ev) {
+    this.page+=10;
+    this.addEventsNextPage();
+    setTimeout(() => {
+      (ev as InfiniteScrollCustomEvent).target.complete();
+    }, 500);
   }
 
 }
