@@ -116,7 +116,7 @@
     </ng-template>
 </ion-modal>
 
-<ion-modal #modalShare trigger="modal-share-{{event.id}}" style="--height: 60%">
+<ion-modal #modalShare trigger="modal-share-{{event.id}}" style="--height: 45%">
     <ng-template>
         <ion-content>
             <ion-toolbar>
@@ -131,7 +131,7 @@
                 <ion-row>
                     <ion-text class="ml-2">{{event.name}}</ion-text>
                 </ion-row>
-                <ion-row>
+                <ion-row class="ion-justify-content-between">
                     <ion-col size="7">
                         <img src="{{eventQR}}" alt="">
                     </ion-col>

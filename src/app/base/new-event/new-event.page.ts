@@ -12,6 +12,7 @@ import { EventService } from 'src/app/services/event.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { IonModal } from '@ionic/angular';
 import { UserService } from 'src/app/services/user.service';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 @Component({
   selector: 'app-new-event',
@@ -152,6 +153,14 @@ export class NewEventPage implements OnInit {
               this.eventService.saveCodeQR('?idEvent='+eventId)
             );
           })).subscribe(([participants, code, qr])=>{
+            LocalNotifications.schedule({
+              notifications: [{
+                title: 'Comienzo de evento',
+                body: 'Tue evento '+newEvent.name+' acaba de comenzar',
+                id: 1,
+                schedule: {at: new Date(startDateToPost)}
+              }]
+            });
             this.savingEvent = false;
             this.navController.navigateRoot(['/base/detail', this.eventId]);
         });

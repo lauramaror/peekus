@@ -4,10 +4,11 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:8080',
+  baseUrl: 'http://192.168.1.83:8080',
 };
 //https://peekus.herokuapp.com
 //http://localhost:8080
+//http://192.168.1.83:8080
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

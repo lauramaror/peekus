@@ -1,4 +1,4 @@
-package io.ionic.peekus;
+package com.ura.peekus;
 
 import com.getcapacitor.BridgeActivity;
 

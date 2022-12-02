@@ -7,6 +7,7 @@ import { UserService } from '../../services/user.service';
 import { StorageService } from '../../services/storage.service';
 import { mergeMap, take, tap } from 'rxjs/operators';
 import { InfiniteScrollCustomEvent, NavController, ViewWillEnter } from '@ionic/angular';
+import { LocalNotifications, LocalNotificationsPlugin } from '@capacitor/local-notifications';
 
 @Component({
   selector: 'app-my-events',
@@ -54,6 +55,7 @@ export class MyEventsPage implements OnInit {
     private userService: UserService,
     private storageService: StorageService,
     private navController: NavController,
+    // private localNotifications: LocalNotificationsPlugin
   ) {}
 
   ngOnInit(): void{ //['NEXT, ONGOING, DONE, COMPLETED']
