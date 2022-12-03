@@ -39,7 +39,7 @@
                     <ion-datetime-button datetime="endHour"></ion-datetime-button>
                     <ion-modal [keepContentsMounted]="true">
                         <ng-template>
-                            <ion-datetime id="endHour" presentation="time" [(ngModel)]="endHour" [min]="startHour" [ngModelOptions]="{standalone: true}"></ion-datetime>
+                            <ion-datetime id="endHour" presentation="time" [(ngModel)]="endHour" [min]="getMinEndDate()" [ngModelOptions]="{standalone: true}"></ion-datetime>
                         </ng-template>
                     </ion-modal>
                 </div>

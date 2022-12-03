@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "846855215193",
+    "project_id": "peekus-bd6fc",
+    "storage_bucket": "peekus-bd6fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846855215193:android:4e8e517e465e55f89ef948",
+        "android_client_info": {
+          "package_name": "com.ura.peekus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846855215193-6r0pmll0pu07dudjuliuk2bmtq0qg851.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM5a38vn7Y3nx3uy45FOTFT3GErqEftx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846855215193-6r0pmll0pu07dudjuliuk2bmtq0qg851.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

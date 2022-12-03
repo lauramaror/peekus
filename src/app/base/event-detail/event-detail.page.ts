@@ -17,6 +17,7 @@ import { EventPeekusStatus, EventPeekusType } from 'src/app/helpers/enums';
 import { PreviousRouteService } from 'src/app/services/previous-route.service';
 import { UserService } from 'src/app/services/user.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 @Component({
   selector: 'app-event-detail',
@@ -112,10 +113,17 @@ export class EventDetailPage implements OnInit {
       this.buildComments();
       this.currentAction = this.eventParticipants.find(p=>p.idParticipant===this.userId) ? 0 : 1;
 
+      this.eventData.createdDate = new Date(this.eventData.createdDate);
+      this.eventData.createdDate.setHours(this.eventData.createdDate.getHours()+1);
+      this.eventData.startDate = new Date(this.eventData.startDate);
+      this.eventData.startDate.setHours(this.eventData.startDate.getHours()+1);
+      this.eventData.endDate = new Date(this.eventData.endDate);
+      this.eventData.endDate.setHours(this.eventData.endDate.getHours()+1);
+
       const createdDateToFormat = new Date(this.eventData.createdDate);
       const createdMonth = new Intl.DateTimeFormat('es-ES', { month: 'short'}).format(createdDateToFormat);
       this.createdDate = createdDateToFormat.getDate() + ' '+createdMonth+'. ' + createdDateToFormat.getFullYear();
-      const startDateToFormat = new Date(this.eventData.startDate);
+      const startDateToFormat = new Date(this.eventData.startDate+'Z');
       this.startDayMonth = new Intl.DateTimeFormat('es-ES', { month: 'short'}).format(startDateToFormat);
       this.startDayWeek = this.dayWeekName(startDateToFormat);
 
@@ -200,6 +208,14 @@ export class EventDetailPage implements OnInit {
               this.eventData.participants++;
               this.eventData.userParticipates = true;
               this.currentAction = 0;
+              LocalNotifications.schedule({
+                notifications: [{
+                  title: '¡Hora de hacer foto!',
+                  body: 'El evento '+this.eventData.name+' acaba de comenzar',
+                  id: Math.random(),
+                  schedule: {at: new Date(this.eventData.startDate)}
+                }]
+              });
               this.loadingParticipants = false;
           });
         }

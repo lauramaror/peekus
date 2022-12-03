@@ -56,9 +56,13 @@ export class NewEventPage implements OnInit {
         capacity: [''],
         secretCode: [''],
       });
-      this.startDate = new Date().toISOString();
-      this.startHour = new Date().toISOString();
-      this.endHour = new Date().toISOString();
+      const now = new Date();
+      now.setUTCHours(now.getHours());
+      this.startDate = now.toISOString();
+      this.startHour = now.toISOString();
+      this.endHour = this.startHour.split(':')[0] + ':'
+                    + (parseInt(this.startHour.split(':')[1], 10)+1).toString()
+                    + ':'+ this.startHour.split(':')[2];
     }
 
   ngOnInit() {
@@ -105,6 +109,12 @@ export class NewEventPage implements OnInit {
     this.currentType = e.detail.value;
   }
 
+  getMinEndDate(){
+    return this.startHour ?
+          this.startHour.split(':')[0] + ':'+ (parseInt(this.startHour.split(':')[1], 10)+1).toString() + ':'+ this.startHour.split(':')[2]
+          : null;
+  }
+
   saveEvent(){
     if(!this.eventForm.valid ||
       !((this.currentType==='private' && this.eventForm.get('secretCode').value) || this.currentType!=='private')){
@@ -116,9 +126,11 @@ export class NewEventPage implements OnInit {
       const startDateToPost = new Date(this.startDate);
       startDateToPost.setHours(new Date(this.startHour).getHours());
       startDateToPost.setMinutes(new Date(this.startHour).getMinutes());
+      startDateToPost.setSeconds(0);
       const endDateToPost = new Date(this.startDate);
       endDateToPost.setHours(new Date(this.endHour).getHours());
       endDateToPost.setMinutes(new Date(this.endHour).getMinutes());
+      endDateToPost.setSeconds(0);
 
       const newEvent = {
         name: this.eventForm.get('name').value,
@@ -157,7 +169,7 @@ export class NewEventPage implements OnInit {
               notifications: [{
                 title: 'Comienzo de evento',
                 body: 'Tue evento '+newEvent.name+' acaba de comenzar',
-                id: 1,
+                id: Math.random(),
                 schedule: {at: new Date(startDateToPost)}
               }]
             });
