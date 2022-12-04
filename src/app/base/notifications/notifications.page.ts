@@ -49,7 +49,7 @@ export class NotificationsPage implements OnInit {
                             + new Intl.DateTimeFormat('es-ES', { month: 'short'}).format(createdDate) + '. '
                             + createdDate.getFullYear();
       });
-      this.notificationsList.sort((a,b) => new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime());
+      this.notificationsList.sort((a,b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
       this.loading = false;
     });
   }
