@@ -49,7 +49,7 @@ export class RegisterProfilepicComponent implements OnInit {
       return this.userService.updateProfilePic(bodyToSend);
     })).subscribe(i=>{
       this.savingPhoto = false;
-      this.navController.navigateRoot(['/tabs/my-events']);
+      this.navController.navigateRoot(['/pk/tabs/my-events']);
     });
   }
 

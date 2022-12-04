@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<!-- <ion-header [translucent]="true">
     <app-peekus-header></app-peekus-header>
     <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="routerBackUrl" [iconName]="'close'"></app-peekus-back-button>
 </ion-header>
@@ -7,76 +7,77 @@
     <ion-header collapse="condense">
         <app-peekus-header></app-peekus-header>
         <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="routerBackUrl" [iconName]="'close'"></app-peekus-back-button>
-    </ion-header>
-    <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading" class="mt-1"></ion-progress-bar>
-    <form *ngIf="!loading" [formGroup]="eventForm" (ngSubmit)="saveEvent()" (keyup.enter)="saveEvent()">
-        <div class="whiteBgCard">
-            <div style="margin:2em; margin-top:0; padding-bottom:1em;">
-                <p class="m-labels" style="padding-top:2em;">TÍTULO *</p>
-                <ion-item class="ion-no-padding item-bg-color">
-                    <ion-input class="ion-no-padding" formControlName="name"></ion-input>
-                </ion-item>
+    </ion-header> -->
+<app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="routerBackUrl" [iconName]="'close'"></app-peekus-back-button>
+<ion-progress-bar type="indeterminate" color="primary" *ngIf="loading" class="mt-1"></ion-progress-bar>
+<form *ngIf="!loading" [formGroup]="eventForm" (ngSubmit)="saveEvent()" (keyup.enter)="saveEvent()">
+    <div class="whiteBgCard">
+        <div style="margin:2em; margin-top:0; padding-bottom:1em;">
+            <p class="m-labels" style="padding-top:2em;">TÍTULO *</p>
+            <ion-item class="ion-no-padding item-bg-color">
+                <ion-input class="ion-no-padding" formControlName="name"></ion-input>
+            </ion-item>
 
-                <p class="m-labels">DESCRIPCIÓN</p>
-                <ion-textarea class="ion-no-padding" formControlName="description" [autoGrow]="true" rows="4"></ion-textarea>
+            <p class="m-labels">DESCRIPCIÓN</p>
+            <ion-textarea class="ion-no-padding" formControlName="description" [autoGrow]="true" rows="4"></ion-textarea>
 
-                <p class="m-labels">FECHA *</p>
-                <div class="d-flex-inbetween">
-                    <ion-datetime-button datetime="startDate"></ion-datetime-button>
-                    <ion-modal [keepContentsMounted]="true">
-                        <ng-template>
-                            <ion-datetime id="startDate" presentation="date" [(ngModel)]="startDate" [ngModelOptions]="{standalone: true}"></ion-datetime>
-                        </ng-template>
-                    </ion-modal>
-                    <span style="padding-left:10px; padding-right:10px;"></span>
-                    <ion-datetime-button datetime="startHour"></ion-datetime-button>
-                    <ion-modal [keepContentsMounted]="true">
-                        <ng-template>
-                            <ion-datetime id="startHour" presentation="time" [(ngModel)]="startHour" [ngModelOptions]="{standalone: true}"></ion-datetime>
-                        </ng-template>
-                    </ion-modal>
-                    <span style="padding-left:8px; padding-right:8px;">-</span>
-                    <ion-datetime-button datetime="endHour"></ion-datetime-button>
-                    <ion-modal [keepContentsMounted]="true">
-                        <ng-template>
-                            <ion-datetime id="endHour" presentation="time" [(ngModel)]="endHour" [min]="getMinEndDate()" [ngModelOptions]="{standalone: true}"></ion-datetime>
-                        </ng-template>
-                    </ion-modal>
-                </div>
-
-                <ion-grid class="ion-no-padding" style="padding-bottom: 1em;">
-                    <ion-row>
-                        <ion-col>
-                            <p class="m-labels">TIPO *</p>
-                            <ion-select formControlName="type" placeholder="Selecciona tipo" class="ion-no-padding" (ionChange)="changeType($event)">
-                                <ion-select-option value="public">Público</ion-select-option>
-                                <ion-select-option value="private">Privado</ion-select-option>
-                                <ion-select-option value="exclusive">Exclusivo</ion-select-option>
-                            </ion-select>
-                        </ion-col>
-                        <ion-col class="ml-2">
-                            <p class="m-labels">AFORO</p>
-                            <div class="d-flex-start">
-                                <ion-input class="ion-no-padding" type="number" formControlName="capacity" min="2"></ion-input>
-                                <ion-icon name="person" class="ml-2"></ion-icon>
-                            </div>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row *ngIf="currentType === 'private'">
-                        <ion-col>
-                            <p class="m-labels">CÓDIGO PARA UNIRSE *</p>
-                            <ion-input class="ion-no-padding" type="text" formControlName="secretCode"></ion-input>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
+            <p class="m-labels">FECHA *</p>
+            <div class="d-flex-inbetween">
+                <ion-datetime-button datetime="startDate"></ion-datetime-button>
+                <ion-modal [keepContentsMounted]="true">
+                    <ng-template>
+                        <ion-datetime id="startDate" presentation="date" [(ngModel)]="startDate" [ngModelOptions]="{standalone: true}"></ion-datetime>
+                    </ng-template>
+                </ion-modal>
+                <span style="padding-left:10px; padding-right:10px;"></span>
+                <ion-datetime-button datetime="startHour"></ion-datetime-button>
+                <ion-modal [keepContentsMounted]="true">
+                    <ng-template>
+                        <ion-datetime id="startHour" presentation="time" [(ngModel)]="startHour" [ngModelOptions]="{standalone: true}"></ion-datetime>
+                    </ng-template>
+                </ion-modal>
+                <span style="padding-left:8px; padding-right:8px;">-</span>
+                <ion-datetime-button datetime="endHour"></ion-datetime-button>
+                <ion-modal [keepContentsMounted]="true">
+                    <ng-template>
+                        <ion-datetime id="endHour" presentation="time" [(ngModel)]="endHour" [min]="getMinEndDate()" [ngModelOptions]="{standalone: true}"></ion-datetime>
+                    </ng-template>
+                </ion-modal>
             </div>
+
+            <ion-grid class="ion-no-padding" style="padding-bottom: 1em;">
+                <ion-row>
+                    <ion-col>
+                        <p class="m-labels">TIPO *</p>
+                        <ion-select formControlName="type" placeholder="Selecciona tipo" class="ion-no-padding" (ionChange)="changeType($event)">
+                            <ion-select-option value="public">Público</ion-select-option>
+                            <ion-select-option value="private">Privado</ion-select-option>
+                            <ion-select-option value="exclusive">Exclusivo</ion-select-option>
+                        </ion-select>
+                    </ion-col>
+                    <ion-col class="ml-2">
+                        <p class="m-labels">AFORO</p>
+                        <div class="d-flex-start">
+                            <ion-input class="ion-no-padding" type="number" formControlName="capacity" min="2"></ion-input>
+                            <ion-icon name="person" class="ml-2"></ion-icon>
+                        </div>
+                    </ion-col>
+                </ion-row>
+                <ion-row *ngIf="currentType === 'private'">
+                    <ion-col>
+                        <p class="m-labels">CÓDIGO PARA UNIRSE *</p>
+                        <ion-input class="ion-no-padding" type="text" formControlName="secretCode"></ion-input>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
         </div>
-        <div class="d-flex-end" style="align-items: center; margin: 5px;">
-            <ion-button color="tertiary" shape="round" [routerLink]="[routerBackUrl]" routerDirection="root"><span>Cancelar</span></ion-button>
-            <ion-button color="primary" shape="round" class="button-border" type="submit">
-                <ion-spinner name="lines" *ngIf="savingEvent"></ion-spinner>
-                <span>Guardar</span>
-            </ion-button>
-        </div>
-    </form>
-</ion-content>
+    </div>
+    <div class="d-flex-end" style="align-items: center; margin: 5px;">
+        <ion-button color="tertiary" shape="round" [routerLink]="[routerBackUrl]" routerDirection="root"><span>Cancelar</span></ion-button>
+        <ion-button color="primary" shape="round" class="button-border" type="submit">
+            <ion-spinner name="lines" *ngIf="savingEvent"></ion-spinner>
+            <span>Guardar</span>
+        </ion-button>
+    </div>
+</form>
+<!-- </ion-content> -->

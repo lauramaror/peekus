@@ -78,7 +78,7 @@ export class ImageService {
         quality: 100,
         allowEditing: false,
         resultType: CameraResultType.Uri,
-        source: CameraSource.Photos // Camera, Photos or Prompt!
+        source: CameraSource.Photos
     });
 
     if (image) {
@@ -92,7 +92,7 @@ export class ImageService {
         quality: 100,
         allowEditing: false,
         resultType: CameraResultType.Uri,
-        source: CameraSource.Camera
+        source: CameraSource.Camera,
       });
 
       if (image) {
@@ -134,9 +134,7 @@ export class ImageService {
 					});
 				}
 			)
-			.then((_) => {
-        // console.log('se acabo el then de loading');
-			});
+			.then((_) => {});
 	}
 
   async loadFileData(fileNames: string[]) {

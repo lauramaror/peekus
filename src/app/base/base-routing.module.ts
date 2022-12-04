@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { FullContentComponent } from '../commons/full-content/full-content.component';
+import { FullHeaderComponent } from '../commons/full-header/full-header.component';
 
 import { BasePage } from './base.page';
 
@@ -7,6 +9,8 @@ const routes: Routes = [
   {
     path: '',
     // component: BasePage,
+    // component: FullHeaderComponent,
+    component: FullContentComponent,
     children: [
       {
         path: 'detail',

@@ -43,7 +43,7 @@ export class LoginPage implements OnInit {
         this.presentToast();
         return;
       }
-        this.router.navigateByUrl('/tabs');
+        this.router.navigateByUrl('/pk/tabs');
     });
 
   }

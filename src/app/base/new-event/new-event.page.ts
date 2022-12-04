@@ -33,7 +33,7 @@ export class NewEventPage implements OnInit {
   currentType = '';
   participantsList = [];
   backButtonText = 'Crear Evento';
-  routerBackUrl = '/tabs/my-events';
+  routerBackUrl = '/pk/tabs/my-events';
   eventData: EventPeekus;
   // usersList = [];
 
@@ -69,7 +69,7 @@ export class NewEventPage implements OnInit {
     this.eventId = this.route.snapshot.params.id;
     if(this.eventId){
       this.backButtonText = 'Editar Evento';
-      this.routerBackUrl = '/base/detail/'+this.eventId;
+      this.routerBackUrl = '/pk/base/detail/'+this.eventId;
       this.getEvent();
     }else{
       this.storageService.getUserInfo().pipe().subscribe(u=>this.userId=u.id);
@@ -97,6 +97,13 @@ export class NewEventPage implements OnInit {
   }
 
   setEventValues(){
+    this.eventData.createdDate = new Date(this.eventData.createdDate);
+    this.eventData.createdDate.setHours(this.eventData.createdDate.getHours()+2);
+    this.eventData.startDate = new Date(this.eventData.startDate);
+    this.eventData.startDate.setHours(this.eventData.startDate.getHours()+2);
+    this.eventData.endDate = new Date(this.eventData.endDate);
+    this.eventData.endDate.setHours(this.eventData.endDate.getHours()+2);
+
     this.startDate = new Date(this.eventData.startDate).toISOString();
     this.startHour = new Date(this.eventData.startDate).toISOString();
     this.endHour = new Date(this.eventData.endDate).toISOString();
@@ -124,12 +131,12 @@ export class NewEventPage implements OnInit {
       this.savingEvent = true;
 
       const startDateToPost = new Date(this.startDate);
-      startDateToPost.setHours(new Date(this.startHour).getHours());
-      startDateToPost.setMinutes(new Date(this.startHour).getMinutes());
+      startDateToPost.setHours(new Date(this.startHour.split('Z')[0]).getHours());
+      startDateToPost.setMinutes(new Date(this.startHour.split('Z')[0]).getMinutes());
       startDateToPost.setSeconds(0);
       const endDateToPost = new Date(this.startDate);
-      endDateToPost.setHours(new Date(this.endHour).getHours());
-      endDateToPost.setMinutes(new Date(this.endHour).getMinutes());
+      endDateToPost.setHours(new Date(this.endHour.split('Z')[0]).getHours());
+      endDateToPost.setMinutes(new Date(this.endHour.split('Z')[0]).getMinutes());
       endDateToPost.setSeconds(0);
 
       const newEvent = {
@@ -146,7 +153,7 @@ export class NewEventPage implements OnInit {
       if(this.eventId){
         this.eventService.updateEvent(newEvent, '?id='+this.eventId).pipe().subscribe(p=>{
             this.savingEvent = false;
-            this.navController.navigateRoot(['/base/detail', this.eventId]);
+            this.navController.navigateRoot(['/pk/base/detail', this.eventId]);
         });
       }
       else{
@@ -174,7 +181,7 @@ export class NewEventPage implements OnInit {
               }]
             });
             this.savingEvent = false;
-            this.navController.navigateRoot(['/base/detail', this.eventId]);
+            this.navController.navigateRoot(['/pk/base/detail', this.eventId]);
         });
       }
   }
@@ -189,25 +196,6 @@ export class NewEventPage implements OnInit {
 
     await toast.present();
   }
-
-  // searchUser(event) {
-  //   const query = event.target.value.toLowerCase();
-  //   this.usersList = [];
-  //   if(query!=='') { this.getUsers(query); }
-  // }
-
-  // getUsers(textToSearch?: string){
-  //   this.userService.getUsers('?text='+textToSearch).subscribe(e=>{
-  //     // this.usersList = (e as []).filter(u=>!this.friendsList.flatMap(f=>f.id).includes(u['id']) && u['id']!==this.userId);
-  //     this.usersList = (e as []);
-  //   });
-  // }
-
-  // saveParticipant(participantId: string){
-  //   // this.participantsList.push({idEvent: null, idParticipant: participantId});
-  //   // const participantToPost = {idEvent: this.eventId, idParticipant: this.userId};
-  //   // this.eventService.saveParticipant(participantToPost).pipe().subscribe()
-  // }
 
 
 }

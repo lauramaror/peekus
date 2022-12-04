@@ -27,7 +27,6 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 export class EventDetailPage implements OnInit {
   @ViewChild(IonModal) modal: IonModal;
 
-
   optionsByTypeMap = optionsByTypeMap;
   eventStatus = EventPeekusStatus;
   eventType = EventPeekusType;
@@ -59,6 +58,7 @@ export class EventDetailPage implements OnInit {
   participantsInvitedList = [];
   savingParticipants = false;
   notificationId = '';
+  eventQR = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -77,7 +77,7 @@ export class EventDetailPage implements OnInit {
 
   ngOnInit() {
     this.previousUrl = !this.previousRouteService.getLoop() && this.previousRouteService.getPreviousUrl()
-                      ? this.previousRouteService.getPreviousUrl() : '/tabs/my-events';
+                      ? this.previousRouteService.getPreviousUrl() : '/pk/tabs/my-events';
     this.eventId = this.route.snapshot.params.id;
     this.getEvent();
   }
@@ -92,9 +92,10 @@ export class EventDetailPage implements OnInit {
         this.eventService.getEvents(params),
         this.eventService.getParticipantsByEvent('?idEvent='+this.eventId),
         this.eventService.getCommentsByEvent('?idEvent='+this.eventId),
-        this.imageService.getImages('?idEvent='+this.eventId+'&type=collage')
+        this.imageService.getImages('?idEvent='+this.eventId+'&type=collage'),
+        this.eventService.getCodes('?idEvent='+this.eventId+'&type=QR')
       );
-    })).subscribe(([event, participants, comments, collage])=>{
+    })).subscribe(([event, participants, comments, collage, codes])=>{
       this.eventData = event[0] as EventPeekus;
       this.eventData.likedByUser = event[0].likedByUser === 1;
       this.eventData.completedByUser = event[0].completedByUser === 1;
@@ -106,6 +107,10 @@ export class EventDetailPage implements OnInit {
           const collageData = convertArrayBufferToBase64(c['data']['data']);
           this.collageSrc.push(collageData);
         });
+      }
+      const allCodes = (codes as any[]);
+      if(allCodes.length){
+        this.eventQR = convertArrayBufferToBase64(allCodes[0]['dataQR']['data']);
       }
 
       this.setActionOption();
@@ -194,6 +199,7 @@ export class EventDetailPage implements OnInit {
               this.eventData.userParticipates = false;
               this.currentAction = 1;
               this.loadingParticipants = false;
+              this.presentToast('Has cancelado tu inscripción');
           });
         }
         break;
@@ -217,6 +223,7 @@ export class EventDetailPage implements OnInit {
                 }]
               });
               this.loadingParticipants = false;
+              this.presentToast('Te has inscrito al evento');
           });
         }
         break;
@@ -251,7 +258,7 @@ export class EventDetailPage implements OnInit {
     if(answer1==='confirm'){
       const params = '?id='+this.eventId;
       this.eventService.deleteEvent(params).pipe().subscribe(l=>{
-        this.router.navigateByUrl('/tabs/my-events');
+        this.router.navigateByUrl('/pk/tabs/my-events');
       });
     }
   }
@@ -269,7 +276,6 @@ export class EventDetailPage implements OnInit {
         return this.eventService.updateParticipant(bodyToSend);
       })).subscribe(i=>{
         this.savingPhoto = false;
-        // this.navController.navigateRoot(['/tabs/my-events']);
       });
     }
   }

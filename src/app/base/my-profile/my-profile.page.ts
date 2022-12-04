@@ -42,7 +42,7 @@ export class MyProfilePage implements OnInit {
 
   ngOnInit() {
     this.previousUrl = !this.previousRouteService.getLoop() && this.previousRouteService.getPreviousUrl()
-                    ? this.previousRouteService.getPreviousUrl() : '/tabs/my-events';
+                    ? this.previousRouteService.getPreviousUrl() : '/pk/tabs/my-events';
     this.profileUserId = this.route.snapshot.params.id;
     this.getUser();
   }

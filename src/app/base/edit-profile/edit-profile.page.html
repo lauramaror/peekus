@@ -1,54 +1,44 @@
-<ion-header [translucent]="true">
-    <app-peekus-header></app-peekus-header>
-    <app-peekus-back-button [routerUrl]="'/base/my-profile/'+this.userId" [iconName]="'arrow-back'" [backButtonText]="'Perfil'"></app-peekus-back-button>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-    <ion-header collapse="condense">
-        <app-peekus-header></app-peekus-header>
-        <app-peekus-back-button [routerUrl]="'/base/my-profile/'+this.userId" [iconName]="'arrow-back'" [backButtonText]="'Perfil'"></app-peekus-back-button>
-    </ion-header>
-    <div style="margin: 2em;" *ngIf="!loading">
-        <ion-grid>
+<app-peekus-back-button [routerUrl]="'/pk/base/my-profile/'+this.userId" [iconName]="'arrow-back'" [backButtonText]="'Perfil'"></app-peekus-back-button>
+<div style="margin: 2em;" *ngIf="!loading">
+    <ion-grid>
+        <ion-row class="ion-justify-content-center">
+            <app-select-image [size]="90" [profilePictureId]="user.idProfilePicture"></app-select-image>
+        </ion-row>
+        <form [formGroup]="registerForm" (ngSubmit)="saveChanges()" (keyup.enter)="saveChanges()">
             <ion-row class="ion-justify-content-center">
-                <app-select-image [size]="90" [profilePictureId]="user.idProfilePicture"></app-select-image>
+                <ion-list>
+                    <p class="m-labels">NOMBRE</p>
+                    <ion-item class="ion-no-padding">
+                        <ion-input class="ion-no-padding" formControlName="name" color="grey"></ion-input>
+                        <ion-icon name="id-card" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
+                    </ion-item>
+
+                    <p class="m-labels">USUARIO</p>
+                    <ion-item class="ion-no-padding">
+                        <ion-input class="ion-no-padding" formControlName="username" color="grey">@</ion-input>
+                        <ion-icon name="person" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
+                    </ion-item>
+
+                    <p class="m-labels">EMAIL</p>
+                    <ion-item class="ion-no-padding">
+                        <ion-input class="ion-no-padding" type="email" formControlName="email" color="grey"></ion-input>
+                        <ion-icon name="mail" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
+                        <ion-note slot="error">Email inválido</ion-note>
+                    </ion-item>
+
+                    <p class="m-labels">TELÉFONO</p>
+                    <ion-item class="ion-no-padding">
+                        <ion-input class="ion-no-padding" type="tel" formControlName="phone" color="grey"></ion-input>
+                        <ion-icon name="call" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
+                    </ion-item>
+                </ion-list>
             </ion-row>
-            <form [formGroup]="registerForm" (ngSubmit)="saveChanges()" (keyup.enter)="saveChanges()">
-                <ion-row class="ion-justify-content-center">
-                    <ion-list>
-                        <p class="m-labels">NOMBRE</p>
-                        <ion-item class="ion-no-padding">
-                            <ion-input class="ion-no-padding" formControlName="name" color="grey"></ion-input>
-                            <ion-icon name="id-card" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
-                        </ion-item>
-
-                        <p class="m-labels">USUARIO</p>
-                        <ion-item class="ion-no-padding">
-                            <ion-input class="ion-no-padding" formControlName="username" color="grey">@</ion-input>
-                            <ion-icon name="person" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
-                        </ion-item>
-
-                        <p class="m-labels">EMAIL</p>
-                        <ion-item class="ion-no-padding">
-                            <ion-input class="ion-no-padding" type="email" formControlName="email" color="grey"></ion-input>
-                            <ion-icon name="mail" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
-                            <ion-note slot="error">Email inválido</ion-note>
-                        </ion-item>
-
-                        <p class="m-labels">TELÉFONO</p>
-                        <ion-item class="ion-no-padding">
-                            <ion-input class="ion-no-padding" type="tel" formControlName="phone" color="grey"></ion-input>
-                            <ion-icon name="call" slot="end" color="tertiary" class="ion-no-margin"></ion-icon>
-                        </ion-item>
-                    </ion-list>
-                </ion-row>
-                <ion-row class="ion-justify-content-center">
-                    <div class="d-flex-center">
-                        <ion-spinner name="lines" style="margin-left: 4em; margin-right: 4em;" [style.visibility]="savingUser ? 'visible': 'hidden'"></ion-spinner>
-                        <ion-button color="tertiary" shape="round" class="btn-landing" type="submit"><span>GUARDAR</span></ion-button>
-                    </div>
-                </ion-row>
-            </form>
-        </ion-grid>
-    </div>
-</ion-content>
+            <ion-row class="ion-justify-content-center">
+                <div class="d-flex-center">
+                    <ion-spinner name="lines" style="margin-left: 4em; margin-right: 4em;" [style.visibility]="savingUser ? 'visible': 'hidden'"></ion-spinner>
+                    <ion-button color="tertiary" shape="round" class="btn-landing" type="submit"><span>GUARDAR</span></ion-button>
+                </div>
+            </ion-row>
+        </form>
+    </ion-grid>
+</div>

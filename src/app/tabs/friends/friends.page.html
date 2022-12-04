@@ -1,13 +1,9 @@
-<ion-header [translucent]="true">
-    <app-peekus-header></app-peekus-header>
-</ion-header>
-
 <ion-content [fullscreen]="true">
     <ion-header collapse="condense">
         <app-peekus-header></app-peekus-header>
     </ion-header>
 
-    <div class="d-flex-center mt-1 friendsButtons">
+    <div class="d-flex-center mt-1 friendsButtons mt-header">
         <button (click)="changeTab(1)"><ion-text [ngStyle]="{'color': myFriends ? '#6B6B6B' : '#1B1C1E'}">Añadir amigos</ion-text></button>
         <span>|</span>
         <button (click)="changeTab(2)"><ion-text [ngStyle]="{'color': myFriends ? '#1B1C1E' : '#6B6B6B'}">Mis amigos</ion-text></button>

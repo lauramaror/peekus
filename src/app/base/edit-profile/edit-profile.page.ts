@@ -78,7 +78,7 @@ export class EditProfilePage implements OnInit {
       : of(null)
     ).subscribe(([user, img])=>{
       this.savingUser = false;
-      this.navController.navigateRoot(['/base/my-profile', this.userId]);
+      this.navController.navigateRoot(['/pk/base/my-profile', this.userId]);
     });
   }
 

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { FullHeaderComponent } from './commons/full-header/full-header.component';
 
 const routes: Routes = [
   {
@@ -7,16 +8,35 @@ const routes: Routes = [
     loadChildren: () => import('./landing/landing.module').then( m => m.LandingPageModule)
   },
   {
-    path: 'tabs',
-    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+    path: 'pk',
+    component: FullHeaderComponent,
+    children: [
+      {
+        path: 'tabs',
+        loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+      },
+      {
+        path: 'base',
+        loadChildren: () => import('./base/base.module').then( m => m.BasePageModule)
+      },
+      {
+        path: '',
+        redirectTo: 'tabs',
+        pathMatch: 'full'
+      },
+    ]
   },
-  {
-    path: 'base',
-    loadChildren: () => import('./base/base.module').then( m => m.BasePageModule)
-  },
+  // {
+  //   path: 'tabs',
+  //   loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+  // },
+  // {
+  //   path: 'base',
+  //   loadChildren: () => import('./base/base.module').then( m => m.BasePageModule)
+  // },
   {
     path: '',
-    redirectTo: 'tabs',
+    redirectTo: 'pk',
     pathMatch: 'full'
   },
 

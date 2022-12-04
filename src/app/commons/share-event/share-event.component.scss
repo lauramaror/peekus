@@ -1,0 +1,29 @@
+ion-modal {
+    --height: 45%;
+    --border-radius: 16px;
+    --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal::part(backdrop) {
+    background: rgba(107, 107, 107);
+    opacity: 0.7;
+}
+
+ion-modal::part(content) {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+ion-title {
+    font-size: 16px;
+}
+
+.logoSocial {
+    --padding-start: 0.5em;
+    --padding-end: 0.5em;
+}
+
+.bigIconSize {
+    font-size: 28px;
+}

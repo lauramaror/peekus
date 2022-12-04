@@ -7,6 +7,9 @@ import { EventStatusBadgeComponent } from './event-status-badge/event-status-bad
 import { RouterModule } from '@angular/router';
 import { ProfilePictureComponent } from './profile-picture/profile-picture.component';
 import { SelectImageComponent } from './select-image/select-image.component';
+import { ShareEventComponent } from './share-event/share-event.component';
+import { FullHeaderComponent } from './full-header/full-header.component';
+import { FullContentComponent } from './full-content/full-content.component';
 
 
 @NgModule({
@@ -15,7 +18,10 @@ import { SelectImageComponent } from './select-image/select-image.component';
     PeekusBackButtonComponent,
     EventStatusBadgeComponent,
     ProfilePictureComponent,
-    SelectImageComponent
+    SelectImageComponent,
+    ShareEventComponent,
+    FullHeaderComponent,
+    FullContentComponent
   ],
   imports: [
     IonicModule,
@@ -27,7 +33,10 @@ import { SelectImageComponent } from './select-image/select-image.component';
     PeekusBackButtonComponent,
     EventStatusBadgeComponent,
     ProfilePictureComponent,
-    SelectImageComponent
+    SelectImageComponent,
+    ShareEventComponent,
+    FullHeaderComponent,
+    FullContentComponent
   ]
 })
 export class CommonsModule { }

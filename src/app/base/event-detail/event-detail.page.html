@@ -1,241 +1,225 @@
-<ion-header [translucent]="true">
-    <app-peekus-header></app-peekus-header>
-    <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="previousUrl" [iconName]="'arrow-back'" [actionIcon]="actionIcon" [actionOption]="actionOption" (actionToPerform)="performAction($event)"></app-peekus-back-button>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-    <ion-header collapse="condense">
-        <app-peekus-header></app-peekus-header>
-        <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="previousUrl" [iconName]="'arrow-back'" [actionIcon]="actionIcon" [actionOption]="actionOption" (actionToPerform)="performAction($event)"></app-peekus-back-button>
-    </ion-header>
-    <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading || generatingCollage" class="mt-1"></ion-progress-bar>
-    <div *ngIf="!loading" class="whiteBgCard">
-        <img *ngFor="let collage of collageSrc" src="{{collage}}" alt="">
-        <ion-grid>
-            <ion-row>
-                <ion-col size="5.5">
-                    <ion-row class="mb-1"><span class="cardTitle">{{eventData.name}}</span></ion-row>
-                    <ion-row>
-                        <ion-text color="grey" class="cardDescription">
-                            {{eventData.description}}
-                        </ion-text>
-                    </ion-row>
-                </ion-col>
-                <ion-col size="5">
-                    <ion-row style="height: 15%; margin-bottom: 10px;">
-                        <ion-col size="9">
-                            <app-event-status-badge [event]="eventData"></app-event-status-badge>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row class="ion-align-items-center" style="height: 50%; margin-bottom: 1px;" [routerLink]="['/base/my-profile', eventData.creator]" routerDirection="root">
-                        <ion-col size="3" class="ion-no-padding">
-                            <app-profile-picture [profilePictureId]="eventData.creatorProfilePicture" [size]="38"></app-profile-picture>
-                        </ion-col>
-                        <ion-col size="9">
-                            <ion-row>
-                                <ion-text color="grey" style="font-size: 14px;">{{eventData.creatorName}}</ion-text>
-                            </ion-row>
-                            <ion-row>
-                                <ion-text color="primary">@{{eventData.creatorUsername}}</ion-text>
-                            </ion-row>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row style="height: 15%; margin-bottom: 1px;">
-                        <ion-text color="grey" style="font-size: 10px;">Creado el {{createdDate}}</ion-text>
-                    </ion-row>
-                </ion-col>
-                <ion-col size="1.5">
-                    <ion-button class="ion-no-margin ion-no-padding" fill="clear" (click)="likeEvent()">
-                        <ion-icon name="{{eventData.likedByUser ? 'heart' : 'heart-outline'}}" color="{{eventData.likedByUser ? 'primary' : 'tertiary'}}" size="large"></ion-icon>
-                    </ion-button>
-                    <ion-button *ngIf="eventData.status === eventStatus.ONGOING && !eventData.completedByUser && eventData.userParticipates" fill="outline" class="ion-no-margin ion-no-padding icon-stack mt-1" color="danger" (click)="takePhoto()">
-                        <ion-icon name="camera" class="primary-icon" [ngStyle]="{'color': optionsByStatusMap.get(eventData.status).colorDate}"></ion-icon>
-                        <ion-icon name="add" class="secondary-icon"></ion-icon>
-                    </ion-button>
-                </ion-col>
-            </ion-row>
-            <ion-row class="ion-align-items-center ion-justify-content-between">
-                <ion-col size="4">
-                    <div class="dateHourBadge d-flex-start">
-                        <div class="dateBadge d-flex-center">
-                            <ion-text color="white" style="font-size: 14px;">{{startDayWeek}}</ion-text>
-                            <hr>
-                            <ion-text color="white" style="font-size: 12px;">{{eventData.startDate | date: 'dd'}}</ion-text>
-                            <hr>
-                            <ion-text color="white" style="font-size: 12px;">{{startDayMonth}}</ion-text>
-                        </div>
-                        <div class="d-flex-center" style="width: 60%;">
-                            <ion-text color="grey" style="font-size: 12px;">{{eventData.startDate | date: 'HH:mm'}}</ion-text>
-                            <hr>
-                            <ion-text color="grey" style="font-size: 12px;">{{eventData.endDate | date: 'HH:mm'}}</ion-text>
-                        </div>
-                    </div>
-                </ion-col>
-                <ion-col size="3.5">
-                    <ion-row class="ion-align-items-center">
-                        <ion-text color="tertiary">{{eventData.likes}}</ion-text>
-                        <ion-text color="grey" class="cardLikes ml-1">Me gusta</ion-text>
-                    </ion-row>
-                    <ion-row class="ion-align-items-center">
-                        <ion-text color="tertiary">{{eventData.participants}}</ion-text>
-                        <ion-text color="grey" class="cardLikes ml-1">Participantes</ion-text>
-                    </ion-row>
-                    <ion-row class="ion-align-items-center">
-                        <ion-text color="tertiary">{{eventData.comments}}</ion-text>
-                        <ion-text color="grey" class="cardLikes ml-1">Comentarios</ion-text>
-                    </ion-row>
-                </ion-col>
-                <ion-col size="3">
-                    <ion-row class="ion-align-items-center">
-                        <ion-icon name="{{optionsByTypeMap.get(eventData.type).icon}}"></ion-icon>
-                        <ion-text color="grey" style="font-size: 12px;" class="ml-1">{{eventData.type}}</ion-text>
-                    </ion-row>
-                </ion-col>
-                <ion-col size="1.5">
-                    <ion-row class="ion-align-items-center">
-                        <ion-icon *ngIf="eventData.type!==eventType.EXCLUSIVE" name="share-social" class="bigIconSize"></ion-icon>
-                        <ion-button *ngIf="eventData.type===eventType.EXCLUSIVE && eventData.creator===userId" fill="clear" class="ion-no-margin ion-no-padding icon-stack" color="tertiary" id="open-modal" (click)="loadInvites()">
-                            <ion-icon name="person" class="primary-icon" color="tertirary"></ion-icon>
-                            <ion-icon name="add" class="secondary-icon" style="background-color: var(--ion-color-tertiary);"></ion-icon>
-                        </ion-button>
-                    </ion-row>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
-        <ion-modal #modal trigger="open-modal">
-            <ng-template>
-                <ion-content>
-                    <ion-toolbar>
-                        <ion-title>ENVIAR INVITACIÓN</ion-title>
-                        <ion-buttons slot="end">
-                            <ion-button color="tertiary" (click)="modal.dismiss()">
-                                <ion-icon name="close"></ion-icon>
-                            </ion-button>
-                        </ion-buttons>
-                    </ion-toolbar>
-                    <div class="ml-1">
-                        <ion-text *ngIf="participantsInvitedList.length" class="ml-1">Invitados</ion-text>
-                        <ion-slides *ngIf="participantsInvitedList.length" [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }">
-                            <ion-slide *ngFor="let participant of participantsInvitedList" style="width: 50px; height: 50px;">
-                                <ion-col class="d-flex-center">
-                                    <app-profile-picture [profilePictureId]="participant.idProfilePicture" [size]="40"></app-profile-picture>
-                                    <ion-text color="primary" style="font-size: 8px;">@{{participant.username}}</ion-text>
-                                </ion-col>
-                            </ion-slide>
-                        </ion-slides>
-                    </div>
-                    <ion-searchbar placeholder="Buscar usuario" show-clear-button="focus" [debounce]="1000" (ionChange)="searchUser($event)"></ion-searchbar>
-                    <ion-list>
-                        <ion-item *ngFor="let user of usersList">
-                            <app-profile-picture [profilePictureId]="user.idProfilePicture" [size]="38"></app-profile-picture>
-                            <ion-label class="ml-2">
-                                <h2>
-                                    <ion-text color="grey" style="font-size: 14px;">{{user.name}}</ion-text>
-                                </h2>
-                                <p>
-                                    <ion-text color="primary">@{{user.username}}</ion-text>
-                                </p>
-                            </ion-label>
-                            <ion-button fill="clear" class="ion-no-margin ion-no-padding icon-stack" color="tertiary" (click)="saveParticipant(user)">
-                                <ion-icon name="mail" class="primary-icon" color="tertirary"></ion-icon>
-                                <ion-icon name="arrow-forward" class="secondary-icon" style="background-color: var(--ion-color-tertiary);"></ion-icon>
-                            </ion-button>
-                        </ion-item>
-                    </ion-list>
-                </ion-content>
-                <ion-footer>
-                    <ion-toolbar>
-                        <div class="d-flex-end mr-1" style="align-items: center;">
-                            <ion-spinner name="lines" *ngIf="savingParticipants"></ion-spinner>
-                            <ion-button color="primary" shape="round" class="button-border" (click)="sendNotifications()">
-                                <span>HECHO</span>
-                            </ion-button>
-                        </div>
-                    </ion-toolbar>
-                </ion-footer>
-            </ng-template>
-        </ion-modal>
-        <div style="margin-top: 5px;">
-            <div>
-                <ion-icon name="person" class="ml-2"></ion-icon>
-                <ion-text class="ml-1 cardHeader">Participantes</ion-text>
-            </div>
-            <div *ngIf="loadingParticipants" class="d-flex-center">
-                <ion-spinner name="lines" class="m-1"></ion-spinner>
-            </div>
-            <ion-slides *ngIf="!loadingParticipants" [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }">
-                <ion-slide *ngFor="let participant of eventParticipants" style="width: 80px; height: 80px;">
-                    <ion-col class="d-flex-center" [routerLink]="['/base/my-profile', participant.idParticipant]" routerDirection="root">
-                        <app-profile-picture [profilePictureId]="participant.idProfilePicture" [size]="55"></app-profile-picture>
-                        <ion-text color="primary" style="font-size: 10px;">@{{participant.username}}</ion-text>
+<app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="previousUrl" [iconName]="'arrow-back'" [actionIcon]="actionIcon" [actionOption]="actionOption" (actionToPerform)="performAction($event)"></app-peekus-back-button>
+<ion-progress-bar type="indeterminate" color="primary" *ngIf="loading || generatingCollage" class="mt-1"></ion-progress-bar>
+<div *ngIf="!loading" class="whiteBgCard">
+    <img *ngFor="let collage of collageSrc" src="{{collage}}" alt="">
+    <ion-grid>
+        <ion-row>
+            <ion-col size="5.5">
+                <ion-row class="mb-1"><span class="cardTitle">{{eventData.name}}</span></ion-row>
+                <ion-row>
+                    <ion-text color="grey" class="cardDescription">
+                        {{eventData.description}}
+                    </ion-text>
+                </ion-row>
+            </ion-col>
+            <ion-col size="5">
+                <ion-row style="height: 15%; margin-bottom: 10px;">
+                    <ion-col size="9">
+                        <app-event-status-badge [event]="eventData"></app-event-status-badge>
                     </ion-col>
-                </ion-slide>
-            </ion-slides>
-        </div>
-        <div style="margin-top: 5px;">
-            <div>
-                <ion-icon name="chatbubble" class="ml-2"></ion-icon>
-                <ion-text class="ml-1 cardHeader">Comentarios</ion-text>
-            </div>
-            <div *ngIf="loadingComments" class="d-flex-center">
-                <ion-spinner name="lines" class="m-1"></ion-spinner>
-            </div>
-            <ion-list style="background-color: white;" *ngIf="!loadingComments">
-                <ng-container *ngIf="eventComments.length; else noComments">
-                    <ion-item *ngFor="let comment of eventComments" class="item-bg-color">
-                        <ion-grid class="ion-no-padding ion-no-margin">
-                            <ion-row class="ion-align-items-center ion-no-padding ion-no-margin">
-                                <ion-col size="1.5" class="ion-no-padding">
-                                    <app-profile-picture [profilePictureId]="comment.idProfilePicture" [size]="38"></app-profile-picture>
-                                </ion-col>
-                                <ion-col size="7">
-                                    <ion-row>
-                                        <ion-text color="primary" style="font-size: 12px;">@{{comment.username}}</ion-text>
-                                    </ion-row>
-                                    <ion-row>
-                                        <ion-text color="tertiary" style="font-size: 12px;">{{comment.text}}</ion-text>
-                                    </ion-row>
-                                </ion-col>
-                                <ion-col size="3.5">
-                                    <ion-row class="ion-justify-content-end">
-                                        <ion-text color="grey" style="font-size: 10px;">{{comment.formattedDate}}</ion-text>
-                                    </ion-row>
-                                </ion-col>
-                            </ion-row>
-                        </ion-grid>
-                    </ion-item>
-                </ng-container>
-                <ng-template #noComments>
-                    <ion-item class="item-bg-color">
-                        <ion-grid class="ion-no-padding ion-no-margin">
-                            <ion-row class="ion-align-items-center ion-justify-content-center ion-no-padding ion-no-margin">
-                                <ion-text color="primary">Sé el primer comentario!</ion-text>
-                            </ion-row>
-                        </ion-grid>
-                    </ion-item>
-                </ng-template>
-            </ion-list>
-            <ion-item class="item-bg-color" style="min-height: 30px;" *ngIf="!loadingComments">
-                <ion-input maxlength="100" placeholder="Deja un comentario" class="ion-no-padding leaveComment" [(ngModel)]="commentToPost"></ion-input>
-                <ion-button (click)="postComment()" slot="end">
-                    <ion-icon name="send"></ion-icon>
+                </ion-row>
+                <ion-row class="ion-align-items-center" style="height: 50%; margin-bottom: 1px;" [routerLink]="['/pk/base/my-profile', eventData.creator]" routerDirection="root">
+                    <ion-col size="3" class="ion-no-padding">
+                        <app-profile-picture [profilePictureId]="eventData.creatorProfilePicture" [size]="38"></app-profile-picture>
+                    </ion-col>
+                    <ion-col size="9">
+                        <ion-row>
+                            <ion-text color="grey" style="font-size: 14px;">{{eventData.creatorName}}</ion-text>
+                        </ion-row>
+                        <ion-row>
+                            <ion-text color="primary">@{{eventData.creatorUsername}}</ion-text>
+                        </ion-row>
+                    </ion-col>
+                </ion-row>
+                <ion-row style="height: 15%; margin-bottom: 1px;">
+                    <ion-text color="grey" style="font-size: 10px;">Creado el {{createdDate}}</ion-text>
+                </ion-row>
+            </ion-col>
+            <ion-col size="1.5">
+                <ion-button class="ion-no-margin ion-no-padding" fill="clear" (click)="likeEvent()">
+                    <ion-icon name="{{eventData.likedByUser ? 'heart' : 'heart-outline'}}" color="{{eventData.likedByUser ? 'primary' : 'tertiary'}}" size="large"></ion-icon>
                 </ion-button>
-            </ion-item>
+                <ion-button *ngIf="eventData.status === eventStatus.ONGOING && !eventData.completedByUser && eventData.userParticipates" fill="outline" class="ion-no-margin ion-no-padding icon-stack mt-1" color="danger" (click)="takePhoto()">
+                    <ion-icon name="camera" class="primary-icon" [ngStyle]="{'color': optionsByStatusMap.get(eventData.status).colorDate}"></ion-icon>
+                    <ion-icon name="add" class="secondary-icon"></ion-icon>
+                </ion-button>
+            </ion-col>
+        </ion-row>
+        <ion-row class="ion-align-items-center ion-justify-content-between">
+            <ion-col size="4">
+                <div class="dateHourBadge d-flex-start">
+                    <div class="dateBadge d-flex-center">
+                        <ion-text color="white" style="font-size: 14px;">{{startDayWeek}}</ion-text>
+                        <hr>
+                        <ion-text color="white" style="font-size: 12px;">{{eventData.startDate | date: 'dd'}}</ion-text>
+                        <hr>
+                        <ion-text color="white" style="font-size: 12px;">{{startDayMonth}}</ion-text>
+                    </div>
+                    <div class="d-flex-center" style="width: 60%;">
+                        <ion-text color="grey" style="font-size: 12px;">{{eventData.startDate | date: 'HH:mm'}}</ion-text>
+                        <hr>
+                        <ion-text color="grey" style="font-size: 12px;">{{eventData.endDate | date: 'HH:mm'}}</ion-text>
+                    </div>
+                </div>
+            </ion-col>
+            <ion-col size="3.5">
+                <ion-row class="ion-align-items-center">
+                    <ion-text color="tertiary">{{eventData.likes}}</ion-text>
+                    <ion-text color="grey" class="cardLikes ml-1">Me gusta</ion-text>
+                </ion-row>
+                <ion-row class="ion-align-items-center">
+                    <ion-text color="tertiary">{{eventData.participants}}</ion-text>
+                    <ion-text color="grey" class="cardLikes ml-1">Participantes</ion-text>
+                </ion-row>
+                <ion-row class="ion-align-items-center">
+                    <ion-text color="tertiary">{{eventData.comments}}</ion-text>
+                    <ion-text color="grey" class="cardLikes ml-1">Comentarios</ion-text>
+                </ion-row>
+            </ion-col>
+            <ion-col size="3">
+                <ion-row class="ion-align-items-center">
+                    <ion-icon name="{{optionsByTypeMap.get(eventData.type).icon}}"></ion-icon>
+                    <ion-text color="grey" style="font-size: 12px;" class="ml-1">{{eventData.type}}</ion-text>
+                </ion-row>
+            </ion-col>
+            <ion-col size="1.5">
+                <ion-row class="ion-align-items-center">
+                    <ng-container *ngIf="eventData.type!==eventType.EXCLUSIVE">
+                        <app-share-event [event]="eventData" [eventQR]="eventQR"></app-share-event>
+                    </ng-container>
+                    <ion-button *ngIf="eventData.type===eventType.EXCLUSIVE && eventData.creator===userId" fill="clear" class="ion-no-margin ion-no-padding icon-stack" color="tertiary" id="open-modal" (click)="loadInvites()">
+                        <ion-icon name="person" class="primary-icon" color="tertirary"></ion-icon>
+                        <ion-icon name="add" class="secondary-icon" style="background-color: var(--ion-color-tertiary);"></ion-icon>
+                    </ion-button>
+                </ion-row>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-modal #modal trigger="open-modal">
+        <ng-template>
+            <ion-content>
+                <ion-toolbar>
+                    <ion-title>ENVIAR INVITACIÓN</ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button color="tertiary" (click)="modal.dismiss()">
+                            <ion-icon name="close"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+                <div class="ml-1">
+                    <ion-text *ngIf="participantsInvitedList.length" class="ml-1">Invitados</ion-text>
+                    <ion-slides *ngIf="participantsInvitedList.length" [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }">
+                        <ion-slide *ngFor="let participant of participantsInvitedList" style="width: 50px; height: 50px;">
+                            <ion-col class="d-flex-center">
+                                <app-profile-picture [profilePictureId]="participant.idProfilePicture" [size]="40"></app-profile-picture>
+                                <ion-text color="primary" style="font-size: 8px;">@{{participant.username}}</ion-text>
+                            </ion-col>
+                        </ion-slide>
+                    </ion-slides>
+                </div>
+                <ion-searchbar placeholder="Buscar usuario" show-clear-button="focus" [debounce]="1000" (ionChange)="searchUser($event)"></ion-searchbar>
+                <ion-list>
+                    <ion-item *ngFor="let user of usersList">
+                        <app-profile-picture [profilePictureId]="user.idProfilePicture" [size]="38"></app-profile-picture>
+                        <ion-label class="ml-2">
+                            <h2>
+                                <ion-text color="grey" style="font-size: 14px;">{{user.name}}</ion-text>
+                            </h2>
+                            <p>
+                                <ion-text color="primary">@{{user.username}}</ion-text>
+                            </p>
+                        </ion-label>
+                        <ion-button fill="clear" class="ion-no-margin ion-no-padding icon-stack" color="tertiary" (click)="saveParticipant(user)">
+                            <ion-icon name="mail" class="primary-icon" color="tertirary"></ion-icon>
+                            <ion-icon name="arrow-forward" class="secondary-icon" style="background-color: var(--ion-color-tertiary);"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+            <ion-footer>
+                <ion-toolbar>
+                    <div class="d-flex-end mr-1" style="align-items: center;">
+                        <ion-spinner name="lines" *ngIf="savingParticipants"></ion-spinner>
+                        <ion-button color="primary" shape="round" class="button-border" (click)="sendNotifications()">
+                            <span>HECHO</span>
+                        </ion-button>
+                    </div>
+                </ion-toolbar>
+            </ion-footer>
+        </ng-template>
+    </ion-modal>
+    <div style="margin-top: 5px;">
+        <div>
+            <ion-icon name="person" class="ml-2"></ion-icon>
+            <ion-text class="ml-1 cardHeader">Participantes</ion-text>
         </div>
+        <div *ngIf="loadingParticipants" class="d-flex-center">
+            <ion-spinner name="lines" class="m-1"></ion-spinner>
+        </div>
+        <ion-slides *ngIf="!loadingParticipants" [options]="{ slidesPerView: 'auto', zoom: false, grabCursor: true }">
+            <ion-slide *ngFor="let participant of eventParticipants" style="width: 80px; height: 80px;">
+                <ion-col class="d-flex-center" [routerLink]="['/pk/base/my-profile', participant.idParticipant]" routerDirection="root">
+                    <app-profile-picture [profilePictureId]="participant.idProfilePicture" [size]="55"></app-profile-picture>
+                    <ion-text color="primary" style="font-size: 10px;">@{{participant.username}}</ion-text>
+                </ion-col>
+            </ion-slide>
+        </ion-slides>
     </div>
-    <div *ngIf="!loading && eventData.creator!==userId && (eventData.capacity>eventData.participants || currentAction===0) && eventData.status!==eventStatus.FINISHED" class="d-flex-end" style="align-items: center; margin: 5px;">
-        <ion-button color="tertiary" shape="round" class="cancelButton" (click)="inscriptionEvent()"><span>{{participantActions[currentAction].buttonText}}</span></ion-button>
+    <div style="margin-top: 5px;">
+        <div>
+            <ion-icon name="chatbubble" class="ml-2"></ion-icon>
+            <ion-text class="ml-1 cardHeader">Comentarios</ion-text>
+        </div>
+        <div *ngIf="loadingComments" class="d-flex-center">
+            <ion-spinner name="lines" class="m-1"></ion-spinner>
+        </div>
+        <ion-list style="background-color: white;" *ngIf="!loadingComments">
+            <ng-container *ngIf="eventComments.length; else noComments">
+                <ion-item *ngFor="let comment of eventComments" class="item-bg-color">
+                    <ion-grid class="ion-no-padding ion-no-margin">
+                        <ion-row class="ion-align-items-center ion-no-padding ion-no-margin">
+                            <ion-col size="1.5" class="ion-no-padding">
+                                <app-profile-picture [profilePictureId]="comment.idProfilePicture" [size]="38"></app-profile-picture>
+                            </ion-col>
+                            <ion-col size="7">
+                                <ion-row>
+                                    <ion-text color="primary" style="font-size: 12px;">@{{comment.username}}</ion-text>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-text color="tertiary" style="font-size: 12px;">{{comment.text}}</ion-text>
+                                </ion-row>
+                            </ion-col>
+                            <ion-col size="3.5">
+                                <ion-row class="ion-justify-content-end">
+                                    <ion-text color="grey" style="font-size: 10px;">{{comment.formattedDate}}</ion-text>
+                                </ion-row>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </ion-item>
+            </ng-container>
+            <ng-template #noComments>
+                <ion-item class="item-bg-color">
+                    <ion-grid class="ion-no-padding ion-no-margin">
+                        <ion-row class="ion-align-items-center ion-justify-content-center ion-no-padding ion-no-margin">
+                            <ion-text color="primary">Sé el primer comentario!</ion-text>
+                        </ion-row>
+                    </ion-grid>
+                </ion-item>
+            </ng-template>
+        </ion-list>
+        <ion-item class="item-bg-color" style="min-height: 30px;" *ngIf="!loadingComments">
+            <ion-input maxlength="100" placeholder="Deja un comentario" class="ion-no-padding leaveComment" [(ngModel)]="commentToPost"></ion-input>
+            <ion-button (click)="postComment()" slot="end">
+                <ion-icon name="send"></ion-icon>
+            </ion-button>
+        </ion-item>
     </div>
-    <div *ngIf="!loading && eventData.creator===userId" class="d-flex-end" style="align-items: center; margin: 5px;">
-        <ion-button color="tertiary" shape="round" (click)="deleteEvent()"><span>Borrar</span></ion-button>
-        <ion-button *ngIf="eventData.status===eventStatus.NEXT" color="primary" shape="round" class="button-border" [routerLink]="['/base/edit', eventId]" routerDirection="root"><span>Editar</span></ion-button>
-    </div>
-    <!-- <div *ngIf="!loading && eventData.creator===userId" class="d-flex-end" style="align-items: center; margin: 5px;">
-        <ion-button class="ion-no-padding" fill="outline" color="grey" size="small">
-            <ion-icon name="pencil" class="editButtons"></ion-icon>
-        </ion-button>
-        <ion-button class="ion-no-padding" fill="outline" color="grey" size="small">
-            <ion-icon name="trash" class="editButtons"></ion-icon>
-        </ion-button>
-    </div> -->
-</ion-content>
+</div>
+<div *ngIf="!loading && eventData.creator!==userId && (eventData.capacity>eventData.participants || currentAction===0) && eventData.status!==eventStatus.FINISHED" class="d-flex-end" style="align-items: center; margin: 5px;">
+    <ion-button color="tertiary" shape="round" class="cancelButton" (click)="inscriptionEvent()"><span>{{participantActions[currentAction].buttonText}}</span></ion-button>
+</div>
+<div *ngIf="!loading && eventData.creator===userId" class="d-flex-end" style="align-items: center; margin: 5px;">
+    <ion-button color="tertiary" shape="round" (click)="deleteEvent()"><span>Borrar</span></ion-button>
+    <ion-button *ngIf="eventData.status===eventStatus.NEXT" color="primary" shape="round" class="button-border" [routerLink]="['/pk/base/edit', eventId]" routerDirection="root"><span>Editar</span></ion-button>
+</div>

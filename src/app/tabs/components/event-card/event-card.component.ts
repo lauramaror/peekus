@@ -8,6 +8,7 @@ import { mergeMap } from 'rxjs/operators';
 import { EventService } from 'src/app/services/event.service';
 import { AlertController, IonModal, NavController, ToastController } from '@ionic/angular';
 import { convertArrayBufferToBase64, presentAlert } from 'src/app/helpers/common-functions';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 @Component({
   selector: 'app-event-card',
@@ -16,7 +17,6 @@ import { convertArrayBufferToBase64, presentAlert } from 'src/app/helpers/common
 })
 export class EventCardComponent implements OnInit {
   @ViewChild(IonModal) modal: IonModal;
-  @ViewChild(IonModal) modalShare: IonModal;
   @Input() event: EventPeekus;
   @Input() userId: string;
 
@@ -29,14 +29,6 @@ export class EventCardComponent implements OnInit {
   accessCode = '';
   eventCode = '';
   eventQR = '';
-  logosSocial = [
-    {logo:'logo-twitter', link:''},
-    {logo:'logo-instagram', link:''},
-    {logo:'logo-whatsapp', link:''},
-    {logo:'logo-facebook', link:''},
-    {logo:'logo-tumblr', link:''},
-    {logo:'link-outline', link:''},
-  ];
 
   constructor(
     private imageService: ImageService,
@@ -48,6 +40,10 @@ export class EventCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+      this.event.startDate = new Date(this.event.startDate);
+      this.event.startDate.setHours(this.event.startDate.getHours()+1);
+      this.event.endDate = new Date(this.event.endDate);
+      this.event.endDate.setHours(this.event.endDate.getHours()+1);
       this.eventService.getCodes('?idEvent='+this.event.id).pipe().subscribe(e=> {
         const allCodes = (e as []);
         this.eventCode = allCodes.find(ev=>ev['type']==='NUMERIC')?.['content'];
@@ -71,7 +67,7 @@ export class EventCardComponent implements OnInit {
         return this.eventService.updateParticipant(bodyToSend);
       })).subscribe(i=>{
         this.savingPhoto = false;
-        this.navController.navigateRoot(['/tabs/my-events']);
+        this.navController.navigateRoot(['/pk/tabs/my-events']);
       });
     }
   }
@@ -84,6 +80,14 @@ export class EventCardComponent implements OnInit {
         this.eventService.saveParticipant(participantToPost).pipe().subscribe(p=>{
             this.event.participants++;
             this.event.userParticipates = true;
+            LocalNotifications.schedule({
+              notifications: [{
+                title: '¡Hora de hacer foto!',
+                body: 'El evento '+this.event.name+' acaba de comenzar',
+                id: Math.random(),
+                schedule: {at: new Date(this.event.startDate)}
+              }]
+            });
             this.presentToast('Te has inscrito al evento');
         });
       }
@@ -95,6 +99,14 @@ export class EventCardComponent implements OnInit {
         this.eventService.saveParticipant(participantToPost).pipe().subscribe(p=>{
           this.event.participants++;
           this.event.userParticipates = true;
+          LocalNotifications.schedule({
+            notifications: [{
+              title: '¡Hora de hacer foto!',
+              body: 'El evento '+this.event.name+' acaba de comenzar',
+              id: Math.random(),
+              schedule: {at: new Date(this.event.startDate)}
+            }]
+          });
           this.presentToast('Te has inscrito al evento');
         });
       } else{
@@ -102,13 +114,6 @@ export class EventCardComponent implements OnInit {
       }
     }
 
-  }
-
-  downloadQR(){
-    this.imageService.saveCollagesToGallery([this.eventQR]).then((saved) => {
-      const textToast = saved ? 'QR guardado en galería' : 'Ha habido un error guardando el QR';
-      this.presentToast(textToast);
-    });
   }
 
   async presentToast(msg: string) {

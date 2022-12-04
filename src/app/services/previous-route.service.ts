@@ -28,7 +28,8 @@ export class PreviousRouteService {
   }
 
   public getPreviousUrl() {
-    return (this.previousUrl === '/base/edit/' || this.previousUrl === '/base/edit-profile') ? '/tabs/my-events' : this.previousUrl;
+    return (this.previousUrl === '/pk/base/edit/' || this.previousUrl === '/pk/base/edit-profile')
+            ? '/pk/tabs/my-events' : this.previousUrl;
   }
 
   public getLoop() {
