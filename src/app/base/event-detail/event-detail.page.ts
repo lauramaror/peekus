@@ -113,11 +113,6 @@ export class EventDetailPage implements OnInit {
         this.eventQR = convertArrayBufferToBase64(allCodes[0]['dataQR']['data']);
       }
 
-      this.setActionOption();
-
-      this.buildComments();
-      this.currentAction = this.eventParticipants.find(p=>p.idParticipant===this.userId) ? 0 : 1;
-
       this.eventData.createdDate = new Date(this.eventData.createdDate);
       this.eventData.createdDate.setHours(this.eventData.createdDate.getHours()+1);
       this.eventData.startDate = new Date(this.eventData.startDate);
@@ -131,6 +126,10 @@ export class EventDetailPage implements OnInit {
       const startDateToFormat = new Date(this.eventData.startDate+'Z');
       this.startDayMonth = new Intl.DateTimeFormat('es-ES', { month: 'short'}).format(startDateToFormat);
       this.startDayWeek = this.dayWeekName(startDateToFormat);
+
+      this.setActionOption();
+      this.buildComments();
+      this.currentAction = this.eventParticipants.find(p=>p.idParticipant===this.userId) ? 0 : 1;
 
       this.loading = false;
     });
