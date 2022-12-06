@@ -55,22 +55,14 @@ export class MyEventsPage implements OnInit {
     private userService: UserService,
     private storageService: StorageService,
     private navController: NavController,
-    // private localNotifications: LocalNotificationsPlugin
   ) {}
 
-  ngOnInit(): void{ //['NEXT, ONGOING, DONE, COMPLETED']
-    // this.myDefaultStatusesValue = this.statusesArray.flatMap(s=>s.value);
-    // this.myDefaultStatusesValue = this.statusesArray.flatMap(s=>s.value).join(',');
+  ngOnInit(): void{
     this.compareWith = this.compareWithFn;
     this.getEventsList();
   }
 
-  // ionViewWillEnter(){ console.log('ionViewWillEnter');
-  //   this.getEventsList();
-  // }
-
   changeStatuses(e) {
-    // this.myDefaultStatusesValue = [...e.detail.value];
     const statusesToSearch = [...e.detail.value];
     const includesCompleted = statusesToSearch.indexOf('COMPLETED');
     if(includesCompleted>-1){
@@ -79,27 +71,10 @@ export class MyEventsPage implements OnInit {
       if(!statusesToSearch.includes('ONGOING')) { statusesToSearch.push('ONGOING'); }
     }
     this.statusParams = '';
-    // const statusesToUpdate = [];
-    // statusesToSearch.forEach(s=> statusesToUpdate.push(s));
     if(statusesToSearch.length){
       this.statusParams = '&status=\'' + statusesToSearch.join('\',\'') + '\'';
     }
-    // console.log('statusesToSearch',statusesToSearch.join(','));
     this.getEventsList();
-    // console.log('this.myDefaultStatusesValue',this.myDefaultStatusesValue);
-
-    // const statusesToSearch = [...e.detail.value];
-    // const includesCompleted = statusesToSearch.indexOf('COMPLETED');
-    // if(includesCompleted>-1){
-    //   this.completedEvents = true;
-    //   statusesToSearch.splice(includesCompleted, 1);
-    //   if(!statusesToSearch.includes('ONGOING')) { statusesToSearch.push('ONGOING'); }
-    // }
-    // this.statusParams = '';
-    // if(statusesToSearch.length){
-    //   this.statusParams = '&status=\'' + statusesToSearch.join('\',\'') + '\'';
-    // }
-    // this.getEventsList();
   }
 
   changeCreators(e) {

@@ -7,7 +7,6 @@
         <div class="d-flex-inbetween">
             <div class="d-flex-start">
                 <ion-item>
-                    <!-- [compareWith]="compareWith" value="{{myDefaultStatusesValue}}" -->
                     <ion-select multiple="true" selectedText="Estados" (ionChange)="changeStatuses($event)">
                         <ion-select-option *ngFor="let status of statusesArray" value="{{status.value}}">{{status.name}}</ion-select-option>
                     </ion-select>

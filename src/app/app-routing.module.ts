@@ -26,14 +26,6 @@ const routes: Routes = [
       },
     ]
   },
-  // {
-  //   path: 'tabs',
-  //   loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
-  // },
-  // {
-  //   path: 'base',
-  //   loadChildren: () => import('./base/base.module').then( m => m.BasePageModule)
-  // },
   {
     path: '',
     redirectTo: 'pk',
@@ -42,9 +34,7 @@ const routes: Routes = [
 
 
 ];
-// const routes: Routes = [
-//   {path:'**', redirectTo: ''}
-// ];
+
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })

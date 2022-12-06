@@ -8,8 +8,6 @@ import { BasePage } from './base.page';
 const routes: Routes = [
   {
     path: '',
-    // component: BasePage,
-    // component: FullHeaderComponent,
     component: FullContentComponent,
     children: [
       {

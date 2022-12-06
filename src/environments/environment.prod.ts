@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseUrl: 'https://peekus.herokuapp.com'
+  baseUrl: 'http://192.168.1.83:8080'
 };

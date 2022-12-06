@@ -1,13 +1,3 @@
-<!-- <ion-header [translucent]="true">
-    <app-peekus-header></app-peekus-header>
-    <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="routerBackUrl" [iconName]="'close'"></app-peekus-back-button>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-    <ion-header collapse="condense">
-        <app-peekus-header></app-peekus-header>
-        <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="routerBackUrl" [iconName]="'close'"></app-peekus-back-button>
-    </ion-header> -->
 <app-peekus-back-button [backButtonText]="backButtonText" [routerUrl]="routerBackUrl" [iconName]="'close'"></app-peekus-back-button>
 <ion-progress-bar type="indeterminate" color="primary" *ngIf="loading" class="mt-1"></ion-progress-bar>
 <form *ngIf="!loading" [formGroup]="eventForm" (ngSubmit)="saveEvent()" (keyup.enter)="saveEvent()">
@@ -80,4 +70,3 @@
         </ion-button>
     </div>
 </form>
-<!-- </ion-content> -->
