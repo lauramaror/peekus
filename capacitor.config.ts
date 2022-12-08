@@ -2,7 +2,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'com.ura.peekus',
   appName: 'Peekus',
   webDir: 'www',
   bundledWebRuntime: false,
