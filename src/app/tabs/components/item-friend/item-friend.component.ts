@@ -41,6 +41,8 @@ export class ItemFriendComponent implements OnInit {
         const friendToPost = {idReceptor: this.userId, idSolicitant: friendId, status: 'ACCEPTED'};
         this.userService.updateFriend(friendToPost).pipe().subscribe(p=>{
           this.usersList = [];
+          this.updateUsers.emit(this.usersList);
+          this.presentToast('Solicitud de amistad aceptada');
           this.loading = false;
         });
       }
@@ -72,6 +74,8 @@ export class ItemFriendComponent implements OnInit {
         const friendToPost = {idReceptor: this.userId, idSolicitant: friendId, status: 'REJECTED'};
         this.userService.updateFriend(friendToPost).pipe().subscribe(p=>{
           this.usersList = [];
+          this.updateUsers.emit(this.usersList);
+          this.presentToast('Solicitud de amistad rechazada');
           this.loading = false;
         });
       }
@@ -80,6 +84,8 @@ export class ItemFriendComponent implements OnInit {
         this.userService.deleteFriend(friendToPost).pipe().subscribe(p=>{
           const indexRemoved = this.usersList.findIndex(u=>u.id===friendId);
           this.usersList.splice(indexRemoved, 1);
+          this.updateUsers.emit(this.usersList);
+          this.presentToast('Ya no sois amigos');
           this.loading = false;
         });
       }

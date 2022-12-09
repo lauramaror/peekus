@@ -173,7 +173,7 @@
         <div *ngIf="loadingComments" class="d-flex-center">
             <ion-spinner name="lines" class="m-1"></ion-spinner>
         </div>
-        <ion-list style="background-color: white;" *ngIf="!loadingComments">
+        <ion-list style="background-color: var(--ion-color-white);" *ngIf="!loadingComments">
             <ng-container *ngIf="eventComments.length; else noComments">
                 <ion-item *ngFor="let comment of eventComments" class="item-bg-color">
                     <ion-grid class="ion-no-padding ion-no-margin">

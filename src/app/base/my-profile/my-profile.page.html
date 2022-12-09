@@ -36,8 +36,8 @@
         </ion-row>
     </ion-grid>
     <div class="mt-1 friendsButtons">
-        <button (click)="changeTab(1)" [ngStyle]="{'border-bottom-color': participatedTab ? '#1B1C1E' : '#D9D9D9'}"><ion-icon [ngStyle]="{'color': participatedTab ? '#1B1C1E' : '#D9D9D9'}" name="grid-outline"></ion-icon></button>
-        <button (click)="changeTab(2)" [ngStyle]="{'border-bottom-color': participatedTab ? '#D9D9D9' : '#1B1C1E'}"><ion-icon [ngStyle]="{'color': participatedTab ? '#D9D9D9' : '#1B1C1E'}" name="heart"></ion-icon></button>
+        <button (click)="changeTab(1)" [ngStyle]="{'border-bottom-color': participatedTab ? 'var(--ion-color-tertiary)' : 'var(--ion-color-greyclaro)'}"><ion-icon [ngStyle]="{'color': participatedTab ? 'var(--ion-color-tertiary)' : 'var(--ion-color-greyclaro)'}" name="grid-outline"></ion-icon></button>
+        <button (click)="changeTab(2)" [ngStyle]="{'border-bottom-color': participatedTab ? 'var(--ion-color-greyclaro)' : 'var(--ion-color-tertiary)'}"><ion-icon [ngStyle]="{'color': participatedTab ? 'var(--ion-color-greyclaro)' : 'var(--ion-color-tertiary)'}" name="heart"></ion-icon></button>
     </div>
     <div class="m-1" *ngIf="participatedTab">
         <img *ngFor="let collage of collagesParticipated" src="{{collage.collage}}" alt="" width="47%" class="m-1" [routerLink]="['/pk/base/detail', collage.id]" routerDirection="root">

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { EventPeekus } from 'src/app/models/event.model';
 import { ImageService } from 'src/app/services/image.service';
 
@@ -11,19 +11,25 @@ export class EventListComponent implements OnInit {
   @Input() events: EventPeekus[];
   @Input() userId: string;
   @Input() search: boolean;
+  @Input() typeCheck: boolean[];
 
   @Output() filterByType = new EventEmitter<boolean[]>();
 
   ascDate = true;
   ascName = true;
-  publicCheck = true;
-  privateCheck = true;
+  publicCheck: boolean;
+  privateCheck: boolean;
 
   constructor(
-    private imageService: ImageService
+    private imageService: ImageService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
+    if(this.typeCheck){
+      this.publicCheck = this.typeCheck[0];
+      this.privateCheck = this.typeCheck[1];
+    }
     this.deleteAllFiles();
   }
 

@@ -6,7 +6,7 @@
 .friendsButtons>button {
     background: none;
     width: 50%;
-    border-bottom: 2px solid #1B1C1E;
+    border-bottom: 2px solid var(--ion-color-tertiary);
 }
 
 .friendsButtons>button>ion-icon {

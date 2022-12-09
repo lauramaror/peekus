@@ -20,6 +20,7 @@ export class SearchEventsPage implements OnInit {
   textToSearch = '';
   paramsToSearch = '';
   page = 0;
+  typeCheck = [true, true];
 
   constructor(
     private eventService: EventService,
@@ -42,6 +43,9 @@ export class SearchEventsPage implements OnInit {
       if(this.textToSearch){
         params+='&text='+this.textToSearch;
       }
+      else {
+        params+='&status=\'NEXT\',\'ONGOING\'';
+      }
       return this.eventService.getEvents(params);
     })).subscribe(e=>{
       this.eventsList = e as EventPeekus[];
@@ -57,6 +61,7 @@ export class SearchEventsPage implements OnInit {
 
   filterByType(filters: boolean[]){
     this.paramsToSearch = '?user='+this.userId;
+    this.typeCheck = filters;
     const types = [];
     if(filters[0]) {types.push('\'PUBLIC\'');}
     if(filters[1]) {types.push('\'PRIVATE\'');}
@@ -68,6 +73,9 @@ export class SearchEventsPage implements OnInit {
     let params = this.paramsToSearch+'&pageNum='+this.page;
     if(this.textToSearch){
       params+='&text='+this.textToSearch;
+    }
+    else {
+      params+='&status=\'NEXT\',\'ONGOING\'';
     }
     this.eventService.getEvents(params).pipe().subscribe(e=>{
       (e as EventPeekus[]).forEach(ev=> {

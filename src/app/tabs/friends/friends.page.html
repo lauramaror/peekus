@@ -17,7 +17,7 @@
                     <ion-badge color="primary" class="ml-1">{{friendRequests.length}}</ion-badge>
                 </ion-label>
             </ion-list-header>
-            <app-item-friend *ngIf="!myFriends && friendRequests.length" [usersList]="friendRequests" [type]="1" [userId]="userId"></app-item-friend>
+            <app-item-friend *ngIf="!myFriends && friendRequests.length" [usersList]="friendRequests" [type]="1" [userId]="userId" (updateUsers)="updateUserList($event)"></app-item-friend>
             <ion-list-header *ngIf="usersList.length">
                 <ion-label>{{myFriends ? 'Amigos' : 'Búsqueda'}}</ion-label>
             </ion-list-header>
