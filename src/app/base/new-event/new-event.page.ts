@@ -35,7 +35,6 @@ export class NewEventPage implements OnInit {
   backButtonText = 'Crear Evento';
   routerBackUrl = '/pk/tabs/my-events';
   eventData: EventPeekus;
-  // usersList = [];
 
 
   constructor(
@@ -60,8 +59,9 @@ export class NewEventPage implements OnInit {
       now.setUTCHours(now.getHours());
       this.startDate = now.toISOString();
       this.startHour = now.toISOString();
+      const minutes = parseInt(this.startHour.split(':')[1], 10)+1;
       this.endHour = this.startHour.split(':')[0] + ':'
-                    + (parseInt(this.startHour.split(':')[1], 10)+1).toString()
+                    + (minutes<10 ? '0'+minutes.toString() : minutes.toString())
                     + ':'+ this.startHour.split(':')[2];
     }
 
@@ -117,8 +117,11 @@ export class NewEventPage implements OnInit {
   }
 
   getMinEndDate(){
+    const minutes = parseInt(this.startHour.split(':')[1], 10)+1;
     return this.startHour ?
-          this.startHour.split(':')[0] + ':'+ (parseInt(this.startHour.split(':')[1], 10)+1).toString() + ':'+ this.startHour.split(':')[2]
+          this.startHour.split(':')[0] + ':'
+          + (minutes<10 ? '0'+minutes.toString() : minutes.toString())
+          + ':'+ this.startHour.split(':')[2]
           : null;
   }
 
